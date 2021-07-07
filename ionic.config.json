@@ -1,0 +1,7 @@
+{
+  "name": "effnerapp@web",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
