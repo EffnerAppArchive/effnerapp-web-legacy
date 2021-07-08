@@ -20,16 +20,19 @@ const routes: Array<RouteRecordRaw> = [
         redirect: '/main/home'
       },
       {
+        name: 'Home',
         path: 'home',
         component: () => import('@/views/fragments/Home.vue')
       },
       {
+        name: 'Schulaufgaben',
         path: 'exams',
         component: () => import('@/views/fragments/Exams.vue')
       },
       {
-        path: 'tab3',
-        component: () => import('@/views/fragments/Tab3.vue')
+        name: 'Vertretungen',
+        path: 'substitutions',
+        component: () => import('@/views/fragments/Substitutions.vue')
       }
     ]
   },

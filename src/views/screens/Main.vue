@@ -8,15 +8,16 @@
           <ion-label>Home</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="tab2" href="/main/exams">
+        <ion-tab-button tab="tab2" href="/main/substitutions">
+          <ion-icon :icon="grid"/>
+          <ion-label>Vertretungen</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="tab3" href="/main/exams">
           <ion-icon :icon="school"/>
           <ion-label>Schulaufgaben</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="tab3" href="/main/tab3">
-          <ion-icon :icon="square"/>
-          <ion-label>Tab 3</ion-label>
-        </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
@@ -24,12 +25,13 @@
 
 <script lang="ts">
 import {IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet} from '@ionic/vue';
-import {square, home, school} from 'ionicons/icons';
+import {home, grid, school} from 'ionicons/icons';
 import {sha512} from '@/tools/hash'
 import axios from 'axios';
 import {useStore} from "vuex";
+import {defineComponent} from "vue";
 
-export default {
+export default defineComponent({
   name: 'Main',
   components: {IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage, IonRouterOutlet},
   async setup() {
@@ -54,10 +56,8 @@ export default {
     }
 
     return {
-      square,
-      home,
-      school
+      home, grid, school
     }
   }
-}
+})
 </script>

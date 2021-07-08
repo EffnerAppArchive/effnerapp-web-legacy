@@ -96,13 +96,12 @@ export default {
       }).then((value) => {
         if (value.data.status.login) {
           saveCredentials(credentials, sClass).then(() => {
-            this.$router.push({name: 'Main'})
+            this.$router.push({name: 'Home'})
           })
         } else {
           console.log('login failed')
         }
-      })
-          .catch(reason => console.log(reason))
+      }).catch(reason => console.log(reason))
     },
   },
   computed: {
