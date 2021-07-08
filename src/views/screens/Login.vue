@@ -20,8 +20,9 @@
         <ion-item style="margin-bottom: 1rem">
           <ion-label position="floating">Klasse</ion-label>
           <ion-select ref="input_class">
-            <ion-select-option value="5A">5A</ion-select-option>
-            <ion-select-option value="11Q3">11Q3</ion-select-option>
+            <ion-select-option v-for="c in classes" :key="c" :value="c">{{ c }}</ion-select-option>
+            <!--            <ion-select-option value="5A">5A</ion-select-option>-->
+            <!--            <ion-select-option value="11Q3">11Q3</ion-select-option>-->
           </ion-select>
         </ion-item>
 
@@ -47,7 +48,10 @@ import {
   IonSelect,
   IonSelectOption
 } from '@ionic/vue';
+
 import axios from 'axios';
+import {sha512} from "@/tools/hash";
+import {saveCredentials} from "@/tools/storage";
 
 export default {
   name: "Login",
@@ -64,28 +68,46 @@ export default {
     IonSelect,
     IonSelectOption
   },
+  created() {
+    axios.get('https://api.effner.app/data/classes').then(value => {
+      value.data.forEach(c => {
+        this.classes.push(c)
+      })
+    })
+  },
+  data() {
+    return {
+      classes: []
+    }
+  },
   methods: {
     async login() {
       console.log('login')
-      const id = this.$refs.input_id.$el.value
-      const password = this.$refs.input_password.$el.value
+      const credentials = this.$refs.input_id.$el.value + ':' + this.$refs.input_password.$el.value
       const sClass = this.$refs.input_class.$el.value
 
       const time = Date.now()
 
       axios.post('https://api.effner.app/auth/login', {}, {
         headers: {
-          authorization: 'Basic ' + await this.sha512(id + ':' + password + ':' + time),
+          'Authorization': 'Basic ' + sha512(credentials + ':' + time),
           'X-Time': time
         }
+      }).then((value) => {
+        if (value.data.status.login) {
+          saveCredentials(credentials, sClass).then(() => {
+            this.$router.push({name: 'Main'})
+          })
+        } else {
+          console.log('login failed')
+        }
       })
-      .then(value => console.log(value))
-      .catch(reason => console.log(reason))
+          .catch(reason => console.log(reason))
     },
-    sha512(str) {
-      return crypto.subtle.digest("SHA-512", new TextEncoder("utf-8").encode(str)).then(buf => {
-        return Array.prototype.map.call(new Uint8Array(buf), x => (('00' + x.toString(16)).slice(-2))).join('');
-      });
+  },
+  computed: {
+    getClasses() {
+      return this.classes
     }
   }
 }

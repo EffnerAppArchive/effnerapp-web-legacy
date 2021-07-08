@@ -1,27 +1,31 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import Tabs from '../views/fragments/Tabs.vue'
+import store from '@/store'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/tabs/tab1'
+    redirect: '/main/home'
   },
   {
-    path: '/tabs/',
-    component: Tabs,
+    path: '/main/',
+    name: 'Main',
+    component: () => import('@/views/screens/Main.vue'),
+    meta: {
+      requiresLogin: true
+    },
     children: [
       {
         path: '',
-        redirect: '/tabs/tab1'
+        redirect: '/main/home'
       },
       {
-        path: 'tab1',
-        component: () => import('@/views/fragments/Tab1.vue')
+        path: 'home',
+        component: () => import('@/views/fragments/Home.vue')
       },
       {
-        path: 'tab2',
-        component: () => import('@/views/fragments/Tab2.vue')
+        path: 'exams',
+        component: () => import('@/views/fragments/Exams.vue')
       },
       {
         path: 'tab3',
@@ -31,6 +35,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/login',
+    name: 'Login',
     component: () => import('@/views/screens/Login.vue')
   }
 ]
@@ -38,6 +43,16 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(value => value.meta.requiresLogin)) {
+    if(!store.getters.isRegistered) {
+      next({name: 'Login'})
+      return
+    }
+  }
+  next()
 })
 
 export default router
