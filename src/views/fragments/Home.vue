@@ -27,13 +27,13 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol } from '@ionic/vue';
+import {IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton} from '@ionic/vue';
 import {defineComponent} from "vue";
 import {useStore} from "vuex";
 
 export default defineComponent({
   name: 'Home',
-  components: {IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonGrid, IonRow, IonCol },
+  components: {IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonGrid, IonRow, IonCol, IonButton },
   created() {
     const store = useStore()
 

@@ -5,10 +5,10 @@ import store from '@/store'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/main'
+    redirect: '/main/home'
   },
   {
-    path: '/main',
+    path: '/main/',
     name: 'Main',
     component: () => import('@/views/screens/Main.vue'),
     meta: {
@@ -16,23 +16,27 @@ const routes: Array<RouteRecordRaw> = [
     },
     children: [
       {
+        path: '',
+        redirect: '/main/home'
+      },
+      {
         name: 'Home',
-        path: '/',
+        path: 'home',
         component: () => import('@/views/fragments/Home.vue')
       },
       {
         name: 'Schulaufgaben',
-        path: '/exams',
+        path: 'exams',
         component: () => import('@/views/fragments/Exams.vue')
       },
       {
         name: 'Vertretungen',
-        path: '/substitutions',
+        path: 'substitutions',
         component: () => import('@/views/fragments/Substitutions.vue')
       },
       {
         name: 'MVV',
-        path: '/mvv',
+        path: 'mvv',
         component: () => import('@/views/fragments/MVV.vue')
       }
     ]
