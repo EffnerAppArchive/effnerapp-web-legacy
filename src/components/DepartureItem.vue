@@ -5,7 +5,7 @@
         <ion-badge :style="`color: white; padding: 0.5rem;--background:var(${color});`">{{ line }}</ion-badge>
       </ion-col>
       <ion-col size="5">
-        <span class="ellipsis">{{ direction }}</span>
+        <span class="ellipsis" style="color: white">{{ direction }}</span>
       </ion-col>
       <ion-col class="ion-text-end">
         <span style="color: var(--ion-color-success)">{{ time }}</span>
