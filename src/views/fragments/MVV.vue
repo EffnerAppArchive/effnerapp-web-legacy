@@ -70,7 +70,8 @@ export default {
     return {
       informationCircleOutline,
       departures: [],
-      stops: []
+      stops: [],
+      currentQuery: undefined
     }
   },
   setup() {
@@ -85,9 +86,19 @@ export default {
   // },
   methods: {
     async queryStops(e) {
-      const stops = await findStop(e.detail.value)
+      const query = e.detail.value
 
-      console.log(stops)
+      if(query.length >= 4 && !this.currentQuery) {
+        this.currentQuery = query
+        setTimeout(() => this.runQuery(), 1000)
+      } else {
+        this.stops = []
+      }
+
+    },
+    async runQuery() {
+      const stops = await findStop(this.currentQuery)
+      this.currentQuery = undefined
 
       this.stops = stops.map(item => {
         return {
