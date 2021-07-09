@@ -21,8 +21,6 @@
           <ion-label position="floating">Klasse</ion-label>
           <ion-select ref="input_class">
             <ion-select-option v-for="c in classes" :key="c" :value="c">{{ c }}</ion-select-option>
-            <!--            <ion-select-option value="5A">5A</ion-select-option>-->
-            <!--            <ion-select-option value="11Q3">11Q3</ion-select-option>-->
           </ion-select>
         </ion-item>
 

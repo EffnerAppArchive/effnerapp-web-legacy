@@ -14,7 +14,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            ion-col
+            <ion-button color="primary" @click="this.$router.push({name: 'MVV'})">MVV</ion-button>
           </ion-col>
           <ion-col>
             ion-col

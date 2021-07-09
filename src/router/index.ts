@@ -33,6 +33,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Vertretungen',
         path: 'substitutions',
         component: () => import('@/views/fragments/Substitutions.vue')
+      },
+      {
+        name: 'MVV',
+        path: 'mvv',
+        component: () => import('@/views/fragments/MVV.vue')
       }
     ]
   },
