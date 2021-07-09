@@ -74,6 +74,10 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  --ion-color-mvv-badge-bus: #4A7FE8;
+  --ion-color-mvv-badge-train: #79B833;
+  --ion-color-mvv-badge-regio: #FD5757;
 }
 
 @media (prefers-color-scheme: dark) {

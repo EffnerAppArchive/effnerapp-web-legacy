@@ -19,7 +19,7 @@
       </div>
       <div class="row">
         <div id="disclaimer">
-          <ion-item style="align-self: center">
+          <ion-item lines="none" style="align-self: center">
             <div id="icon">
               <ion-icon :icon="informationCircleOutline"></ion-icon>
             </div>
@@ -96,5 +96,7 @@ export default defineComponent({
 }
 #disclaimer {
   --ion-item-background: transparent;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 </style>
