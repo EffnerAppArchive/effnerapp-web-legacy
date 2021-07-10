@@ -51,6 +51,8 @@ import DepartureItem from "@/components/DepartureItem";
 import {findStop, fetchDepartures} from "@/tools/mvv";
 
 import {ref} from 'vue';
+import {useStore} from "vuex";
+import {saveMVVState} from "@/tools/storage";
 
 export default {
   name: "MVV",
@@ -81,14 +83,19 @@ export default {
       search
     }
   },
-  // async created() {
-  //   await this.loadDepartures('de:09174:6800')
-  // },
+  created() {
+    const store = useStore()
+    if (store.getters.getMVVState) {
+      const state = store.getters.getMVVState
+      console.log(state)
+      this.selectStop(state)
+    }
+  },
   methods: {
     async queryStops(e) {
       const query = e.detail.value
 
-      if(query.length >= 4 && !this.currentQuery) {
+      if (query.length >= 4 && !this.currentQuery) {
         this.currentQuery = query
         setTimeout(() => this.runQuery(), 1000)
       } else {
@@ -119,13 +126,14 @@ export default {
       })
     },
     selectStop(item) {
-      this.stops = []
+      if(item) {
+        this.stops = []
 
-      console.log(item)
+        this.search = item.name
+        this.loadDepartures(item.id)
 
-      this.search = item.name
-
-      this.loadDepartures(item.id)
+        saveMVVState(item)
+      }
     }
   },
   computed: {

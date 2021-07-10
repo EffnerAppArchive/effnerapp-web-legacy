@@ -23,11 +23,18 @@
               <ion-card-content>
                 <ion-card>
                   <departure-item
-                      v-for="(item, i) in [{line: '721', direction: 'Dachau', time: '13:37'}]" :key="i"
-                      :line="item.line"
-                      :direction="item.direction"
-                      :time="item.time"
+                      v-if="nextDeparture"
+                      style="padding-top: 0.5rem; padding-bottom: 0.5rem"
+                      :line="nextDeparture.line"
+                      :direction="nextDeparture.direction"
+                      :time="nextDeparture.time"
                   ></departure-item>
+                  <div v-else>
+                    <ion-item lines="none" class="item_transparent">
+                      <ion-icon :icon="informationCircleOutline" style="margin-right: 0.75rem; font-size: 1.5rem; color: white"></ion-icon>
+                      <ion-label style="font-weight: normal; font-size: 1rem">Derzeit keine Abfahrten</ion-label>
+                    </ion-item>
+                  </div>
                 </ion-card>
               </ion-card-content>
             </ion-card>
@@ -84,15 +91,16 @@ import {
   IonGrid,
   IonRow,
   IonCol,
-  IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonIcon
+  IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonIcon, IonItem, IonLabel
 } from '@ionic/vue';
 
 import {defineComponent} from "vue";
 import {useStore} from "vuex";
 
-import {bus, grid} from 'ionicons/icons'
+import {bus, grid, informationCircleOutline} from 'ionicons/icons'
 import DepartureItem from "@/components/DepartureItem.vue";
 import {useRouter} from "vue-router";
+import {fetchDepartures} from "@/tools/mvv";
 
 export default defineComponent({
   name: 'Home',
@@ -110,14 +118,18 @@ export default defineComponent({
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonIcon
+    IonIcon,
+    IonItem,
+    IonLabel
   },
   setup() {
     const router = useRouter()
+
     return {
       bus,
       grid,
-      router
+      router,
+      informationCircleOutline
     }
   },
   created() {
@@ -125,17 +137,34 @@ export default defineComponent({
 
     const data = store.getters.getData
 
-    console.log(data)
-
-
     this.data = data
+
+    if(store.getters.getMVVState) {
+      this.loadDeparture(store.getters.getMVVState.id)
+    }
   },
   data() {
     return {
       data: {
         motd: ''
       },
+      nextDeparture: undefined
     }
+  },
+  methods: {
+    async loadDeparture(id: string) {
+      const departures = await fetchDepartures(id)
+
+      this.nextDeparture = departures.map((item: any) => {
+        return {
+          line: item.line.number,
+          direction: item.direction,
+          time: item.departureLive
+        }
+      })[0]
+
+      console.log(this.nextDeparture)
+    },
   },
   computed: {
     motd(): string {

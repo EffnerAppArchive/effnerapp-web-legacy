@@ -17,7 +17,6 @@
           <ion-icon :icon="school"/>
           <ion-label>Schulaufgaben</ion-label>
         </ion-tab-button>
-
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>

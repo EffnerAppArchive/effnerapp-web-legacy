@@ -80,7 +80,6 @@ export default {
   },
   methods: {
     async login() {
-      console.log('login')
       const credentials = this.$refs.input_id.$el.value + ':' + this.$refs.input_password.$el.value
       const sClass = this.$refs.input_class.$el.value
 

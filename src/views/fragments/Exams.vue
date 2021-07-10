@@ -49,8 +49,6 @@ export default defineComponent({
 
     const data = store.getters.getData
 
-    console.log(data.exams.exams)
-
     const exams: Exam[] = []
 
     data.exams.exams.forEach((exam: Exam) => {
