@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build app bundle
+    name: Build APK
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +36,8 @@ jobs:
         run: chmod +x android/gradlew
         
       - name: Build APK
-        run: ./android/gradlew build
+        run: ./gradlew build
+        working-directory: ./android
         
 #       - name: Build bundle
 #         run: ./android/gradlew bundleRelease
@@ -51,8 +52,8 @@ jobs:
 #           name: Unsigned app bundle
 #           path: android/app/build/outputs/bundle/release/app-release.aab
         
-  sign:
-    name: Sign app bundle
+  release:
+    name: Release App
     runs-on: ubuntu-latest
     needs: [build]
     
