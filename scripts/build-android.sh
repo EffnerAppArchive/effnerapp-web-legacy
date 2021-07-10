@@ -1,3 +1,4 @@
+npx ionic capacitor sync android
 npx ionic capacitor copy android
 
 # copy pre-generated MainActivity.java to android source for dark-mode functionality
