@@ -56,11 +56,10 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if(to.matched.some(value => value.meta.requiresLogin)) {
     if(!store.getters.isRegistered) {
-      next({name: 'Login'})
-      return
+      router.push({name: 'Login'})
     }
   }
-  next()
+  return next()
 })
 
 export default router

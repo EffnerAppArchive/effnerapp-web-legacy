@@ -13,8 +13,6 @@ const fetchDepartures = async (stopId: string) => {
 
     const response = await axios.get(url);
 
-    console.log(response.data.departures)
-
     return response.data.departures;
 }
 

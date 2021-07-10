@@ -1,13 +1,16 @@
 <template>
   <ion-grid>
-    <ion-row>
-      <ion-col size="2" sizeMd="1">
-        <ion-badge :style="`color: white; padding: 0.5rem;--background:var(${color});`">{{ line }}</ion-badge>
+    <ion-row class="center">
+      <ion-col size="2" sizeMd="1" sizeXs="3">
+        <div class="center">
+          <ion-badge :style="`color: white; padding: 0.5rem; min-width: 3rem; --background:var(${color});`">
+            <span class="center">{{ line }}</span></ion-badge>
+        </div>
       </ion-col>
       <ion-col size="5">
-        <span class="ellipsis">{{ direction }}</span>
+        <span class="ellipsis" style="color: white">{{ direction }}</span>
       </ion-col>
-      <ion-col class="ion-text-end">
+      <ion-col class="ion-text-end" style="padding-right: 1rem">
         <span style="color: var(--ion-color-success)">{{ time }}</span>
       </ion-col>
     </ion-row>
@@ -56,7 +59,7 @@ ion-grid {
   height: 100%;
 }
 
-ion-row {
+.center {
   display: flex;
   align-items: center;
   justify-content: center;

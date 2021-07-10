@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <ion-tabs>
-      <ion-router-outlet />
+      <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="tab1" href="/main/home">
           <ion-icon :icon="home"/>
@@ -17,7 +17,6 @@
           <ion-icon :icon="school"/>
           <ion-label>Schulaufgaben</ion-label>
         </ion-tab-button>
-
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
