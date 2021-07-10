@@ -6,7 +6,8 @@ export default createStore({
     credentials: null,
     class: null,
     data: null,
-    mvvState: null
+    mvvState: null,
+    error : null
   },
   mutations: {
     setCredentials(state, to) {
@@ -23,6 +24,9 @@ export default createStore({
     },
     setMVVState(state, to) {
       state.mvvState = to
+    },
+    setError(state, to) {
+      state.error = to
     }
   },
   getters: {
@@ -40,6 +44,9 @@ export default createStore({
     },
     getMVVState(state) {
       return state.mvvState
+    },
+    getError(state) {
+      return state.error
     }
   },
   actions: {

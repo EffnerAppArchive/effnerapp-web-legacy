@@ -4,7 +4,7 @@
   "private": true,
   "description": "An Ionic project",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "ionic serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",

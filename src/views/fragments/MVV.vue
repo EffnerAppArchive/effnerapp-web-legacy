@@ -34,7 +34,7 @@
   </ion-page>
 </template>
 
-<script>
+<script lang="ts">
 import {
   IonContent,
   IonHeader,
@@ -47,14 +47,14 @@ import {
   IonSearchbar
 } from "@ionic/vue";
 import {informationCircleOutline} from 'ionicons/icons';
-import DepartureItem from "@/components/DepartureItem";
+import DepartureItem from "@/components/DepartureItem.vue";
 import {findStop, fetchDepartures} from "@/tools/mvv";
 
-import {ref} from 'vue';
+import {defineComponent, ref} from 'vue';
 import {useStore} from "vuex";
 import {saveMVVState} from "@/tools/storage";
 
-export default {
+export default defineComponent({
   name: "MVV",
   components: {
     DepartureItem,
@@ -71,9 +71,9 @@ export default {
   data() {
     return {
       informationCircleOutline,
-      departures: [],
-      stops: [],
-      currentQuery: undefined
+      departures: [] as any[],
+      stops: [] as any[],
+      currentQuery: undefined as string | undefined
     }
   },
   setup() {
@@ -92,7 +92,7 @@ export default {
     }
   },
   methods: {
-    async queryStops(e) {
+    async queryStops(e: any) {
       const query = e.detail.value
 
       if (query.length >= 4 && !this.currentQuery) {
@@ -104,20 +104,21 @@ export default {
 
     },
     async runQuery() {
+      if(!this.currentQuery) return;
       const stops = await findStop(this.currentQuery)
       this.currentQuery = undefined
 
-      this.stops = stops.map(item => {
+      this.stops = stops.map((item: { name: any; id: any }) => {
         return {
           name: item.name,
           id: item.id
         }
       })
     },
-    async loadDepartures(id) {
+    async loadDepartures(id: string) {
       const departures = await fetchDepartures(id)
 
-      this.departures = departures.map(item => {
+      this.departures = departures.map((item: { line: { number: any }; direction: any; departureLive: any }) => {
         return {
           line: item.line.number,
           direction: item.direction,
@@ -125,7 +126,7 @@ export default {
         }
       })
     },
-    selectStop(item) {
+    selectStop(item: { name: string; id: string }) {
       if(item) {
         this.stops = []
 
@@ -137,28 +138,17 @@ export default {
     }
   },
   computed: {
-    getDepartures() {
+    getDepartures(): any[] {
       return this.departures
     },
-    getStops() {
+    getStops(): any[] {
       return this.stops.filter(value => value.name !== this.search)
     }
   }
-}
+})
 </script>
 
 <style scoped>
-#list {
-  padding-top: 1vh;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: '';
-  display: table;
-  clear: both;
-}
-
 #icon {
   font-size: 3.5vh;
   padding: 1vh;

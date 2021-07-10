@@ -29,12 +29,14 @@ import {sha512} from '@/tools/hash'
 import axios from 'axios';
 import {useStore} from "vuex";
 import {defineComponent} from "vue";
+import {useRouter} from "vue-router";
 
 export default defineComponent({
   name: 'Main',
   components: {IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage, IonRouterOutlet},
   async setup() {
     const store = useStore()
+    const router = useRouter()
 
     const credentials = store.getters.getCredentials
     const sClass = store.getters.getClass
@@ -50,8 +52,8 @@ export default defineComponent({
 
       store.commit('setData', response.data.data)
     } catch (e) {
-      console.log(e)
-      // TODO: handle
+      store.commit('setError', e)
+      await router.push({name: 'Login'})
     }
 
     return {
