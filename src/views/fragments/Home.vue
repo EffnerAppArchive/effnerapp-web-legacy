@@ -76,6 +76,11 @@
             </ion-card>
           </ion-col>
         </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button @click="logout">Logout</ion-button>
+          </ion-col>
+        </ion-row>
       </ion-grid>
     </ion-content>
   </ion-page>
@@ -91,7 +96,7 @@ import {
   IonGrid,
   IonRow,
   IonCol,
-  IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonIcon, IonItem, IonLabel
+  IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonIcon, IonItem, IonLabel, IonButton
 } from '@ionic/vue';
 
 import {defineComponent} from "vue";
@@ -101,6 +106,7 @@ import {bus, grid, informationCircleOutline} from 'ionicons/icons'
 import DepartureItem from "@/components/DepartureItem.vue";
 import {useRouter} from "vue-router";
 import {fetchDepartures} from "@/tools/mvv";
+import {Storage} from "@capacitor/storage";
 
 export default defineComponent({
   name: 'Home',
@@ -120,27 +126,29 @@ export default defineComponent({
     IonCardContent,
     IonIcon,
     IonItem,
-    IonLabel
+    IonLabel,
+    IonButton
   },
   setup() {
     const router = useRouter()
+    const store = useStore()
 
     return {
       bus,
       grid,
       router,
+      store,
       informationCircleOutline
     }
   },
   created() {
-    const store = useStore()
 
-    const data = store.getters.getData
+    const data = this.store.getters.getData
 
     this.data = data
 
-    if(store.getters.getMVVState) {
-      this.loadDeparture(store.getters.getMVVState.id)
+    if(this.store.getters.getMVVState) {
+      this.loadDeparture(this.store.getters.getMVVState.id)
     }
   },
   data() {
@@ -165,6 +173,11 @@ export default defineComponent({
 
       console.log(this.nextDeparture)
     },
+    async logout() {
+      await Storage.clear()
+      this.store.commit('reset')
+      await this.router.push({name: 'Login'})
+    }
   },
   computed: {
     motd(): string {

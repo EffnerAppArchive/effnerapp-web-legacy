@@ -90,6 +90,12 @@ export default defineComponent({
       console.log(e)
     }
 
+    for (const c of ['11Q','12Q']) {
+      for (let i = 1; i <= 6; i++) {
+        classes.push(c + i)
+      }
+    }
+
     return {
       router,
       store,
