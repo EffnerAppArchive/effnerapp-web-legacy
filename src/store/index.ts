@@ -27,6 +27,14 @@ export default createStore({
     },
     setError(state, to) {
       state.error = to
+    },
+    reset(state) {
+      state.credentials = null
+      state.registered = false
+      state.class = null
+      state.data = null
+      state.mvvState = null
+      state.error = null
     }
   },
   getters: {

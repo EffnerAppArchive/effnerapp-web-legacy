@@ -12,20 +12,20 @@ export default class DSBMobile {
         this.password = password;
     }
 
-    async getTimetable() {
+    async getTimetable(): Promise<TimetableResponse> {
         const meta = await this.fetchMetaData();
 
-        if (!meta) {
-            // handle
-            return null;
-        }
+        // if (!meta) {
+        //     // handle
+        //     return undefined;
+        // }
 
         const {Detail: url, Date: time} = meta['ResultMenuItems'][0]['Childs'][0]['Root']['Childs'][0]['Childs'][0];
 
         return {
             url,
             time,
-            timetable: await this.parseTimetable(url)
+            items: await this.parseTimetable(url)
         };
     }
 
@@ -71,7 +71,7 @@ export default class DSBMobile {
         }
     }
 
-    async parseTimetable(url: string) {
+    async parseTimetable(url: string): Promise<Substitutions> {
         try {
             const response = await Http.request({
                 method: 'GET',
@@ -86,12 +86,12 @@ export default class DSBMobile {
             const documents = this.splitDocuments(document)
 
             const dates: string[] = []
-            const days = new Map();
+            const days = new Map<string, ClassEntry[]>();
             const information = new Map()
-            let absentClasses: any[] = []
+            let absentClasses: AbsentClass[] = []
 
             documents.forEach(document => {
-                const date = document.querySelector('a')?.getAttribute('name')
+                const date = document.querySelector('a')?.getAttribute('name') as string
                 if (date) {
                     dates.push(date)
                 }
@@ -106,15 +106,14 @@ export default class DSBMobile {
                         case 'K':
                             absentClasses = absentClasses.concat(Array.from(table.querySelectorAll('tr')).map(tr => {
                                 return {
-                                    date,
+                                    date: date,
                                     class: tr.querySelector('th')?.innerText.trim(),
                                     period: tr.querySelector('td')?.innerText.trim()
                                 }
                             }));
                             break;
                         case 'k':
-                            // eslint-disable-next-line no-case-declarations
-                            const subs = Array.from(table.querySelectorAll('tbody')).filter(tbody => !tbody.innerText.trim().startsWith('Klasse')).map(tbody => {
+                            days.set(date, Array.from(table.querySelectorAll('tbody')).filter(tbody => !tbody.innerText.trim().startsWith('Klasse')).map(tbody => {
                                 const items = Array.from(tbody.querySelectorAll('tr')).map(tr => {
                                     const td = tr.querySelectorAll('td');
 
@@ -131,9 +130,7 @@ export default class DSBMobile {
                                     name: tbody.querySelector('th')?.innerText.trim(),
                                     items
                                 }
-                            });
-
-                            days.set(date, subs)
+                            }));
                             break;
 
                         // don't know what 'G' was :C
@@ -159,7 +156,7 @@ export default class DSBMobile {
             }
 
         } catch (e) {
-            return null;
+            return Promise.reject(e);
         }
     }
 
