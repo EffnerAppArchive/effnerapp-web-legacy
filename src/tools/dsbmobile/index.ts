@@ -1,5 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
 import {Http} from "@capacitor-community/http";
-import {encode, decode} from './helpers'
+import {decode, encode} from './helpers'
 
 export default class DSBMobile {
     private readonly username: string;
