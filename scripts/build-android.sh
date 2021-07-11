@@ -1,3 +1,4 @@
+npx cap sync
 npx ionic capacitor sync android
 npx ionic capacitor copy android
 
