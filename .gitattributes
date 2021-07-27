@@ -1,0 +1,3 @@
+*.config.js linguist-vendored
+tests/* linguist-vendored
+.eslintrc.js linguist-vendored
