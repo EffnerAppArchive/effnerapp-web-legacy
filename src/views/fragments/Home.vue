@@ -51,7 +51,7 @@
                   <ion-item>
                     <ion-icon :icon="bus" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
                     <ion-label style="text-decoration: none" @click.prevent="openInBrowser(data.documents[0].uri)">
-                      {{ data.documents[0].name }}
+                      {{ data.documents[0].name }} <i class="fas fa-external-link-alt"/>
                     </ion-label>
                   </ion-item>
                   <ion-item>
@@ -75,9 +75,10 @@
 
         <ion-row>
           <ion-col>
-            <ion-card class="gradient_4">
+            <ion-card class="gradient_4"
+                      @click.prevent="openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
               <ion-card-header>
-                <ion-card-title>Speiseplan</ion-card-title>
+                <ion-card-title>Speiseplan <i class="fas fa-external-link-alt"/></ion-card-title>
               </ion-card-header>
             </ion-card>
             <ion-card class="gradient_4">
