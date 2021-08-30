@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
+import {createRouter, createWebHistory} from '@ionic/vue-router';
+import {RouteRecordRaw} from 'vue-router';
 import store from '@/store'
 
 const routes: Array<RouteRecordRaw> = [
@@ -38,6 +38,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'MVV',
         path: 'mvv',
         component: () => import('@/views/fragments/MVV.vue')
+      },
+      {
+        name: 'Settings',
+        path: 'settings',
+        component: () => import('@/views/fragments/Settings.vue')
       }
     ]
   },

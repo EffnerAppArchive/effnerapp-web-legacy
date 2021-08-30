@@ -17,19 +17,25 @@
           <ion-icon :icon="school"/>
           <ion-label>Schulaufgaben</ion-label>
         </ion-tab-button>
+
+        <ion-tab-button href="/main/settings" tab="tab4">
+          <ion-icon :icon="settings"/>
+          <ion-label>Einstellungen</ion-label>
+        </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
 </template>
 
 <script lang="ts">
-import {IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet} from '@ionic/vue';
-import {home, grid, school} from 'ionicons/icons';
+import {IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from '@ionic/vue';
+import {grid, home, school, settings} from 'ionicons/icons';
 import {sha512} from '@/tools/hash'
 import axios from 'axios';
 import {useStore} from "vuex";
 import {defineComponent} from "vue";
 import {useRouter} from "vue-router";
+import DSBMobile from "@/tools/dsbmobile";
 
 export default defineComponent({
   name: 'Main',
@@ -56,8 +62,22 @@ export default defineComponent({
       await router.push({name: 'Login'})
     }
 
+    const creds = credentials.split(':')
+    const dsbmobile = new DSBMobile(creds[0], creds[1])
+
+    let timetable;
+
+    try {
+      timetable = await dsbmobile.getTimetable();
+
+      console.log("timetable: " + JSON.stringify(timetable));
+      store.commit('setSubstitutions', timetable);
+    } catch (e) {
+      console.error(e);
+    }
+
     return {
-      home, grid, school
+      home, grid, school, settings
     }
   }
 })

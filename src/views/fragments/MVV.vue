@@ -2,11 +2,15 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button default-href="home"></ion-back-button>
+        </ion-buttons>
         <ion-title>MVV</ion-title>
       </ion-toolbar>
     </ion-header>
+
     <ion-content :fullscreen="true">
-      <ion-searchbar style="padding: 1rem" v-model="search" @ionChange="queryStops"></ion-searchbar>
+      <ion-searchbar v-model="search" style="padding: 1rem" @ionChange="queryStops"></ion-searchbar>
       <ion-list v-if="getStops.length > 0">
         <ion-item v-for="(item, i) in getStops" :key="i" button @click="selectStop(item)">
           {{ item.name }}
@@ -15,8 +19,8 @@
       <ion-list class="departure_wrapper">
         <departure-item
             v-for="(item, i) in getDepartures" :key="i"
-            :line="item.line"
             :direction="item.direction"
+            :line="item.line"
             :time="item.time"
         ></departure-item>
         <div id="disclaimer">
@@ -36,19 +40,21 @@
 
 <script lang="ts">
 import {
+  IonBackButton,
+  IonButtons,
   IonContent,
   IonHeader,
   IonIcon,
   IonItem,
-  IonPage,
-  IonTitle,
-  IonToolbar,
   IonList,
-  IonSearchbar
+  IonPage,
+  IonSearchbar,
+  IonTitle,
+  IonToolbar
 } from "@ionic/vue";
 import {informationCircleOutline} from 'ionicons/icons';
 import DepartureItem from "@/components/DepartureItem.vue";
-import {findStop, fetchDepartures} from "@/tools/mvv";
+import {fetchDepartures, findStop} from "@/tools/mvv";
 
 import {defineComponent, ref} from 'vue';
 import {useStore} from "vuex";
@@ -66,7 +72,9 @@ export default defineComponent({
     IonPage,
     IonItem,
     IonList,
-    IonSearchbar
+    IonSearchbar,
+    IonBackButton,
+    IonButtons
   },
   data() {
     return {
@@ -104,7 +112,7 @@ export default defineComponent({
 
     },
     async runQuery() {
-      if(!this.currentQuery) return;
+      if (!this.currentQuery) return;
       const stops = await findStop(this.currentQuery)
       this.currentQuery = undefined
 
@@ -127,7 +135,7 @@ export default defineComponent({
       })
     },
     selectStop(item: { name: string; id: string }) {
-      if(item) {
+      if (item) {
         this.stops = []
 
         this.search = item.name

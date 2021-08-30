@@ -1,17 +1,21 @@
-import { createStore } from 'vuex'
+import {createStore} from 'vuex'
 
 export default createStore({
   state: {
     registered: false,
     credentials: null,
+    substitutions: null,
     class: null,
     data: null,
     mvvState: null,
-    error : null
+    error: null
   },
   mutations: {
     setCredentials(state, to) {
       state.credentials = to
+    },
+    setSubstitutions(state, to) {
+      state.substitutions = to
     },
     setClass(state, to) {
       state.class = to
@@ -40,6 +44,9 @@ export default createStore({
   getters: {
     getCredentials(state) {
       return state.credentials
+    },
+    getSubstitutions(state) {
+      return state.substitutions
     },
     isRegistered(state) {
       return state.registered

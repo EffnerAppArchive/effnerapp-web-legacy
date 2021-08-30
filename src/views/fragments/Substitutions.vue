@@ -30,20 +30,9 @@
 </template>
 
 <script lang="ts">
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonSelect,
-  IonSelectOption,
-  IonTitle,
-  IonToolbar,
-  IonList,
-  isPlatform
-} from '@ionic/vue';
+import {IonContent, IonHeader, IonList, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar} from '@ionic/vue';
 import {defineComponent, ref} from "vue";
 import {useStore} from "vuex";
-import DSBMobile from "@/tools/dsbmobile";
 import SubstitutionItem from "@/components/SubstitutionItem.vue";
 
 export default defineComponent({
@@ -51,15 +40,12 @@ export default defineComponent({
   components: {
     SubstitutionItem, IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonSelect, IonSelectOption, IonList},
   async setup() {
-    const store = useStore()
-
-    const creds = store.getters.getCredentials.split(':')
-    const dsbmobile = new DSBMobile(creds[0], creds[1])
+    const store = useStore();
 
     let timetable, select;
 
     try {
-      timetable = await dsbmobile.getTimetable();
+      timetable = await store.getters.getSubstitutions;
       select = ref(timetable.items?.dates[0]);
     } catch (e) {
       console.error(e);
@@ -71,8 +57,6 @@ export default defineComponent({
       select,
       store
     }
-
-
   },
   created() {
     // improve this ugly shit
