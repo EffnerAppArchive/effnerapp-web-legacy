@@ -7,20 +7,24 @@
     </ion-header>
     <ion-content :fullscreen="true">
       <div v-if="timetable">
-        <ion-select v-model="select" @ionChange="selectDate(select)">
-          <ion-select-option v-for="date in timetable.items?.dates" :key="date" :value="date">
-            {{ date }}
-          </ion-select-option>
-        </ion-select>
+        <ion-item>
+          <ion-label>Datum</ion-label>
+          <ion-select v-model="select" @ionChange="selectDate(select)">
+            <ion-select-option v-for="date in timetable.items?.dates" :key="date" :value="date">
+              {{ date }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
         <ion-list class="substitutions_wrapper">
           <substitution-item
               v-for="(item, i) in getSubstitutions"
               :key="i"
-              :teacher="item.teacher"
-              :sub-teacher="item.subTeacher"
-              :period="item.period"
               :info="item.info"
+              :period="item.period"
               :room="item.room"
+              :sub-teacher="item.subTeacher"
+              :teacher="item.teacher"
           ></substitution-item>
         </ion-list>
       </div>
@@ -30,7 +34,18 @@
 </template>
 
 <script lang="ts">
-import {IonContent, IonHeader, IonList, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar} from '@ionic/vue';
+import {
+  IonContent,
+  IonHeader,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPage,
+  IonSelect,
+  IonSelectOption,
+  IonTitle,
+  IonToolbar
+} from '@ionic/vue';
 import {defineComponent, ref} from "vue";
 import {useStore} from "vuex";
 import SubstitutionItem from "@/components/SubstitutionItem.vue";
@@ -38,7 +53,18 @@ import SubstitutionItem from "@/components/SubstitutionItem.vue";
 export default defineComponent({
   name: 'Substitutions',
   components: {
-    SubstitutionItem, IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonSelect, IonSelectOption, IonList},
+    SubstitutionItem,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonPage,
+    IonSelect,
+    IonSelectOption,
+    IonList,
+    IonLabel,
+    IonItem
+  },
   async setup() {
     const store = useStore();
 
@@ -60,7 +86,7 @@ export default defineComponent({
   },
   created() {
     // improve this ugly shit
-    if(this.timetable) {
+    if (this.timetable) {
       this.selectDate(this.timetable.items?.dates[0] as string)
     }
   },
