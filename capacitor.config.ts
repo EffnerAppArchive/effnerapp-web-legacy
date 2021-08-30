@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.effner.web',
+  appId: 'de.effnerapp.effner',
   appName: 'EffnerApp',
   webDir: 'dist',
   bundledWebRuntime: false
