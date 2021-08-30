@@ -1,22 +1,19 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Home</ion-title>
-      </ion-toolbar>
-    </ion-header>
     <ion-content :fullscreen="true">
       <ion-grid>
+
         <ion-row>
           <ion-col>
             <p style="font-size: x-large; text-align: center">{{ motd }}</p>
           </ion-col>
         </ion-row>
+
         <ion-row>
           <ion-col>
-            <ion-card class="gradient_1" @click="router.push({name: 'MVV'})">
-              <ion-item lines="none" class="item_transparent" style="padding-top: 0.5rem">
-                <ion-icon class="card_icon" :icon="bus" style="margin-right: 0.75rem;"></ion-icon>
+            <ion-card class="gradient_1" routerDirection="forward" @click="router.push({name: 'MVV'})">
+              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
+                <ion-icon :icon="busOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
                 <ion-label style="font-weight: bold; font-size: 1.3rem">MVV-Abfahrtszeiten</ion-label>
               </ion-item>
 
@@ -24,14 +21,15 @@
                 <ion-card>
                   <departure-item
                       v-if="nextDeparture"
-                      style="padding-top: 0.5rem; padding-bottom: 0.5rem"
-                      :line="nextDeparture.line"
                       :direction="nextDeparture.direction"
+                      :line="nextDeparture.line"
                       :time="nextDeparture.time"
+                      style="padding-top: 0.5rem; padding-bottom: 0.5rem"
                   ></departure-item>
                   <div v-else>
-                    <ion-item lines="none" class="item_transparent">
-                      <ion-icon :icon="informationCircleOutline" style="margin-right: 0.75rem; font-size: 1.5rem; color: white"></ion-icon>
+                    <ion-item class="item_transparent" lines="none">
+                      <ion-icon :icon="informationOutline"
+                                style="margin-right: 0.75rem; font-size: 1.5rem; color: white"></ion-icon>
                       <ion-label style="font-weight: normal; font-size: 1rem">Derzeit keine Abfahrten</ion-label>
                     </ion-item>
                   </div>
@@ -39,46 +37,68 @@
               </ion-card-content>
             </ion-card>
           </ion-col>
+
+
           <ion-col>
-            <ion-card>
-              <ion-item lines="none" class="item_transparent" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
-                <ion-icon class="card_icon" :icon="grid" style="margin-right: 0.75rem;"></ion-icon>
-                <ion-label style="font-weight: bold; font-size: 1.3rem">Vertretungen</ion-label>
+            <ion-card class="gradient_2">
+              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
+                <ion-icon :icon="fileTrayFullOutline" class="card_icon" style="margin-right: 0.75rem;"/>
+                <ion-label style="font-weight: bold; font-size: 1.3rem">News</ion-label>
               </ion-item>
 
-              <ion-card-content class="gradient_2">
-                <span style="font-size: 4rem; color: white">5</span>
+              <ion-card-content>
+                <ion-list class="news_item">
+                  <ion-item>
+                    <ion-icon :icon="documentOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
+                    <ion-label style="text-decoration: none" @click.prevent="openInBrowser(data.documents[0].uri)">
+                      {{ data.documents[0].name }} <i class="fas fa-external-link-alt" style="padding-left: 0.25rem"/>
+                    </ion-label>
+                  </ion-item>
+                  <ion-item>
+                    <ion-icon :icon="schoolOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
+                    <ion-label style="text-decoration: none" @click.prevent="router.push({name: 'Schulaufgaben'})">
+                      {{ data.exams.exams[data.exams.exams.length - 1].name }}
+                    </ion-label>
+                  </ion-item>
+                  <ion-item>
+                    <ion-icon :icon="shuffle" class="card_icon"
+                              style="margin-right: 0.75rem;"></ion-icon>
+                    <ion-label style="text-decoration: none" @click.prevent="router.push({name: 'Vertretungen'})">
+                      {{ getSubstitutions.length }} Vertretungen heute
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
               </ion-card-content>
             </ion-card>
           </ion-col>
         </ion-row>
+
         <ion-row>
           <ion-col>
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>Another card</ion-card-title>
-              </ion-card-header>
-
-              <ion-card-content class="gradient_3">
-                <span style="color: white">Another card content bla lol</span>
-              </ion-card-content>
+            <ion-card class="gradient_3"
+                      @click.prevent="openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
+              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
+                <ion-label style="font-weight: bold; font-size: 1.3rem">Speiseplan <i class="fas fa-external-link-alt"/>
+                </ion-label>
+              </ion-item>
+            </ion-card>
+            <ion-card class="gradient_4">
+              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
+                <ion-label style="font-weight: bold; font-size: 1.3rem">Informationen</ion-label>
+              </ion-item>
             </ion-card>
           </ion-col>
-          <ion-col>
-            <ion-card>
-              <ion-card-header>
-                <ion-card-title>Another card</ion-card-title>
-              </ion-card-header>
 
-              <ion-card-content class="gradient_4">
-                <span style="color: white">Another card content bla lol</span>
+          <ion-col>
+            <ion-card class="gradient_4">
+              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
+                <ion-label style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
+              </ion-item>
+
+              <ion-card-content>
+                <span style="color: white">Nächste Stunde</span>
               </ion-card-content>
             </ion-card>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-button @click="logout">Logout</ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -88,66 +108,82 @@
 
 <script lang="ts">
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
+  IonCard,
+  IonCardContent,
+  IonCol,
   IonContent,
   IonGrid,
-  IonRow,
-  IonCol,
-  IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonIcon, IonItem, IonLabel, IonButton
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPage,
+  IonRow
 } from '@ionic/vue';
 
 import {defineComponent} from "vue";
 import {useStore} from "vuex";
 
-import {bus, grid, informationCircleOutline} from 'ionicons/icons'
+import {
+  busOutline,
+  documentOutline,
+  fileTrayFullOutline,
+  informationOutline,
+  restaurantOutline,
+  schoolOutline,
+  shuffle
+} from 'ionicons/icons'
 import DepartureItem from "@/components/DepartureItem.vue";
 import {useRouter} from "vue-router";
 import {fetchDepartures} from "@/tools/mvv";
-import {Storage} from "@capacitor/storage";
+import {Browser} from "@capacitor/browser";
 
 export default defineComponent({
   name: 'Home',
   components: {
     DepartureItem,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
     IonContent,
     IonPage,
     IonGrid,
     IonRow,
     IonCol,
     IonCard,
-    IonCardHeader,
-    IonCardTitle,
     IonCardContent,
     IonIcon,
     IonItem,
     IonLabel,
-    IonButton
+    IonList
   },
   setup() {
     const router = useRouter()
     const store = useStore()
 
+    const substitutions = store.getters.getSubstitutions
+    console.log(substitutions)
+
     return {
-      bus,
-      grid,
+      busOutline,
+      informationOutline,
+      schoolOutline,
+      documentOutline,
+      shuffle,
+      fileTrayFullOutline,
+      restaurantOutline,
+
       router,
       store,
-      informationCircleOutline
+
+      substitutions
     }
   },
   created() {
-
     const data = this.store.getters.getData
 
     this.data = data
 
-    if(this.store.getters.getMVVState) {
+    console.log(data)
+
+    if (this.store.getters.getMVVState) {
       this.loadDeparture(this.store.getters.getMVVState.id)
     }
   },
@@ -173,15 +209,17 @@ export default defineComponent({
 
       console.log(this.nextDeparture)
     },
-    async logout() {
-      await Storage.clear()
-      this.store.commit('reset')
-      await this.router.push({name: 'Login'})
+    async openInBrowser(uri: string) {
+      await Browser.open({url: uri})
     }
   },
   computed: {
     motd(): string {
       return this.data.motd
+    },
+    getSubstitutions(): Array<Substitution> {
+      const date = this.substitutions.items?.dates[0];
+      return this.substitutions.items?.days?.get(date)?.find((entry: any) => entry.name === this.store.getters.getClass)?.items;
     }
   }
 })
@@ -211,5 +249,12 @@ export default defineComponent({
 .card_icon {
   font-size: 2rem;
   color: white;
+}
+
+.news_item {
+  -webkit-box-shadow: 5px 5px 8px 2px rgba(0, 0, 0, 0.55);
+  box-shadow: 5px 5px 8px 2px rgba(0, 0, 0, 0.55);
+  border: none;
+  border-radius: 2%;
 }
 </style>

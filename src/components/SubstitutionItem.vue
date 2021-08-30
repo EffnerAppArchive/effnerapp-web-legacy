@@ -1,8 +1,16 @@
 <template>
   <ion-card>
     <ion-card-header>
-      <ion-card-title>{{ period + '. Stunde' }}</ion-card-title>
-      <ion-card-subtitle>{{ teacher + ' > ' + subTeacher + ' @' + room + (info ? ' (' + info + ')' : '') }}</ion-card-subtitle>
+      <ion-card-title>{{ period }}.
+        Stunde {{ (info === 'entfällt' ? 'entfällt' : 'vertreten durch ' + subTeacher) }}
+      </ion-card-title>
+      <ion-card-content>
+        Ausfall: {{ teacher }}
+        <br>
+        Raum: {{ room }}
+        <br>
+        Info: {{ info }}
+      </ion-card-content>
     </ion-card-header>
     <ion-card-content>
     </ion-card-content>
@@ -10,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import {IonCard, IonCardHeader, IonCardSubtitle, IonCardContent, IonCardTitle} from "@ionic/vue";
+import {IonCard, IonCardContent, IonCardHeader, IonCardTitle} from "@ionic/vue";
 import {defineComponent} from "vue";
 
 export default defineComponent({
@@ -24,7 +32,7 @@ export default defineComponent({
 
   },
   components: {
-    IonCard, IonCardHeader, IonCardSubtitle, IonCardContent, IonCardTitle
+    IonCard, IonCardHeader, IonCardContent, IonCardTitle
   }
 })
 </script>

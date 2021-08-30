@@ -4,18 +4,23 @@
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="tab1" href="/main/home">
-          <ion-icon :icon="home"/>
+          <ion-icon :icon="homeOutline"/>
           <ion-label>Home</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab2" href="/main/substitutions">
-          <ion-icon :icon="grid"/>
+          <ion-icon :icon="listOutline"/>
           <ion-label>Vertretungen</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab3" href="/main/exams">
-          <ion-icon :icon="school"/>
+          <ion-icon :icon="schoolOutline"/>
           <ion-label>Schulaufgaben</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button href="/main/settings" tab="tab4">
+          <ion-icon :icon="settingsOutline"/>
+          <ion-label>Einstellungen</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
@@ -23,13 +28,14 @@
 </template>
 
 <script lang="ts">
-import {IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet} from '@ionic/vue';
-import {home, grid, school} from 'ionicons/icons';
+import {IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from '@ionic/vue';
+import {homeOutline, listOutline, schoolOutline, settingsOutline} from 'ionicons/icons';
 import {sha512} from '@/tools/hash'
 import axios from 'axios';
 import {useStore} from "vuex";
 import {defineComponent} from "vue";
 import {useRouter} from "vue-router";
+import DSBMobile from "@/tools/dsbmobile";
 
 export default defineComponent({
   name: 'Main',
@@ -56,8 +62,22 @@ export default defineComponent({
       await router.push({name: 'Login'})
     }
 
+    const creds = credentials.split(':')
+    const dsbmobile = new DSBMobile(creds[0], creds[1])
+
+    let timetable;
+
+    try {
+      timetable = await dsbmobile.getTimetable();
+
+      console.log("timetable: " + JSON.stringify(timetable));
+      store.commit('setSubstitutions', timetable);
+    } catch (e) {
+      console.error(e);
+    }
+
     return {
-      home, grid, school
+      homeOutline, listOutline, schoolOutline, settingsOutline,
     }
   }
 })
