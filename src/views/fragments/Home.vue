@@ -100,11 +100,6 @@
             </ion-card>
           </ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-button @click="logout">Logout</ion-button>
-          </ion-col>
-        </ion-row>
       </ion-grid>
     </ion-content>
   </ion-page>
@@ -112,7 +107,6 @@
 
 <script lang="ts">
 import {
-  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -135,7 +129,6 @@ import {bus, grid, informationCircleOutline} from 'ionicons/icons'
 import DepartureItem from "@/components/DepartureItem.vue";
 import {useRouter} from "vue-router";
 import {fetchDepartures} from "@/tools/mvv";
-import {Storage} from "@capacitor/storage";
 import {Browser} from "@capacitor/browser";
 
 export default defineComponent({
@@ -154,7 +147,6 @@ export default defineComponent({
     IonIcon,
     IonItem,
     IonLabel,
-    IonButton,
     IonList
   },
   setup() {
@@ -205,11 +197,6 @@ export default defineComponent({
       })[0]
 
       console.log(this.nextDeparture)
-    },
-    async logout() {
-      await Storage.clear()
-      this.store.commit('reset')
-      await this.router.push({name: 'Login'})
     },
     async openInBrowser(uri: string) {
       await Browser.open({url: uri})
