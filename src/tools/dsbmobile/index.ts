@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import {Http} from "@capacitor-community/http";
 import {decode, encode} from './helpers'
 
@@ -15,10 +13,9 @@ export default class DSBMobile {
     async getTimetable(): Promise<TimetableResponse> {
         const meta = await this.fetchMetaData();
 
-        // if (!meta) {
-        //     // handle
-        //     return undefined;
-        // }
+        if (!meta) {
+            throw new Error('Could not fetch timetable meta data.')
+        }
 
         const {Detail: url, Date: time} = meta['ResultMenuItems'][0]['Childs'][0]['Root']['Childs'][0]['Childs'][0];
 
@@ -66,7 +63,7 @@ export default class DSBMobile {
             }
 
         } catch (e) {
-            console.log(e)
+            console.error(e)
             return null;
         }
     }

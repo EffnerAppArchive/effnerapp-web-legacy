@@ -87,7 +87,7 @@ export default defineComponent({
     try {
       classes = await axios.get('https://api.effner.app/data/classes').then(value => value.data)
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
 
     for (const c of ['11Q','12Q']) {

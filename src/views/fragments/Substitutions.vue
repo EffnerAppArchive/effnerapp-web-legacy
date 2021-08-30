@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <div v-if="isNative">
+      <div v-if="timetable">
         <ion-select v-model="select" @ionChange="selectDate(select)">
           <ion-select-option v-for="date in timetable.items?.dates" :key="date" :value="date">
             {{ date }}
@@ -56,15 +56,15 @@ export default defineComponent({
     const creds = store.getters.getCredentials.split(':')
     const dsbmobile = new DSBMobile(creds[0], creds[1])
 
-    const timetable = await dsbmobile.getTimetable();
+    let timetable, select;
 
-    console.log(timetable)
-
-    if(!timetable) {
-      // handle
+    try {
+      timetable = await dsbmobile.getTimetable();
+      select = ref(timetable.items?.dates[0]);
+    } catch (e) {
+      console.error(e);
     }
 
-    const select = ref(timetable.items?.dates[0]);
 
     return {
       timetable: timetable as TimetableResponse,
@@ -76,7 +76,9 @@ export default defineComponent({
   },
   created() {
     // improve this ugly shit
-    this.selectDate(this.timetable.items?.dates[0] as string)
+    if(this.timetable) {
+      this.selectDate(this.timetable.items?.dates[0] as string)
+    }
   },
   data() {
     return {
@@ -97,9 +99,9 @@ export default defineComponent({
     getSubstitutions(): Substitution[] {
       return this.substitutions
     },
-    isNative() {
-      return (isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb')
-    }
+    // isNative() {
+    //   return (isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb')
+    // }
   }
 })
 </script>
