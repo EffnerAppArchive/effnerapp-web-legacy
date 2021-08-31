@@ -86,7 +86,6 @@ jobs:
           code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
           team-id: ${{ secrets.TEAM_ID }}
           workspace-path: ios/App/App.xcworkspace
-          certificate-password: ${{ secrets.CERT_PASSWORD }}
 
       - uses: actions/upload-artifact@v2
         with:
@@ -96,7 +95,7 @@ jobs:
   release:
     name: Release App
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [build, build-ios]
 
     steps:
       - uses: actions/checkout@v2
