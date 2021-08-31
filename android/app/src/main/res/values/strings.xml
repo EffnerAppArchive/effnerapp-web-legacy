@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">EffnerApp</string>
+    <string name="title_activity_main">EffnerApp</string>
+    <string name="package_name">de.effnerapp.effner</string>
+    <string name="custom_url_scheme">de.effnerapp.effner</string>
+</resources>
