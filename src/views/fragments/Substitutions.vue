@@ -24,8 +24,11 @@
               :period="item.period"
               :room="item.room"
               :sub-teacher="item.subTeacher"
-              :teacher="item.teacher"
-          ></substitution-item>
+              :teacher="item.teacher"/>
+          <substitution-item
+              key="info"
+              :info="getInformation"
+              teacher="info"/>
         </ion-list>
       </div>
       <div v-else>Native feature only! Fuck CORS!</div>
@@ -92,7 +95,8 @@ export default defineComponent({
   },
   data() {
     return {
-      substitutions: [] as Substitution[]
+      substitutions: [] as Substitution[],
+      information: undefined as string | undefined
     }
   },
   methods: {
@@ -103,12 +107,16 @@ export default defineComponent({
 
       console.log(substitutions)
       this.substitutions = substitutions as Substitution[]
+      this.information = this.timetable?.items?.information?.get(date);
     }
   },
   computed: {
     getSubstitutions(): Substitution[] {
       return this.substitutions
     },
+    getInformation(): string | undefined {
+      return this.information;
+    }
     // isNative() {
     //   return (isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb')
     // }
