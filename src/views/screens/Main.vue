@@ -3,24 +3,28 @@
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="tab1" href="/main/home">
+        <ion-tab-button tab="tab1" href="/main/home" class="ion-activatable ripple-parent">
           <ion-icon :icon="homeOutline"/>
           <ion-label>Home</ion-label>
+          <ion-ripple-effect />
         </ion-tab-button>
 
-        <ion-tab-button tab="tab2" href="/main/substitutions">
+        <ion-tab-button tab="tab2" href="/main/substitutions" class="ion-activatable ripple-parent">
           <ion-icon :icon="listOutline"/>
           <ion-label>Vertretungen</ion-label>
+          <ion-ripple-effect />
         </ion-tab-button>
 
-        <ion-tab-button tab="tab3" href="/main/exams">
+        <ion-tab-button tab="tab3" href="/main/exams" class="ion-activatable ripple-parent">
           <ion-icon :icon="schoolOutline"/>
           <ion-label>Schulaufgaben</ion-label>
+          <ion-ripple-effect />
         </ion-tab-button>
 
-        <ion-tab-button href="/main/settings" tab="tab4">
+        <ion-tab-button href="/main/settings" tab="tab4" class="ion-activatable ripple-parent">
           <ion-icon :icon="settingsOutline"/>
           <ion-label>Einstellungen</ion-label>
+          <ion-ripple-effect />
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
@@ -28,7 +32,16 @@
 </template>
 
 <script lang="ts">
-import {IonIcon, IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from '@ionic/vue';
+import {
+  IonIcon,
+  IonLabel,
+  IonPage,
+  IonRippleEffect,
+  IonRouterOutlet,
+  IonTabBar,
+  IonTabButton,
+  IonTabs
+} from '@ionic/vue';
 import {homeOutline, listOutline, schoolOutline, settingsOutline} from 'ionicons/icons';
 import {sha512} from '@/tools/hash'
 import axios from 'axios';
@@ -39,7 +52,7 @@ import DSBMobile from "@/tools/dsbmobile";
 
 export default defineComponent({
   name: 'Main',
-  components: {IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage, IonRouterOutlet},
+  components: {IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage, IonRouterOutlet, IonRippleEffect},
   async setup() {
     const store = useStore()
     const router = useRouter()
