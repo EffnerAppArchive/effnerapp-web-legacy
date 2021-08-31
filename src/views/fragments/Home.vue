@@ -90,7 +90,7 @@
           </ion-col>
 
           <ion-col>
-            <ion-card class="gradient_4">
+            <ion-card class="gradient_5">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-label style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
               </ion-item>
@@ -235,12 +235,17 @@ export default defineComponent({
 }
 
 .gradient_3 {
-  background: linear-gradient(90deg, hsla(33, 100%, 53%, 1) 0%, hsla(58, 100%, 68%, 1) 100%);
+  background: linear-gradient(180deg, hsla(78, 56%, 85%, 1) 0%, hsla(359, 84%, 63%, 1) 100%);
 }
 
 .gradient_4 {
   background: linear-gradient(90deg, hsla(339, 100%, 55%, 1) 0%, hsla(197, 100%, 64%, 1) 100%);
 }
+
+.gradient_5 {
+  background: linear-gradient(0deg, hsla(261, 60%, 28%, 1) 0%, hsla(354, 57%, 64%, 1) 100%);
+}
+
 
 .item_transparent {
   --ion-item-background: transparent;
