@@ -78,7 +78,7 @@ jobs:
       - name: Build ionic web app
         run: ./scripts/build-ios.sh
 
-      - uses: yukiarrr/ios-build-action@v1.4.0
+      - uses: sparkfabrik/ios-build-action@v1.0.0
         with:
           project-path: ios/App/App.xcodeproj
           p12-base64: ${{ secrets.P12_BASE64 }}
@@ -87,6 +87,11 @@ jobs:
           team-id: ${{ secrets.TEAM_ID }}
           workspace-path: ios/App/App.xcworkspace
           certificate-password: ${{ secrets.CERT_PASSWORD }}
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: IPA
+          path: output.ipa
 
   release:
     name: Release App
@@ -107,6 +112,10 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: Unsigned APK
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: IPA
 
 #       - uses: actions/download-artifact@v2
 #         with:
@@ -137,6 +146,7 @@ jobs:
           automatic_release_tag: 'dev'
           files: |
             app-release-unsigned.apk
+            output.ipa
 #            ${{steps.sign_app.outputs.signedReleaseFile}}
 
 #   upload:
