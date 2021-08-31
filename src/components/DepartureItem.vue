@@ -3,12 +3,13 @@
     <ion-row class="center">
       <ion-col size="2" sizeMd="2" sizeXs="2">
         <div class="center">
-          <ion-badge :style="`color: white; padding: 0.5rem; min-width: 2rem; --background:var(${color});`">
-            <span class="center">{{ line }}</span></ion-badge>
+          <ion-badge :style="`padding: 0.5rem; min-width: 2rem; --background:var(${color});`">
+            <span class="center">{{ line }}</span>
+          </ion-badge>
         </div>
       </ion-col>
-      <ion-col size="5">
-        <span class="ellipsis" style="color: white">{{ direction }}</span>
+      <ion-col size="6">
+        <ion-label class="ellipsis">{{ direction }}</ion-label>
       </ion-col>
       <ion-col class="ion-text-end" style="padding-right: 1rem">
         <span style="color: var(--ion-color-success)">{{ time }}</span>
@@ -17,7 +18,7 @@
   </ion-grid>
 </template>
 <script lang="ts">
-import {IonGrid, IonRow, IonCol, IonBadge} from "@ionic/vue";
+import {IonBadge, IonCol, IonGrid, IonLabel, IonRow,} from "@ionic/vue";
 import {defineComponent} from "vue";
 
 export default defineComponent({
@@ -28,7 +29,7 @@ export default defineComponent({
     time: String
   },
   components: {
-    IonGrid, IonRow, IonCol, IonBadge
+    IonGrid, IonRow, IonCol, IonBadge, IonLabel
   },
   setup(props) {
     let color;

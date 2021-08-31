@@ -5,6 +5,8 @@ on:
   workflow_dispatch:
   push:
     branches: [ master ]
+    paths:
+      - "ios/App/App.xcodeproj/**"
 
 jobs:
   build:
@@ -179,7 +181,7 @@ jobs:
           prerelease: false
           automatic_release_tag: 'dev'
           files: |
-            app-release.apk
+            app-release-unsigned-signed.apk
             app-release.aab
             output.ipa
 #            ${{steps.sign_app.outputs.signedReleaseFile}}

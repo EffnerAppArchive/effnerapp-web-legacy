@@ -93,13 +93,12 @@ bodY {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #000;
 }
 
 .wave {
   width: 5px;
   height: 100px;
-  background: linear-gradient(45deg, cyan, #fff);
+  background: linear-gradient(45deg, cyan, #04009A);
   margin: 10px;
   animation: wave 1s linear infinite;
   border-radius: 20px;
