@@ -1,4 +1,4 @@
-package app.effner.web;
+package de.effnerapp.effner;
 
 import android.content.res.Configuration;
 import android.os.Build;
