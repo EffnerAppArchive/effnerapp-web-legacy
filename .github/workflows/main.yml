@@ -86,6 +86,7 @@ jobs:
           code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
           team-id: ${{ secrets.TEAM_ID }}
           workspace-path: ios/App/App.xcworkspace
+          certificate-password: ${{ secrets.CERT_PASSWORD }}
 
   release:
     name: Release App
