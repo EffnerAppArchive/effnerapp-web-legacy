@@ -28,8 +28,8 @@
                   ></departure-item>
                   <div v-else>
                     <ion-item class="item_transparent" lines="none">
-                      <ion-icon :icon="informationOutline"
-                                style="margin-right: 0.75rem; font-size: 1.5rem; color: white"></ion-icon>
+                      <ion-icon :icon="informationOutline" color="black"
+                                style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
                       <ion-label style="font-weight: normal; font-size: 1rem">Derzeit keine Abfahrten</ion-label>
                     </ion-item>
                   </div>
@@ -42,31 +42,35 @@
           <ion-col>
             <ion-card class="gradient_2">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
-                <ion-icon :icon="fileTrayFullOutline" class="card_icon" style="margin-right: 0.75rem;"/>
+                <ion-icon :icon="fileTrayFullOutline" class="card_icon" color="black" style="margin-right: 0.75rem;"/>
                 <ion-label style="font-weight: bold; font-size: 1.3rem">News</ion-label>
               </ion-item>
 
               <ion-card-content>
                 <ion-list class="news_item">
                   <ion-item>
-                    <ion-icon :icon="documentOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
+                    <ion-icon :icon="documentOutline" class="card_icon" color="black"
+                              style="margin-right: 0.75rem;"></ion-icon>
                     <ion-label style="text-decoration: none" @click.prevent="openInBrowser(data.documents[0].uri)">
                       {{ data.documents[0].name }} <i class="fas fa-external-link-alt" style="padding-left: 0.25rem"/>
                     </ion-label>
                   </ion-item>
                   <ion-item>
-                    <ion-icon :icon="schoolOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
+                    <ion-icon :icon="schoolOutline" class="card_icon" color="black"
+                              style="margin-right: 0.75rem;"></ion-icon>
                     <ion-label style="text-decoration: none" @click.prevent="router.push({name: 'Schulaufgaben'})">
                       {{ data.exams.exams[data.exams.exams.length - 1].name }}
                     </ion-label>
                   </ion-item>
-                  <ion-item>
+
+                  <ion-item @click.prevent="router.push({name: 'Vertretungen'})">
                     <ion-icon :icon="shuffle" class="card_icon"
-                              style="margin-right: 0.75rem;"></ion-icon>
-                    <ion-label style="text-decoration: none" @click.prevent="router.push({name: 'Vertretungen'})">
+                              color="black" style="margin-right: 0.75rem;"></ion-icon>
+                    <ion-label style="text-decoration: none">
                       {{ getSubstitutions.length }} Vertretungen heute
                     </ion-label>
                   </ion-item>
+
                 </ion-list>
               </ion-card-content>
             </ion-card>
