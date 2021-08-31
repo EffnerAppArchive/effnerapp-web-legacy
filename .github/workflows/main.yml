@@ -39,7 +39,7 @@ jobs:
         run: chmod +x android/gradlew
 
       - name: Build APK
-        run: ./gradlew build
+        run: ./gradlew build -x test
         working-directory: ./android
 
 #       - name: Build bundle
@@ -54,6 +54,38 @@ jobs:
 #         with:
 #           name: Unsigned app bundle
 #           path: android/app/build/outputs/bundle/release/app-release.aab
+
+#  build-ios:
+#    name: Build iOS app
+#    runs-on: macos-latest
+#
+#    steps:
+#      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#      - uses: actions/checkout@v2
+#
+#      - name: Setup Node.js environment
+#        uses: actions/setup-node@v2.2.0
+#
+#      - name: Setup Ionic
+#        run: npm install -D @ionic/cli
+#
+#      - name: Install dependencies
+#        run: npm install
+#
+#      - name: Grant execute permission for build script
+#        run: chmod +x scripts/build-ios.sh
+#
+#      - name: Build ionic web app
+#        run: ./scripts/build-ios.sh
+#
+#      - uses: yukiarrr/ios-build-action@v1.4.0
+#        with:
+#          project-path: ios/App/App.xcodeproj
+#          p12-base64: ${{ secrets.P12_BASE64 }}
+#          mobileprovision-base64: ${{ secrets.MOBILEPROVISION_BASE64 }}
+#          code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
+#          team-id: ${{ secrets.TEAM_ID }}
+#          workspace-path: ios/App/App.xcworkspace
 
   release:
     name: Release App
