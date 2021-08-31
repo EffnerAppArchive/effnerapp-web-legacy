@@ -1,16 +1,17 @@
 <template>
-  <ion-card>
+  <ion-card class="ion-activatable ripple-parent">
     <ion-card-header>
       <ion-card-subtitle :color="color">{{ date }}</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
       {{ name }}
     </ion-card-content>
+    <ion-ripple-effect />
   </ion-card>
 </template>
 
 <script lang="ts">
-import {IonCard, IonCardHeader, IonCardSubtitle, IonCardContent} from "@ionic/vue";
+import {IonCard, IonCardHeader, IonCardSubtitle, IonCardContent, IonRippleEffect} from "@ionic/vue";
 import {defineComponent} from "vue";
 
 export default defineComponent({
@@ -21,7 +22,7 @@ export default defineComponent({
     color: String
   },
   components: {
-    IonCard, IonCardHeader, IonCardSubtitle, IonCardContent
+    IonCard, IonCardHeader, IonCardSubtitle, IonCardContent, IonRippleEffect
   }
 })
 </script>

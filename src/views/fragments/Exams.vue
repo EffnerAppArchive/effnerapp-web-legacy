@@ -82,12 +82,7 @@ export default defineComponent({
 #list {
   padding-top: 1vh;
 }
-/* Clear floats after the columns */
-.row:after {
-  content: '';
-  display: table;
-  clear: both;
-}
+
 #icon {
   font-size: 3.5vh;
   padding: 1vh;

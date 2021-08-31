@@ -11,7 +11,7 @@
 
         <ion-row>
           <ion-col>
-            <ion-card class="gradient_1" routerDirection="forward" @click="router.push({name: 'MVV'})">
+            <ion-card class="gradient_1 ion-activatable ripple-parent" routerDirection="forward" @click="router.push({name: 'MVV'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
                 <ion-icon :icon="busOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
                 <ion-label style="font-weight: bold; font-size: 1.3rem">MVV-Abfahrtszeiten</ion-label>
@@ -36,11 +36,11 @@
                 </ion-card>
               </ion-card-content>
             </ion-card>
+            <ion-ripple-effect></ion-ripple-effect>
           </ion-col>
 
-
           <ion-col>
-            <ion-card class="gradient_2">
+            <ion-card class="gradient_2 ion-activatable ripple-parent">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-icon :icon="fileTrayFullOutline" class="card_icon" style="margin-right: 0.75rem;"/>
                 <ion-label style="font-weight: bold; font-size: 1.3rem">News</ion-label>
@@ -48,49 +48,55 @@
 
               <ion-card-content>
                 <ion-list class="news_item">
-                  <ion-item>
+                  <ion-item class="ion-activatable ripple-parent">
                     <ion-icon :icon="documentOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
-                    <ion-label style="text-decoration: none" @click.prevent="openInBrowser(data.documents[0].uri)">
+                    <ion-label style="text-decoration: none" @click="openInBrowser(data.documents[0].uri)">
                       {{ data.documents[0].name }} <i class="fas fa-external-link-alt" style="padding-left: 0.25rem"/>
                     </ion-label>
+                    <ion-ripple-effect></ion-ripple-effect>
                   </ion-item>
-                  <ion-item>
+                  <ion-item class="ion-activatable ripple-parent">
                     <ion-icon :icon="schoolOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
                     <ion-label style="text-decoration: none" @click.prevent="router.push({name: 'Schulaufgaben'})">
                       {{ data.exams.exams[data.exams.exams.length - 1].name }}
                     </ion-label>
+                    <ion-ripple-effect></ion-ripple-effect>
                   </ion-item>
-                  <ion-item>
+                  <ion-item class="ion-activatable ripple-parent">
                     <ion-icon :icon="shuffle" class="card_icon"
                               style="margin-right: 0.75rem;"></ion-icon>
                     <ion-label style="text-decoration: none" @click.prevent="router.push({name: 'Vertretungen'})">
-                      {{ getSubstitutions.length }} Vertretungen heute
+                      {{ getSubstitutions?.length || 0 }} Vertretungen heute
                     </ion-label>
+                    <ion-ripple-effect></ion-ripple-effect>
                   </ion-item>
                 </ion-list>
               </ion-card-content>
+              <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
           </ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col>
-            <ion-card class="gradient_3"
+            <ion-card class="gradient_3 ion-activatable ripple-parent"
                       @click.prevent="openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-label style="font-weight: bold; font-size: 1.3rem">Speiseplan <i class="fas fa-external-link-alt"/>
                 </ion-label>
               </ion-item>
+              <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
-            <ion-card class="gradient_4">
+            <ion-card class="gradient_4 ion-activatable ripple-parent">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-label style="font-weight: bold; font-size: 1.3rem">Informationen</ion-label>
               </ion-item>
+              <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
           </ion-col>
 
           <ion-col>
-            <ion-card class="gradient_5">
+            <ion-card class="gradient_5 ion-activatable ripple-parent">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-label style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
               </ion-item>
@@ -98,6 +104,7 @@
               <ion-card-content>
                 <span style="color: white">Nächste Stunde</span>
               </ion-card-content>
+              <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
           </ion-col>
         </ion-row>
@@ -117,7 +124,7 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonPage,
+  IonPage, IonRippleEffect,
   IonRow
 } from '@ionic/vue';
 
@@ -152,7 +159,8 @@ export default defineComponent({
     IonIcon,
     IonItem,
     IonLabel,
-    IonList
+    IonList,
+    IonRippleEffect
   },
   setup() {
     const router = useRouter()

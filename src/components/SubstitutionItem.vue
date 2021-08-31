@@ -1,5 +1,5 @@
 <template>
-  <ion-card>
+  <ion-card class="ion-activatable ripple-parent">
     <div v-if="teacher === 'info'">
       <ion-card-header>
         <ion-card-title style="color: limegreen">Allgemeine Infos
@@ -24,12 +24,12 @@
         Info: {{ info }}
       </ion-card-content>
     </div>
-
+    <ion-ripple-effect></ion-ripple-effect>
   </ion-card>
 </template>
 
 <script lang="ts">
-import {IonCard, IonCardContent, IonCardHeader, IonCardTitle} from "@ionic/vue";
+import {IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonRippleEffect} from "@ionic/vue";
 import {defineComponent} from "vue";
 
 export default defineComponent({
@@ -42,7 +42,7 @@ export default defineComponent({
     info: String
   },
   components: {
-    IonCard, IonCardHeader, IonCardContent, IonCardTitle
+    IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonRippleEffect
   }
 })
 </script>
