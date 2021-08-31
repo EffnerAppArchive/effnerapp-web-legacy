@@ -91,6 +91,9 @@ jobs:
         with:
           name: IPA
           path: output.ipa
+          
+      - name: Upload IPA to App Store Connect
+        run: fastlane deliver --ipa "output.ipa"
 
   release:
     name: Release App
