@@ -93,7 +93,7 @@ jobs:
           path: output.ipa
           
       - name: Upload IPA to App Store Connect
-        run: fastlane deliver --ipa "output.ipa"
+        run: xcrun altool --upload-app -t ios -f "output.ipa" -u ${{ secrets.ASC_USER }} -p ${{ secrets.ASC_PASS }}
 
   release:
     name: Release App
