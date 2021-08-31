@@ -38,22 +38,50 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x android/gradlew
 
+      # build APK and app bundle
       - name: Build APK
         run: ./gradlew build -x test
         working-directory: ./android
 
-#       - name: Build bundle
-#         run: ./android/gradlew bundleRelease
+      - name: Build bundle
+        run: ./gradlew bundleRelease -x test
+        working-directory: ./android
+
+      # sign APK and aab
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign APK
+        id: sign_apk
+        with:
+          releaseDirectory: android/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "30.0.3"
+
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign app bundle
+        id: sign_bundle
+        with:
+          releaseDirectory: android/app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "30.0.3"
+
+      # upload artifacts
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Signed APK
+          path: ${{steps.sign_apk.outputs.signedReleaseFile}}
 
       - uses: actions/upload-artifact@v2
         with:
-          name: Unsigned APK
-          path: android/app/build/outputs/apk/release/app-release-unsigned.apk
-
-#       - uses: actions/upload-artifact@v2
-#         with:
-#           name: Unsigned app bundle
-#           path: android/app/build/outputs/bundle/release/app-release.aab
+          name: Signed app bundle
+          path: ${{steps.sign_bundle.outputs.signedReleaseFile}}
 
   build-ios:
     name: Build iOS app
@@ -91,7 +119,7 @@ jobs:
         with:
           name: IPA
           path: output.ipa
-          
+
       - name: Upload IPA to App Store Connect
         run: xcrun altool --upload-app -t ios -f "output.ipa" -u ${{ secrets.ASC_USER }} -p ${{ secrets.ASC_PASS }}
 
@@ -113,7 +141,11 @@ jobs:
 
       - uses: actions/download-artifact@v2
         with:
-          name: Unsigned APK
+          name: Signed APK
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: Signed app bundle
 
       - uses: actions/download-artifact@v2
         with:
@@ -147,7 +179,8 @@ jobs:
           prerelease: false
           automatic_release_tag: 'dev'
           files: |
-            app-release-unsigned.apk
+            app-release.apk
+            app-release.aab
             output.ipa
 #            ${{steps.sign_app.outputs.signedReleaseFile}}
 
