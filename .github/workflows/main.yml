@@ -78,7 +78,7 @@ jobs:
       - name: Build ionic web app
         run: ./scripts/build-ios.sh
 
-      - uses: sparkfabrik/ios-build-action@v1.0.0
+      - uses: sparkfabrik/ios-build-action@v1.1.0
         with:
           project-path: ios/App/App.xcodeproj
           p12-base64: ${{ secrets.P12_BASE64 }}
