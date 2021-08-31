@@ -246,7 +246,6 @@ export default defineComponent({
   background: linear-gradient(0deg, hsla(261, 60%, 28%, 1) 0%, hsla(354, 57%, 64%, 1) 100%);
 }
 
-
 .item_transparent {
   --ion-item-background: transparent;
 }

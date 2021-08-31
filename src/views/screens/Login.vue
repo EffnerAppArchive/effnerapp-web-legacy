@@ -9,7 +9,7 @@
       <div id="container">
         <ion-item style="margin-bottom: 1rem">
           <ion-label position="floating">ID</ion-label>
-          <ion-input v-model="id"></ion-input>
+          <ion-input v-model="id" type="number"></ion-input>
         </ion-item>
 
         <ion-item style="margin-bottom: 1rem">
@@ -34,17 +34,17 @@
 
 <script lang="ts">
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
+  IonButton,
   IonContent,
-  IonTitle,
-  IonLabel,
+  IonHeader,
   IonInput,
   IonItem,
-  IonButton,
+  IonLabel,
+  IonPage,
   IonSelect,
   IonSelectOption,
+  IonTitle,
+  IonToolbar,
   toastController
 } from '@ionic/vue';
 
