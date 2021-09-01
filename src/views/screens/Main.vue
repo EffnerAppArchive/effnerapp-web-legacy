@@ -43,23 +43,23 @@ import {
   IonTabs
 } from '@ionic/vue';
 import {homeOutline, listOutline, schoolOutline, settingsOutline} from 'ionicons/icons';
-import {sha512} from '@/tools/hash'
+import {sha512} from '@/tools/hash';
 import axios from 'axios';
-import {useStore} from "vuex";
-import {defineComponent} from "vue";
-import {useRouter} from "vue-router";
-import DSBMobile from "@/tools/dsbmobile";
+import {useStore} from 'vuex';
+import {defineComponent} from 'vue';
+import {useRouter} from 'vue-router';
+import DSBMobile from '@/tools/dsbmobile';
 
 export default defineComponent({
   name: 'Main',
   components: {IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage, IonRouterOutlet, IonRippleEffect},
   async setup() {
-    const store = useStore()
-    const router = useRouter()
+    const store = useStore();
+    const router = useRouter();
 
-    const credentials = store.getters.getCredentials
-    const sClass = store.getters.getClass
-    const time = Date.now()
+    const credentials = store.getters.getCredentials;
+    const sClass = store.getters.getClass;
+    const time = Date.now();
 
     try {
       const response = await axios.get('https://api.effner.app/data?class=' + sClass, {
@@ -67,31 +67,31 @@ export default defineComponent({
           'Authorization': 'Basic ' + sha512(credentials + ':' + time),
           'X-Time': time
         }
-      })
+      });
 
-      store.commit('setData', response.data.data)
+      store.commit('setData', response.data.data);
     } catch (e) {
-      store.commit('setError', e)
-      await router.push({name: 'Login'})
+      store.commit('setError', e);
+      await router.push({name: 'Login'});
     }
 
-    const creds = credentials.split(':')
-    const dsbmobile = new DSBMobile(creds[0], creds[1])
+    const creds = credentials.split(':');
+    const dsbmobile = new DSBMobile(creds[0], creds[1]);
 
     let timetable;
 
     try {
       timetable = await dsbmobile.getTimetable();
 
-      console.log("timetable: " + JSON.stringify(timetable));
+      console.log('timetable: ' + JSON.stringify(timetable));
       store.commit('setSubstitutions', timetable);
     } catch (e) {
       console.error(e);
     }
 
     return {
-      homeOutline, listOutline, schoolOutline, settingsOutline,
-    }
+      homeOutline, listOutline, schoolOutline, settingsOutline
+    };
   }
-})
+});
 </script>

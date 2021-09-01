@@ -25,7 +25,7 @@
 <script lang="ts">
 import {IonApp, IonRouterOutlet, isPlatform} from '@ionic/vue';
 import {defineComponent} from 'vue';
-import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from "@capacitor/push-notifications";
+import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
 
 export default defineComponent({
   name: 'App',
@@ -77,7 +77,7 @@ export default defineComponent({
           }
       );
     }
-  },
+  }
 });
 </script>
 

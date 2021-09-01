@@ -3,7 +3,7 @@
 import pako from 'pako';
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
-import {StringView} from './decode'
+import {StringView} from './decode';
 
 export function encode(o: any) {
     return btoa(pako.deflate(JSON.stringify(o), {

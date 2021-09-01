@@ -1,4 +1,4 @@
-import {createStore} from 'vuex'
+import {createStore} from 'vuex';
 
 export default createStore({
   state: {
@@ -12,60 +12,60 @@ export default createStore({
   },
   mutations: {
     setCredentials(state, to) {
-      state.credentials = to
+      state.credentials = to;
     },
     setSubstitutions(state, to) {
-      state.substitutions = to
+      state.substitutions = to;
     },
     setClass(state, to) {
-      state.class = to
+      state.class = to;
     },
     setRegistered(state, to) {
-      state.registered = to
+      state.registered = to;
     },
     setData(state, to) {
-      state.data = to
+      state.data = to;
     },
     setMVVState(state, to) {
-      state.mvvState = to
+      state.mvvState = to;
     },
     setError(state, to) {
-      state.error = to
+      state.error = to;
     },
     reset(state) {
-      state.credentials = null
-      state.registered = false
-      state.class = null
-      state.data = null
-      state.mvvState = null
-      state.error = null
+      state.credentials = null;
+      state.registered = false;
+      state.class = null;
+      state.data = null;
+      state.mvvState = null;
+      state.error = null;
     }
   },
   getters: {
     getCredentials(state) {
-      return state.credentials
+      return state.credentials;
     },
     getSubstitutions(state) {
-      return state.substitutions
+      return state.substitutions;
     },
     isRegistered(state) {
-      return state.registered
+      return state.registered;
     },
     getClass(state) {
-      return state.class
+      return state.class;
     },
     getData(state) {
-      return state.data
+      return state.data;
     },
     getMVVState(state) {
-      return state.mvvState
+      return state.mvvState;
     },
     getError(state) {
-      return state.error
+      return state.error;
     }
   },
   actions: {
   },
   modules: {
   }
-})
+});

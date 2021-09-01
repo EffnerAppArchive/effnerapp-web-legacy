@@ -51,13 +51,13 @@ import {
 import {defineComponent, ref} from 'vue';
 
 import axios from 'axios';
-import {sha512} from "@/tools/hash";
-import {saveCredentials} from "@/tools/storage";
-import {useRouter} from "vue-router";
-import {useStore} from "vuex";
+import {sha512} from '@/tools/hash';
+import {saveCredentials} from '@/tools/storage';
+import {useRouter} from 'vue-router';
+import {useStore} from 'vuex';
 
 export default defineComponent({
-  name: "Login",
+  name: 'Login',
   components: {
     IonPage,
     IonHeader,
@@ -72,27 +72,27 @@ export default defineComponent({
     IonSelectOption
   },
   async setup() {
-    const router = useRouter()
-    const store = useStore()
+    const router = useRouter();
+    const store = useStore();
 
     if(store.getters.isRegistered && !store.getters.getError) {
-      await router.push({path: '/main'})
+      await router.push({path: '/main'});
     }
 
     const id = ref('');
     const password = ref('');
     const sClass = ref('');
 
-    let classes = []
+    let classes = [];
     try {
-      classes = await axios.get('https://api.effner.app/data/classes').then(value => value.data)
+      classes = await axios.get('https://api.effner.app/data/classes').then(value => value.data);
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
 
     for (const c of ['11Q','12Q']) {
       for (let i = 1; i <= 6; i++) {
-        classes.push(c + i)
+        classes.push(c + i);
       }
     }
 
@@ -103,12 +103,12 @@ export default defineComponent({
       password,
       sClass,
       classes: classes as string[]
-    }
+    };
   },
   created() {
     if(this.store.getters.getError) {
-      this.openToast(this.store.getters.getError)
-      this.store.commit('setError', null)
+      this.openToast(this.store.getters.getError);
+      this.store.commit('setError', null);
     }
   },
   methods: {
@@ -118,10 +118,10 @@ export default defineComponent({
         return;
       }
 
-      const credentials = this.id + ':' + this.password
-      const sClass = this.sClass
+      const credentials = this.id + ':' + this.password;
+      const sClass = this.sClass;
 
-      const time = Date.now()
+      const time = Date.now();
 
       axios.post('https://api.effner.app/auth/login', {}, {
         headers: {
@@ -131,19 +131,19 @@ export default defineComponent({
       }).then((value) => {
         if (value.data.status.login) {
           saveCredentials(credentials, sClass).then(() => {
-            this.router.push({name: 'Home'})
-          })
+            this.router.push({name: 'Home'});
+          });
         } else {
-          this.openToast(value.status + ' ' + value.statusText)
+          this.openToast(value.status + ' ' + value.statusText);
         }
-      }).catch(reason => this.openToast(reason))
+      }).catch(reason => this.openToast(reason));
     },
     async openToast(message: string) {
       const toast = await toastController
           .create({
             message: message,
             duration: 2000
-          })
+          });
       return toast.present();
     },
     validateInput() {
@@ -152,10 +152,10 @@ export default defineComponent({
   },
   computed: {
     getClasses(): string[] {
-      return this.classes
+      return this.classes;
     }
   }
-})
+});
 </script>
 
 <style scoped>
