@@ -51,17 +51,17 @@ import {
   IonSearchbar,
   IonTitle,
   IonToolbar
-} from "@ionic/vue";
+} from '@ionic/vue';
 import {informationCircleOutline} from 'ionicons/icons';
-import DepartureItem from "@/components/DepartureItem.vue";
-import {fetchDepartures, findStop} from "@/tools/mvv";
+import DepartureItem from '@/components/DepartureItem.vue';
+import {fetchDepartures, findStop} from '@/tools/mvv';
 
 import {defineComponent, ref} from 'vue';
-import {useStore} from "vuex";
-import {saveMVVState} from "@/tools/storage";
+import {useStore} from 'vuex';
+import {saveMVVState} from '@/tools/storage';
 
 export default defineComponent({
-  name: "MVV",
+  name: 'MVV',
   components: {
     DepartureItem,
     IonIcon,
@@ -82,78 +82,78 @@ export default defineComponent({
       departures: [] as any[],
       stops: [] as any[],
       currentQuery: undefined as string | undefined
-    }
+    };
   },
   setup() {
-    const search = ref('')
+    const search = ref('');
 
     return {
       search
-    }
+    };
   },
   created() {
-    const store = useStore()
+    const store = useStore();
     if (store.getters.getMVVState) {
-      const state = store.getters.getMVVState
-      console.log(state)
-      this.selectStop(state)
+      const state = store.getters.getMVVState;
+      console.log(state);
+      this.selectStop(state);
     }
   },
   methods: {
     async queryStops(e: any) {
-      const query = e.detail.value
+      const query = e.detail.value;
 
       if (query.length >= 4 && !this.currentQuery) {
-        this.currentQuery = query
-        setTimeout(() => this.runQuery(), 1000)
+        this.currentQuery = query;
+        setTimeout(() => this.runQuery(), 1000);
       } else {
-        this.stops = []
+        this.stops = [];
       }
 
     },
     async runQuery() {
       if (!this.currentQuery) return;
-      const stops = await findStop(this.currentQuery)
-      this.currentQuery = undefined
+      const stops = await findStop(this.currentQuery);
+      this.currentQuery = undefined;
 
       this.stops = stops.map((item: { name: any; id: any }) => {
         return {
           name: item.name,
           id: item.id
-        }
-      })
+        };
+      });
     },
     async loadDepartures(id: string) {
-      const departures = await fetchDepartures(id)
+      const departures = await fetchDepartures(id);
 
       this.departures = departures.map((item: { line: { number: any }; direction: any; departureLive: any }) => {
         return {
           line: item.line.number,
           direction: item.direction,
           time: item.departureLive
-        }
-      })
+        };
+      });
     },
     selectStop(item: { name: string; id: string }) {
       if (item) {
-        this.stops = []
+        this.stops = [];
 
-        this.search = item.name
-        this.loadDepartures(item.id)
+        this.search = item.name;
+        this.loadDepartures(item.id);
 
-        saveMVVState(item)
+        saveMVVState(item);
       }
     }
   },
   computed: {
     getDepartures(): any[] {
-      return this.departures
+      return this.departures;
     },
     getStops(): any[] {
-      return this.stops.filter(value => value.name !== this.search)
+      return this.stops.filter(value => value.name !== this.search);
     }
   }
-})
+});
 </script>
 
 <style scoped>

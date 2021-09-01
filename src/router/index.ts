@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory} from '@ionic/vue-router';
 import {RouteRecordRaw} from 'vue-router';
-import store from '@/store'
+import store from '@/store';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -51,20 +51,20 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Login',
     component: () => import('@/views/screens/Login.vue')
   }
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
-})
+});
 
 router.beforeEach((to, from, next) => {
   if(to.matched.some(value => value.meta.requiresLogin)) {
     if(!store.getters.isRegistered) {
-      router.push({name: 'Login'})
+      router.push({name: 'Login'});
     }
   }
-  return next()
-})
+  return next();
+});
 
-export default router
+export default router;

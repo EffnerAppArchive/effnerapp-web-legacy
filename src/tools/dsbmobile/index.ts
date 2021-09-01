@@ -1,5 +1,5 @@
-import {Http} from "@capacitor-community/http";
-import {decode, encode} from './helpers'
+import {Http} from '@capacitor-community/http';
+import {decode, encode} from './helpers';
 
 export default class DSBMobile {
     private readonly username: string;
@@ -14,7 +14,7 @@ export default class DSBMobile {
         const meta = await this.fetchMetaData();
 
         if (!meta) {
-            throw new Error('Could not fetch timetable meta data.')
+            throw new Error('Could not fetch timetable meta data.');
         }
 
         const {Detail: url, Date: time} = meta['ResultMenuItems'][0]['Childs'][0]['Root']['Childs'][0]['Childs'][0];
@@ -57,13 +57,13 @@ export default class DSBMobile {
             });
 
             if (response.data.d) {
-                return decode(response.data.d)
+                return decode(response.data.d);
             } else {
-                return null
+                return null;
             }
 
         } catch (e) {
-            console.error(e)
+            console.error(e);
             return null;
         }
     }
@@ -75,22 +75,22 @@ export default class DSBMobile {
                 url
             });
 
-            const {data} = response
+            const {data} = response;
 
             const parser = new DOMParser();
             const document = parser.parseFromString(data, 'text/html');
 
-            const documents = this.splitDocuments(document)
+            const documents = this.splitDocuments(document);
 
-            const dates: string[] = []
+            const dates: string[] = [];
             const days = new Map<string, ClassEntry[]>();
-            const information = new Map()
-            let absentClasses: AbsentClass[] = []
+            const information = new Map();
+            let absentClasses: AbsentClass[] = [];
 
             documents.forEach(document => {
-                const date = document.querySelector('a')?.getAttribute('name') as string
+                const date = document.querySelector('a')?.getAttribute('name') as string;
                 if (date) {
-                    dates.push(date)
+                    dates.push(date);
                 }
 
                 document.querySelectorAll('table').forEach(table => {
@@ -106,7 +106,7 @@ export default class DSBMobile {
                                     date: date,
                                     class: tr.querySelector('th')?.innerText.trim(),
                                     period: tr.querySelector('td')?.innerText.trim()
-                                }
+                                };
                             }));
                             break;
                         case 'k':
@@ -119,14 +119,14 @@ export default class DSBMobile {
                                         period: td.item(1).innerText.trim(),
                                         subTeacher: td.item(2).innerText.trim(),
                                         room: td.item(3).innerText.trim(),
-                                        info: td.item(4).innerText.trim(),
+                                        info: td.item(4).innerText.trim()
                                     };
                                 });
 
                                 return {
                                     name: tbody.querySelector('th')?.innerText.trim(),
                                     items
-                                }
+                                };
                             }));
                             break;
 
@@ -137,8 +137,8 @@ export default class DSBMobile {
                         //     })
                         //     break;
                     }
-                })
-            })
+                });
+            });
 
             // console.log(`dates: ${JSON.stringify(dates)}`)
             // console.log(`information: ${JSON.stringify(Array.from(information))}`)
@@ -150,7 +150,7 @@ export default class DSBMobile {
                 days,
                 information,
                 absentClasses
-            }
+            };
 
         } catch (e) {
             return Promise.reject(e);

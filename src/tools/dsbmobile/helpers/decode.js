@@ -623,7 +623,7 @@ StringView.prototype.makeIndex = function (nChrLength, nStartFrom) {
 
     if (nChrLength + 1 > aTarget.length) {
         throw new RangeError(
-            "StringView.prototype.makeIndex - The offset can't be major than the length of the array - 1."
+            'StringView.prototype.makeIndex - The offset can\'t be major than the length of the array - 1.'
         );
     }
 

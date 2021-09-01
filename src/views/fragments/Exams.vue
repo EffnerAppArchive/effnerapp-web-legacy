@@ -35,47 +35,47 @@
 
 <script lang="ts">
 import {IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonItem} from '@ionic/vue';
-import {useStore} from "vuex";
+import {useStore} from 'vuex';
 import {informationCircleOutline} from 'ionicons/icons';
-import TermItem from "@/components/TermItem.vue";
-import moment from "moment";
-import {defineComponent} from "vue";
+import TermItem from '@/components/TermItem.vue';
+import moment from 'moment';
+import {defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'Exams',
   components: {TermItem, IonIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonItem},
   created() {
-    const store = useStore()
+    const store = useStore();
 
-    const data = store.getters.getData
+    const data = store.getters.getData;
 
-    const exams: Exam[] = []
+    const exams: Exam[] = [];
 
     data.exams.exams.forEach((exam: Exam) => {
       exams.push({
         name: exam.name,
         date: exam.date,
-        color: moment(exam.date, "DD.MM.YYYY") < moment() ? "danger" : "success"
-      })
-    })
+        color: moment(exam.date, 'DD.MM.YYYY') < moment() ? 'danger' : 'success'
+      });
+    });
 
-    this.exams = exams
+    this.exams = exams;
 
   },
   data() {
     return {
       exams: [] as Exam[],
       informationCircleOutline
-    }
+    };
   },
   computed: {
     sortedExams(): Exam[] {
       return this.exams.slice().sort((a: Exam, b: Exam) => {
-        return moment(b.date, "DD.MM.YYYY").unix() - moment(a.date, "DD.MM.YYYY").unix();
-      })
+        return moment(b.date, 'DD.MM.YYYY').unix() - moment(a.date, 'DD.MM.YYYY').unix();
+      });
     }
   }
-})
+});
 </script>
 
 <style scoped>

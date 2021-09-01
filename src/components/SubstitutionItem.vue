@@ -29,8 +29,8 @@
 </template>
 
 <script lang="ts">
-import {IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonRippleEffect} from "@ionic/vue";
-import {defineComponent} from "vue";
+import {IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonRippleEffect} from '@ionic/vue';
+import {defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'SubstitutionItem',
@@ -44,5 +44,5 @@ export default defineComponent({
   components: {
     IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonRippleEffect
   }
-})
+});
 </script>

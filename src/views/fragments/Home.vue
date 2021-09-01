@@ -56,7 +56,7 @@
                     </ion-label>
                     <ion-ripple-effect></ion-ripple-effect>
                   </ion-item>
-                  
+
                   <ion-item class="ion-activatable ripple-parent">
                     <ion-icon :icon="schoolOutline" class="card_icon" color="black"
                               style="margin-right: 0.75rem;"></ion-icon>
@@ -65,7 +65,7 @@
                     </ion-label>
                     <ion-ripple-effect></ion-ripple-effect>
                   </ion-item>
-                  
+
                   <ion-item class="ion-activatable ripple-parent">
                     <ion-icon :icon="shuffle" class="card_icon"
                               color="black" style="margin-right: 0.75rem;"></ion-icon>
@@ -133,8 +133,8 @@ import {
   IonRow
 } from '@ionic/vue';
 
-import {defineComponent} from "vue";
-import {useStore} from "vuex";
+import {defineComponent} from 'vue';
+import {useStore} from 'vuex';
 
 import {
   busOutline,
@@ -144,11 +144,11 @@ import {
   restaurantOutline,
   schoolOutline,
   shuffle
-} from 'ionicons/icons'
-import DepartureItem from "@/components/DepartureItem.vue";
-import {useRouter} from "vue-router";
-import {fetchDepartures} from "@/tools/mvv";
-import {Browser} from "@capacitor/browser";
+} from 'ionicons/icons';
+import DepartureItem from '@/components/DepartureItem.vue';
+import {useRouter} from 'vue-router';
+import {fetchDepartures} from '@/tools/mvv';
+import {Browser} from '@capacitor/browser';
 
 export default defineComponent({
   name: 'Home',
@@ -168,11 +168,11 @@ export default defineComponent({
     IonRippleEffect
   },
   setup() {
-    const router = useRouter()
-    const store = useStore()
+    const router = useRouter();
+    const store = useStore();
 
-    const substitutions = store.getters.getSubstitutions
-    console.log(substitutions)
+    const substitutions = store.getters.getSubstitutions;
+    console.log(substitutions);
 
     return {
       busOutline,
@@ -187,17 +187,17 @@ export default defineComponent({
       store,
 
       substitutions
-    }
+    };
   },
   created() {
-    const data = this.store.getters.getData
+    const data = this.store.getters.getData;
 
-    this.data = data
+    this.data = data;
 
-    console.log(data)
+    console.log(data);
 
     if (this.store.getters.getMVVState) {
-      this.loadDeparture(this.store.getters.getMVVState.id)
+      this.loadDeparture(this.store.getters.getMVVState.id);
     }
   },
   data() {
@@ -206,36 +206,36 @@ export default defineComponent({
         motd: ''
       },
       nextDeparture: undefined
-    }
+    };
   },
   methods: {
     async loadDeparture(id: string) {
-      const departures = await fetchDepartures(id)
+      const departures = await fetchDepartures(id);
 
       this.nextDeparture = departures.map((item: any) => {
         return {
           line: item.line.number,
           direction: item.direction,
           time: item.departureLive
-        }
-      })[0]
+        };
+      })[0];
 
-      console.log(this.nextDeparture)
+      console.log(this.nextDeparture);
     },
     async openInBrowser(uri: string) {
-      await Browser.open({url: uri})
+      await Browser.open({url: uri});
     }
   },
   computed: {
     motd(): string {
-      return this.data.motd
+      return this.data.motd;
     },
     getSubstitutions(): Array<Substitution> {
       const date = this.substitutions.items?.dates[0];
       return this.substitutions.items?.days?.get(date)?.find((entry: any) => entry.name === this.store.getters.getClass)?.items;
     }
   }
-})
+});
 </script>
 
 <style scoped>

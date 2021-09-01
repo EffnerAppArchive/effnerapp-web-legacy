@@ -49,9 +49,9 @@ import {
   IonTitle,
   IonToolbar
 } from '@ionic/vue';
-import {defineComponent, ref} from "vue";
-import {useStore} from "vuex";
-import SubstitutionItem from "@/components/SubstitutionItem.vue";
+import {defineComponent, ref} from 'vue';
+import {useStore} from 'vuex';
+import SubstitutionItem from '@/components/SubstitutionItem.vue';
 
 export default defineComponent({
   name: 'Substitutions',
@@ -85,34 +85,34 @@ export default defineComponent({
       timetable: timetable as TimetableResponse,
       select,
       store
-    }
+    };
   },
   created() {
     // improve this ugly shit
     if (this.timetable) {
-      this.selectDate(this.timetable.items?.dates[0] as string)
+      this.selectDate(this.timetable.items?.dates[0] as string);
     }
   },
   data() {
     return {
       substitutions: [] as Substitution[],
       information: undefined as string | undefined
-    }
+    };
   },
   methods: {
     selectDate(date: string) {
-      const days = this.timetable?.items?.days
+      const days = this.timetable?.items?.days;
 
-      const substitutions = days?.get(date)?.find(entry => entry.name === this.store.getters.getClass)?.items
+      const substitutions = days?.get(date)?.find(entry => entry.name === this.store.getters.getClass)?.items;
 
-      console.log(substitutions)
-      this.substitutions = substitutions as Substitution[]
+      console.log(substitutions);
+      this.substitutions = substitutions as Substitution[];
       this.information = this.timetable?.items?.information?.get(date);
     }
   },
   computed: {
     getSubstitutions(): Substitution[] {
-      return this.substitutions
+      return this.substitutions;
     },
     getInformation(): string | undefined {
       return this.information;
@@ -121,7 +121,7 @@ export default defineComponent({
     //   return (isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb')
     // }
   }
-})
+});
 </script>
 
 <style scoped>

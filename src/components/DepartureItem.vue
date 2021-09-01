@@ -18,11 +18,11 @@
   </ion-grid>
 </template>
 <script lang="ts">
-import {IonBadge, IonCol, IonGrid, IonLabel, IonRow,} from "@ionic/vue";
-import {defineComponent} from "vue";
+import {IonBadge, IonCol, IonGrid, IonLabel, IonRow} from '@ionic/vue';
+import {defineComponent} from 'vue';
 
 export default defineComponent({
-  name: "DepartureItem",
+  name: 'DepartureItem',
   props: {
     line: String,
     direction: String,
@@ -46,9 +46,9 @@ export default defineComponent({
 
     return {
       color
-    }
+    };
   }
-})
+});
 </script>
 
 <style scoped>

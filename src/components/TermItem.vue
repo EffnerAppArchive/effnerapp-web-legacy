@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts">
-import {IonCard, IonCardHeader, IonCardSubtitle, IonCardContent, IonRippleEffect} from "@ionic/vue";
-import {defineComponent} from "vue";
+import {IonCard, IonCardHeader, IonCardSubtitle, IonCardContent, IonRippleEffect} from '@ionic/vue';
+import {defineComponent} from 'vue';
 
 export default defineComponent({
   name: 'TermItem',
@@ -24,7 +24,7 @@ export default defineComponent({
   components: {
     IonCard, IonCardHeader, IonCardSubtitle, IonCardContent, IonRippleEffect
   }
-})
+});
 </script>
 
 <style scoped>

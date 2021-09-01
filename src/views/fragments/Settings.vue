@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent} from 'vue';
 import {
   IonHeader,
   IonPage,
@@ -80,31 +80,31 @@ import {
   IonToggle,
   alertController, isPlatform
 } from '@ionic/vue';
-import {Storage} from "@capacitor/storage";
-import {useRouter} from "vue-router";
-import {useStore} from "vuex";
-import {Browser} from "@capacitor/browser";
+import {Storage} from '@capacitor/storage';
+import {useRouter} from 'vue-router';
+import {useStore} from 'vuex';
+import {Browser} from '@capacitor/browser';
 
 export default defineComponent({
-  name: "Settings",
+  name: 'Settings',
   components: {IonPage, IonHeader, IonToolbar, IonTitle, IonItem, IonList, IonContent, IonLabel, IonListHeader, IonRippleEffect, IonNote, IonToggle},
   setup() {
-    const router = useRouter()
-    const store = useStore()
+    const router = useRouter();
+    const store = useStore();
 
     return {
       router,
       store
-    }
+    };
   },
   methods: {
     async logout() {
-      await Storage.clear()
-      this.store.commit('reset')
-      await this.router.push({name: 'Login'})
+      await Storage.clear();
+      this.store.commit('reset');
+      await this.router.push({name: 'Login'});
     },
     async openInBrowser(uri: string) {
-      await Browser.open({url: uri})
+      await Browser.open({url: uri});
     },
     async confirmLogout() {
       const alert = await alertController
@@ -120,9 +120,9 @@ export default defineComponent({
                 text: 'Ja',
                 handler: () => {
                   this.logout();
-                },
-              },
-            ],
+                }
+              }
+            ]
           });
       return alert.present();
     },
@@ -148,16 +148,16 @@ export default defineComponent({
               {
                 text: 'App bewerten',
                 handler: () => {
-                  this.openInBrowser(this.getStoreUrl())
-                },
+                  this.openInBrowser(this.getStoreUrl());
+                }
               },
               {
                 text: 'E-Mail senden',
                 handler: () => {
-                  this.openInBrowser('mailto:info@effner.app')
-                },
+                  this.openInBrowser('mailto:info@effner.app');
+                }
               }
-            ],
+            ]
           });
       return alert.present();
     },
