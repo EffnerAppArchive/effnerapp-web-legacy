@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.14.5",
-    "@capacitor/cli": "3.1.0",
+    "@capacitor/cli": "3.2.2",
     "@types/jest": "^24.0.19",
     "@types/moment": "^2.13.0",
     "@types/node": "^16.0.1",
