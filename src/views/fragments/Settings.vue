@@ -51,7 +51,7 @@
         </ion-list-header>
         <ion-item class="ion-activatable ripple-parent">
           <ion-label>Deine Klasse</ion-label>
-          <ion-note>{{ this.$store.getters.getClass }}</ion-note>
+          <ion-note>{{ $store.getters.getClass }}</ion-note>
           <ion-ripple-effect />
         </ion-item>
         <ion-item class="ion-activatable ripple-parent" @click="confirmLogout">
@@ -66,19 +66,20 @@
 <script lang="ts">
 import {defineComponent} from 'vue';
 import {
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonItem,
-  IonList,
+  alertController,
   IonContent,
+  IonHeader,
+  IonItem,
   IonLabel,
+  IonList,
   IonListHeader,
-  IonRippleEffect,
   IonNote,
+  IonPage,
+  IonRippleEffect,
+  IonTitle,
   IonToggle,
-  alertController, isPlatform
+  IonToolbar,
+  isPlatform
 } from '@ionic/vue';
 import {Storage} from '@capacitor/storage';
 import {useRouter} from 'vue-router';

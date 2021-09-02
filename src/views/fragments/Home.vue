@@ -129,7 +129,8 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonPage, IonRippleEffect,
+  IonPage,
+  IonRippleEffect,
   IonRow
 } from '@ionic/vue';
 
@@ -231,8 +232,8 @@ export default defineComponent({
       return this.data.motd;
     },
     getSubstitutions(): Array<Substitution> {
-      const date = this.substitutions.items?.dates[0];
-      return this.substitutions.items?.days?.get(date)?.find((entry: any) => entry.name === this.store.getters.getClass)?.items;
+      const date = this.substitutions?.items?.dates[0];
+      return this.substitutions?.items?.days?.get(date)?.find((entry: any) => entry.name === this.store.getters.getClass)?.items;
     }
   }
 });
