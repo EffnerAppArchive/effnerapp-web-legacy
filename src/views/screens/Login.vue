@@ -52,9 +52,10 @@ import {defineComponent, ref} from 'vue';
 
 import axios from 'axios';
 import {sha512} from '@/tools/hash';
-import {saveCredentials} from '@/tools/storage';
+import {saveCredentials, saveNotificationsState} from '@/tools/storage';
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
+import {FCM} from '@capacitor-community/fcm';
 
 export default defineComponent({
   name: 'Login',
@@ -75,7 +76,7 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
 
-    if(store.getters.isRegistered && !store.getters.getError) {
+    if (store.getters.isRegistered && !store.getters.getError) {
       await router.push({path: '/main'});
     }
 
@@ -90,7 +91,7 @@ export default defineComponent({
       console.error(e);
     }
 
-    for (const c of ['11Q','12Q']) {
+    for (const c of ['11Q', '12Q']) {
       for (let i = 1; i <= 6; i++) {
         classes.push(c + i);
       }
@@ -106,7 +107,7 @@ export default defineComponent({
     };
   },
   created() {
-    if(this.store.getters.getError) {
+    if (this.store.getters.getError) {
       this.openToast(this.store.getters.getError);
       this.store.commit('setError', null);
     }
@@ -130,9 +131,16 @@ export default defineComponent({
         }
       }).then((value) => {
         if (value.data.status.login) {
-          saveCredentials(credentials, sClass).then(() => {
-            this.router.push({name: 'Home'});
-          });
+          (async () => {
+            await saveCredentials(credentials, sClass);
+
+            // subscribe to FCM channels
+            await FCM.subscribeTo({topic: 'APP_GENERAL_NOTIFICATIONS'});
+            await FCM.subscribeTo({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+            await saveNotificationsState(true);
+
+            await this.router.push({name: 'Home'});
+          })();
         } else {
           this.openToast(value.status + ' ' + value.statusText);
         }

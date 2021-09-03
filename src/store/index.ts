@@ -8,7 +8,8 @@ export default createStore({
     class: null,
     data: null,
     mvvState: null,
-    error: null
+    error: null,
+    notificationsEnabled: false
   },
   mutations: {
     setCredentials(state, to) {
@@ -31,6 +32,9 @@ export default createStore({
     },
     setError(state, to) {
       state.error = to;
+    },
+    setNotificationsEnabled(state, to) {
+      state.notificationsEnabled = to;
     },
     reset(state) {
       state.credentials = null;
@@ -62,6 +66,9 @@ export default createStore({
     },
     getError(state) {
       return state.error;
+    },
+    getNotificationsEnabled(state) {
+      return state.notificationsEnabled;
     }
   },
   actions: {

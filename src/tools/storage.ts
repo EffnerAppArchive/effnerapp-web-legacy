@@ -5,6 +5,7 @@ export async function loadStorage() {
     const credentials = await Storage.get({key: 'APP_CREDENTIALS'});
     const sClass = await Storage.get({key: 'APP_USER_CLASS'});
     const mvvState = await Storage.get({key: 'APP_MVV_STATE'});
+    const notificationsEnabled = await Storage.get({key: 'APP_NOTIFICATIONS'});
 
     if(credentials && credentials.value) {
         store.commit('setCredentials', credentials.value);
@@ -18,6 +19,10 @@ export async function loadStorage() {
     if(mvvState && mvvState.value) {
         store.commit('setMVVState', JSON.parse(mvvState.value));
     }
+
+    if(notificationsEnabled.value === 'true') {
+        store.commit('setNotificationsEnabled', true);
+    }
 }
 
 export async function saveCredentials(credentials: string, sClass: string) {
@@ -29,7 +34,17 @@ export async function saveCredentials(credentials: string, sClass: string) {
     await Storage.set({key: 'APP_USER_CLASS', value: sClass});
 }
 
+export async function saveNotificationsState(enabled: boolean) {
+    store.commit('setNotificationsEnabled', enabled);
+    await Storage.set({key: 'APP_NOTIFICATIONS', value: String(enabled)});
+}
+
 export async function saveMVVState(state: {id: string; name: string}) {
     store.commit('setMVVState', state);
     await Storage.set({key: 'APP_MVV_STATE', value: JSON.stringify(state)});
+}
+
+export async function reset() {
+    store.commit('reset');
+    await Storage.clear();
 }

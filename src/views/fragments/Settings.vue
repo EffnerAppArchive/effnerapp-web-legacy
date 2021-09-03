@@ -12,7 +12,7 @@
         </ion-list-header>
         <ion-item>
           <ion-label>Benachrichtigungen</ion-label>
-          <ion-toggle slot="end"></ion-toggle>
+          <ion-toggle slot="end" :checked="notificationEnabled" @ionChange="toggleNotifications($event.target.value)"></ion-toggle>
         </ion-item>
         <ion-list-header>
           <ion-label>Verschiedenes</ion-label>
@@ -81,10 +81,12 @@ import {
   IonToolbar,
   isPlatform
 } from '@ionic/vue';
-import {Storage} from '@capacitor/storage';
+
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
 import {Browser} from '@capacitor/browser';
+import {reset, saveNotificationsState} from '@/tools/storage';
+import {FCM} from '@capacitor-community/fcm';
 
 export default defineComponent({
   name: 'Settings',
@@ -93,16 +95,42 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
 
+    const notificationEnabled = store.getters.getNotificationsEnabled;
+
     return {
       router,
-      store
+      store,
+      notificationEnabled
     };
   },
   methods: {
     async logout() {
-      await Storage.clear();
-      this.store.commit('reset');
+      const sClass = this.store.getters.getClass;
+
+      // unsubscribe from FCM channels
+      await FCM.unsubscribeFrom({topic: 'APP_GENERAL_NOTIFICATIONS'});
+      await FCM.unsubscribeFrom({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+
+      // reset storage
+      await reset();
+
+      // redirect to login page
       await this.router.push({name: 'Login'});
+    },
+    async toggleNotifications(enable: boolean) {
+      const sClass = this.store.getters.getClass;
+
+      if(enable) {
+        // subscribe to FCM channels
+        await FCM.subscribeTo({topic: 'APP_GENERAL_NOTIFICATIONS'});
+        await FCM.subscribeTo({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+      } else {
+        // unsubscribe from FCM channels
+        await FCM.unsubscribeFrom({topic: 'APP_GENERAL_NOTIFICATIONS'});
+        await FCM.unsubscribeFrom({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+      }
+
+      await saveNotificationsState(enable);
     },
     async openInBrowser(uri: string) {
       await Browser.open({url: uri});
