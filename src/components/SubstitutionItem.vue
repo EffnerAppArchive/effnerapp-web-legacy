@@ -13,7 +13,7 @@
     <div v-else>
       <ion-card-header>
         <ion-card-title>{{ period }}.
-          Stunde {{ (info === 'entfällt' ? 'entfällt' : 'vertreten durch ' + subTeacher) }}
+          Stunde {{ (info === 'entfällt' ? 'entfällt' : 'vertreten durch ' + subTeacher) + ' (' + fullClass + ')' }}
         </ion-card-title>
       </ion-card-header>
       <ion-card-content style="margin-left: 1rem">
@@ -21,7 +21,7 @@
         <br>
         Raum: {{ room }}
         <br>
-        Info: {{ info }}
+        {{ info ? 'Info: ' + info : '' }}
       </ion-card-content>
     </div>
     <ion-ripple-effect></ion-ripple-effect>
@@ -39,7 +39,8 @@ export default defineComponent({
     period: String,
     subTeacher: String,
     room: String,
-    info: String
+    info: String,
+    fullClass: String
   },
   components: {
     IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonRippleEffect

@@ -24,7 +24,8 @@
               :period="item.period"
               :room="item.room"
               :sub-teacher="item.subTeacher"
-              :teacher="item.teacher"/>
+              :teacher="item.teacher"
+              :full-class="item.fullClass" />
           <substitution-item
               key="info"
               :info="getInformation"
@@ -103,12 +104,34 @@ export default defineComponent({
     selectDate(date: string) {
       const days = this.timetable?.items?.days;
 
-      const substitutions = days?.get(date)?.find(entry => entry.name === this.store.getters.getClass)?.items;
+      const substitutions = days?.get(date)?.filter(entry => this.matchesClass(entry.name as string))?.map(e => e.items);
 
-      console.log(substitutions);
-      this.substitutions = substitutions as Substitution[];
+      let tmp = [] as any[];
+      if(substitutions) {
+        for (let i = 0; i < substitutions.length; i++) {
+          if (substitutions[i]) {
+            tmp = tmp.concat(substitutions[i]);
+          }
+        }
+      }
+
+      console.log(tmp);
+      this.substitutions = tmp as Substitution[];
       this.information = this.timetable?.items?.information?.get(date);
+    },
+    matchesClass(sClass: string): boolean {
+      const myClass = this.store.getters.getClass;
+      if (myClass.startsWith('11') && sClass === '11Q') {
+        return true;
+      }
+
+      if (myClass.startsWith('12') && sClass === '12Q') {
+        return true;
+      }
+
+      return myClass === sClass;
     }
+
   },
   computed: {
     getSubstitutions(): Substitution[] {
