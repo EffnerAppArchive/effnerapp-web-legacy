@@ -9,7 +9,5 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    ignore:
-      - dependency-name: "pako"
     labels:
       - "dependencies"

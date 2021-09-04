@@ -1,13 +1,34 @@
 import {Http} from '@capacitor-community/http';
-import {decode, encode} from './helpers';
 
 export default class DSBMobile {
+    private static readonly BASE_URL = 'https://mobileapi.dsbcontrol.de';
+    private static readonly BUNDLE_ID = 'de.heinekingmedia.dsbmobile';
+    private static readonly APP_VERSION = '36';
+    private static readonly OS_VERSION = '30';
+
     private readonly username: string;
     private readonly password: string;
+
+    private token: string | undefined;
 
     constructor(username: string, password: string) {
         this.username = username;
         this.password = password;
+    }
+
+    async login(): Promise<void> {
+        const url = `${DSBMobile.BASE_URL}/authid?bundleid=${DSBMobile.BUNDLE_ID}&appversion=${DSBMobile.APP_VERSION}&osversion=${DSBMobile.OS_VERSION}&pushid&user=${this.username}&password=${this.password}`;
+
+        const token = await Http.request({
+            method: 'GET',
+            url
+        }).then(response => response.data.replaceAll('"', ''));
+
+        if (!token) {
+            throw new Error('Error while authenticating with dsbmobile');
+        }
+
+        this.token = token;
     }
 
     async getTimetable(): Promise<TimetableResponse> {
@@ -17,7 +38,9 @@ export default class DSBMobile {
             throw new Error('Could not fetch timetable meta data.');
         }
 
-        const {Detail: url, Date: time} = meta['ResultMenuItems'][0]['Childs'][0]['Root']['Childs'][0]['Childs'][0];
+        console.log(meta);
+
+        const {Detail: url, Date: time} = meta[0]['Childs'][0];
 
         return {
             url,
@@ -27,45 +50,17 @@ export default class DSBMobile {
     }
 
     async fetchMetaData() {
-        try {
-            const response = await Http.request({
-                method: 'POST',
-                url: 'https://app.dsbcontrol.de/JsonHandler.ashx/GetData',
-                data: {
-                    req: {
-                        Data: encode({
-                            PushId: '',
-                            UserId: this.username,
-                            UserPw: this.password,
-                            Device: 'Nexus 4',
-                            AppVersion: '2.5.9',
-                            Language: 'en-DE',
-                            Date: new Date(),
-                            BundleId: 'de.heinekingmedia.dsbmobile',
-                            OsVersion: '27 8.1.0',
-                            LastUpdate: new Date(),
-                            AppId: this.uuidv4()
-                        }),
-                        DataType: 1
-                    }
-                },
-                headers: {
-                    'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 8.1.0; Nexus 4 Build/OPM7.181205.001)',
-                    'Accept-Encoding': 'gzip, deflate',
-                    'Content-Type': 'application/json;charset=utf-8'
-                }
-            });
+        const json = await Http.request({
+            method: 'GET',
+            url: `${DSBMobile.BASE_URL}/dsbtimetables?authid=${this.token}`
+        }).then(response => response.data);
 
-            if (response.data.d) {
-                return decode(response.data.d);
-            } else {
-                return null;
-            }
-
-        } catch (e) {
-            console.error(e);
-            return null;
+        if (json['Message']) {
+            throw new Error('dsbError: ' + json['Message']);
         }
+
+        return json;
+
     }
 
     async parseTimetable(url: string): Promise<Substitutions> {
@@ -111,6 +106,8 @@ export default class DSBMobile {
                             break;
                         case 'k':
                             days.set(date, Array.from(table.querySelectorAll('tbody')).filter(tbody => !tbody.innerText.trim().startsWith('Klasse')).map(tbody => {
+                                const className = tbody.querySelector('th')?.innerText.trim() as string;
+
                                 const items = Array.from(tbody.querySelectorAll('tr')).map(tr => {
                                     const td = tr.querySelectorAll('td');
 
@@ -119,12 +116,13 @@ export default class DSBMobile {
                                         period: td.item(1).innerText.trim(),
                                         subTeacher: td.item(2).innerText.trim(),
                                         room: td.item(3).innerText.trim(),
-                                        info: td.item(4).innerText.trim()
+                                        info: td.item(4).innerText.trim(),
+                                        fullClass: className
                                     };
                                 });
 
                                 return {
-                                    name: tbody.querySelector('th')?.innerText.trim(),
+                                    name: className,
                                     items
                                 };
                             }));
@@ -139,11 +137,6 @@ export default class DSBMobile {
                     }
                 });
             });
-
-            // console.log(`dates: ${JSON.stringify(dates)}`)
-            // console.log(`information: ${JSON.stringify(Array.from(information))}`)
-            // console.log(`absentClasses: ${JSON.stringify(absentClasses)}`)
-            // console.log(`days: ${JSON.stringify(Array.from(days))}`)
 
             return {
                 dates,
@@ -180,12 +173,5 @@ export default class DSBMobile {
         }
 
         return documents;
-    }
-
-    private uuidv4() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
     }
 }

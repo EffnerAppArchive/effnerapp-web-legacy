@@ -81,6 +81,7 @@ export default defineComponent({
     let timetable;
 
     try {
+      await dsbmobile.login();
       timetable = await dsbmobile.getTimetable();
 
       console.log('timetable: ' + JSON.stringify(timetable));

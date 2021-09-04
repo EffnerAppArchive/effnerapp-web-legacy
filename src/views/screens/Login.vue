@@ -44,7 +44,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonTitle,
-  IonToolbar,
+  IonToolbar, isPlatform,
   toastController
 } from '@ionic/vue';
 
@@ -134,10 +134,12 @@ export default defineComponent({
           (async () => {
             await saveCredentials(credentials, sClass);
 
-            // subscribe to FCM channels
-            await FCM.subscribeTo({topic: 'APP_GENERAL_NOTIFICATIONS'});
-            await FCM.subscribeTo({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
-            await saveNotificationsState(true);
+            if ((isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb')) {
+              // subscribe to FCM channels
+              await FCM.subscribeTo({topic: 'APP_GENERAL_NOTIFICATIONS'});
+              await FCM.subscribeTo({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+              await saveNotificationsState(true);
+            }
 
             await this.router.push({name: 'Home'});
           })();

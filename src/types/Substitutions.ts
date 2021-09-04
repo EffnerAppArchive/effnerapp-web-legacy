@@ -22,6 +22,7 @@ type Substitution = {
     subTeacher: string;
     room: string;
     info: string;
+    fullClass: string;
 }
 
 type AbsentClass = {
