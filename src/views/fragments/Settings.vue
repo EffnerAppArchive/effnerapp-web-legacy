@@ -12,14 +12,14 @@
         </ion-list-header>
         <ion-item>
           <ion-label>Benachrichtigungen</ion-label>
-          <ion-toggle slot="end" :checked="notificationEnabled" @ionChange="toggleNotifications($event.target.value)"></ion-toggle>
+          <ion-toggle slot="end" :checked="notificationEnabled" @ionChange="toggleNotifications"></ion-toggle>
         </ion-item>
         <ion-list-header>
           <ion-label>Verschiedenes</ion-label>
         </ion-list-header>
-        <ion-item class="ion-activatable ripple-parent" @click="toggleNightTheme">
+        <ion-item class="ion-activatable ripple-parent">
           <ion-label>Night-Theme</ion-label>
-          <ion-toggle slot="end"></ion-toggle>
+          <ion-toggle slot="end" :checked="nightModeEnabled" @ionChange="toggleNightTheme"></ion-toggle>
         </ion-item>
         <ion-list-header>
           <ion-label>Über EffnerApp</ion-label>
@@ -96,11 +96,13 @@ export default defineComponent({
     const store = useStore();
 
     const notificationEnabled = store.getters.getNotificationsEnabled;
+    const nightModeEnabled = false;
 
     return {
       router,
       store,
-      notificationEnabled
+      notificationEnabled,
+      nightModeEnabled
     };
   },
   methods: {
@@ -117,10 +119,11 @@ export default defineComponent({
       // redirect to login page
       await this.router.push({name: 'Login'});
     },
-    async toggleNotifications(enable: boolean) {
+    async toggleNotifications() {
+      this.notificationEnabled = !this.notificationEnabled;
       const sClass = this.store.getters.getClass;
 
-      if(enable) {
+      if(this.notificationEnabled) {
         // subscribe to FCM channels
         await FCM.subscribeTo({topic: 'APP_GENERAL_NOTIFICATIONS'});
         await FCM.subscribeTo({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
@@ -130,7 +133,7 @@ export default defineComponent({
         await FCM.unsubscribeFrom({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
       }
 
-      await saveNotificationsState(enable);
+      await saveNotificationsState(this.notificationEnabled);
     },
     async openInBrowser(uri: string) {
       await Browser.open({url: uri});
@@ -200,7 +203,8 @@ export default defineComponent({
       }
     },
     toggleNightTheme() {
-      document.body.classList.toggle('dark', false);
+      this.nightModeEnabled = !this.nightModeEnabled;
+      document.body.classList.toggle('dark', this.nightModeEnabled);
     }
   }
 });
