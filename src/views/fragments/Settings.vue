@@ -12,14 +12,14 @@
         </ion-list-header>
         <ion-item>
           <ion-label>Benachrichtigungen</ion-label>
-          <ion-toggle slot="end"></ion-toggle>
+          <ion-toggle slot="end" :checked="notificationEnabled" @ionChange="toggleNotifications"></ion-toggle>
         </ion-item>
         <ion-list-header>
           <ion-label>Verschiedenes</ion-label>
         </ion-list-header>
-        <ion-item class="ion-activatable ripple-parent" @click="toggleNightTheme">
+        <ion-item class="ion-activatable ripple-parent">
           <ion-label>Night-Theme</ion-label>
-          <ion-toggle slot="end"></ion-toggle>
+          <ion-toggle slot="end" :checked="nightModeEnabled" @ionChange="toggleNightTheme"></ion-toggle>
         </ion-item>
         <ion-list-header>
           <ion-label>Über EffnerApp</ion-label>
@@ -81,10 +81,12 @@ import {
   IonToolbar,
   isPlatform
 } from '@ionic/vue';
-import {Storage} from '@capacitor/storage';
+
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
 import {Browser} from '@capacitor/browser';
+import {reset, saveNotificationsState} from '@/tools/storage';
+import {FCM} from '@capacitor-community/fcm';
 
 export default defineComponent({
   name: 'Settings',
@@ -93,16 +95,45 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
 
+    const notificationEnabled = store.getters.getNotificationsEnabled;
+    const nightModeEnabled = false;
+
     return {
       router,
-      store
+      store,
+      notificationEnabled,
+      nightModeEnabled
     };
   },
   methods: {
     async logout() {
-      await Storage.clear();
-      this.store.commit('reset');
+      const sClass = this.store.getters.getClass;
+
+      // unsubscribe from FCM channels
+      await FCM.unsubscribeFrom({topic: 'APP_GENERAL_NOTIFICATIONS'});
+      await FCM.unsubscribeFrom({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+
+      // reset storage
+      await reset();
+
+      // redirect to login page
       await this.router.push({name: 'Login'});
+    },
+    async toggleNotifications() {
+      this.notificationEnabled = !this.notificationEnabled;
+      const sClass = this.store.getters.getClass;
+
+      if(this.notificationEnabled) {
+        // subscribe to FCM channels
+        await FCM.subscribeTo({topic: 'APP_GENERAL_NOTIFICATIONS'});
+        await FCM.subscribeTo({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+      } else {
+        // unsubscribe from FCM channels
+        await FCM.unsubscribeFrom({topic: 'APP_GENERAL_NOTIFICATIONS'});
+        await FCM.unsubscribeFrom({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+      }
+
+      await saveNotificationsState(this.notificationEnabled);
     },
     async openInBrowser(uri: string) {
       await Browser.open({url: uri});
@@ -172,7 +203,8 @@ export default defineComponent({
       }
     },
     toggleNightTheme() {
-      document.body.classList.toggle('dark', false);
+      this.nightModeEnabled = !this.nightModeEnabled;
+      document.body.classList.toggle('dark', this.nightModeEnabled);
     }
   }
 });
