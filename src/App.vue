@@ -34,7 +34,7 @@ export default defineComponent({
     IonRouterOutlet
   },
   setup() {
-    console.log('Initializing HomePage');
+    console.log('Initializing app ...');
 
     if ((isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb')) {
       // Request permission to use push notifications

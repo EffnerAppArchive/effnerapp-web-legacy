@@ -95,7 +95,6 @@ export default defineComponent({
     const store = useStore();
     if (store.getters.getMVVState) {
       const state = store.getters.getMVVState;
-      console.log(state);
       this.selectStop(state);
     }
   },

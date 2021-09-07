@@ -57,11 +57,11 @@
                     <ion-ripple-effect></ion-ripple-effect>
                   </ion-item>
 
-                  <ion-item class="ion-activatable ripple-parent">
+                  <ion-item v-if="!!data.exams" class="ion-activatable ripple-parent">
                     <ion-icon :icon="schoolOutline" class="card_icon" color="black"
                               style="margin-right: 0.75rem;"></ion-icon>
                     <ion-label style="text-decoration: none" @click.prevent="router.push({name: 'Schulaufgaben'})">
-                      {{ data.exams.exams[data.exams.exams.length - 1].name }}
+                      {{ data.exams?.exams[data.exams.exams.length - 1].name }}
                     </ion-label>
                     <ion-ripple-effect></ion-ripple-effect>
                   </ion-item>
@@ -101,13 +101,14 @@
           </ion-col>
 
           <ion-col>
-            <ion-card class="gradient_5 ion-activatable ripple-parent">
+            <ion-card class="gradient_5 ion-activatable ripple-parent" @click="router.push({name: 'Stundenplan'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-label style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
               </ion-item>
 
               <ion-card-content>
                 <span style="color: white">Nächste Stunde</span>
+                {{ getNextTimetableLesson() }}
               </ion-card-content>
               <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
@@ -136,6 +137,8 @@ import {
 
 import {defineComponent} from 'vue';
 import {useStore} from 'vuex';
+
+import moment from 'moment';
 
 import {
   busOutline,
@@ -173,7 +176,6 @@ export default defineComponent({
     const store = useStore();
 
     const substitutions = store.getters.getSubstitutions;
-    console.log(substitutions);
 
     return {
       busOutline,
@@ -191,11 +193,7 @@ export default defineComponent({
     };
   },
   created() {
-    const data = this.store.getters.getData;
-
-    this.data = data;
-
-    console.log(data);
+    this.data = this.store.getters.getData;
 
     if (this.store.getters.getMVVState) {
       this.loadDeparture(this.store.getters.getMVVState.id);
@@ -204,7 +202,10 @@ export default defineComponent({
   data() {
     return {
       data: {
-        motd: ''
+        motd: '',
+        timetable: {
+          lessons: []
+        }
       },
       nextDeparture: undefined
     };
@@ -220,11 +221,45 @@ export default defineComponent({
           time: item.departureLive
         };
       })[0];
-
-      console.log(this.nextDeparture);
     },
     async openInBrowser(uri: string) {
       await Browser.open({url: uri});
+    },
+    getNextTimetableLesson(): string {
+      const { lessons } = this.data.timetable;
+
+      const now = new Date();
+      const dayI = now.getDay() - 1;
+
+      return lessons[dayI][this.getCurrentLessonIndex() + 1] || 'Heute kein Unterricht mehr yay!';
+    },
+    getCurrentLessonIndex(): number {
+      const now = moment();
+
+      // TODO: improve
+      const times = [
+          '8:00',
+          '8:45',
+          '9:45',
+          '10:30',
+          '11:15',
+          '12:15',
+          '13:00',
+          '13:45',
+          '14:30',
+          '15:15',
+          '16:00'
+      ];
+
+      const time = times.find(e => {
+        const start = moment(e, 'HH:mm');
+        const end = moment(e, 'HH:mm').add(45, 'minutes');
+        return now.isBetween(start, end);
+      });
+
+      // TODO: improve
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return times.indexOf(time!);
     }
   },
   computed: {

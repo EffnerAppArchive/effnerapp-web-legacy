@@ -51,7 +51,7 @@ export default defineComponent({
 
     const exams: Exam[] = [];
 
-    data.exams.exams.forEach((exam: Exam) => {
+    data.exams?.exams?.forEach((exam: Exam) => {
       exams.push({
         name: exam.name,
         date: exam.date,
