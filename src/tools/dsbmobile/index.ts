@@ -38,8 +38,6 @@ export default class DSBMobile {
             throw new Error('Could not fetch timetable meta data.');
         }
 
-        console.log(meta);
-
         const {Detail: url, Date: time} = meta[0]['Childs'][0];
 
         return {
@@ -49,7 +47,7 @@ export default class DSBMobile {
         };
     }
 
-    async fetchMetaData() {
+    async fetchMetaData(): Promise<any> {
         const json = await Http.request({
             method: 'GET',
             url: `${DSBMobile.BASE_URL}/dsbtimetables?authid=${this.token}`

@@ -84,7 +84,6 @@ export default defineComponent({
       await dsbmobile.login();
       timetable = await dsbmobile.getTimetable();
 
-      console.log('timetable: ' + JSON.stringify(timetable));
       store.commit('setSubstitutions', timetable);
     } catch (e) {
       console.error(e);

@@ -95,7 +95,6 @@ export default defineComponent({
     const store = useStore();
     if (store.getters.getMVVState) {
       const state = store.getters.getMVVState;
-      console.log(state);
       this.selectStop(state);
     }
   },
@@ -150,7 +149,7 @@ export default defineComponent({
       return this.departures;
     },
     getStops(): any[] {
-      return this.stops.filter(value => value.name !== this.search);
+      return this.stops;
     }
   }
 });

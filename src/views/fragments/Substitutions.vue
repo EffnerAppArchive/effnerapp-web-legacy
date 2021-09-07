@@ -115,7 +115,6 @@ export default defineComponent({
         }
       }
 
-      console.log(tmp);
       this.substitutions = tmp as Substitution[];
       this.information = this.timetable?.items?.information?.get(date);
     },
