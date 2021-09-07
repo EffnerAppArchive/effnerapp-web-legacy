@@ -25,7 +25,11 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+/* Service Worker */
 import './registerServiceWorker';
+
+/* Tailwind */
+import './index.css';
 
 loadStorage().then(() => {
     const app = createApp(App)
