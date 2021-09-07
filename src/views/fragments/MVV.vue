@@ -150,7 +150,7 @@ export default defineComponent({
       return this.departures;
     },
     getStops(): any[] {
-      return this.stops.filter(value => value.name !== this.search);
+      return this.stops;
     }
   }
 });
