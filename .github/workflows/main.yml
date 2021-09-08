@@ -175,15 +175,15 @@ jobs:
 #           name: Signed app bundle
 #           path: ${{steps.sign_app.outputs.signedReleaseFile}}
 
+      - run: mv app-release-unsigned-signed.apk app-release.apk
+
       - uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
-          automatic_release_tag: 'dev'
+          automatic_release_tag: 'latest'
           files: |
-            app-release-unsigned-signed.apk
-            app-release.aab
-            output.ipa
+            app-release.apk
 #            ${{steps.sign_app.outputs.signedReleaseFile}}
 
 #   upload:
