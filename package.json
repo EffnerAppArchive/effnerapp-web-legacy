@@ -38,6 +38,7 @@
     "@capacitor/cli": "3.2.2",
     "@types/jest": "^27.0.1",
     "@types/moment": "^2.13.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@types/node": "^16.7.13",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "@typescript-eslint/parser": "^2.33.0",
