@@ -1,31 +1,44 @@
 <template>
   <ion-page>
-    <ion-header translucent="true">
-      <ion-toolbar>
-        <ion-title>Login - EffnerApp</ion-title>
-      </ion-toolbar>
-    </ion-header>
     <ion-content fullscreen>
-      <div id="container">
-        <ion-item style="margin-bottom: 1rem">
-          <ion-label position="floating">ID</ion-label>
-          <ion-input v-model="id" type="number"></ion-input>
-        </ion-item>
+      <div class="container mx-auto px-6 py-10">
+        <div class="flex flex-col">
+          <div>
+            <div class="flex justify-center h-24 smolest:h-32 smol:h-36 norm:h-40 thiccc:h-52">
+              <img alt="logo" src="/img/effnerapp_logo.svg">
+            </div>
+          </div>
 
-        <ion-item style="margin-bottom: 1rem">
-          <ion-label position="floating">Passwort</ion-label>
-          <ion-input v-model="password" type="password"></ion-input>
-        </ion-item>
+          <div class="flex justify-center text-3xl">
+            <h1>EffnerApp</h1>
+          </div>
 
-        <ion-item style="margin-bottom: 1rem">
-          <ion-label position="floating">Klasse</ion-label>
-          <ion-select v-model="sClass">
-            <ion-select-option v-for="c in classes" :key="c" :value="c">{{ c }}</ion-select-option>
-          </ion-select>
-        </ion-item>
+          <div class="pt-8 smolest:pt-16 smol:pt-20 norm:pt-24 thiccc:pt-32">
+            <ion-item style="margin-bottom: 1rem">
+              <ion-label position="floating">ID</ion-label>
+              <ion-input v-model="id" type="number"></ion-input>
+            </ion-item>
+          </div>
 
-        <div style="position: relative">
-          <ion-button @click="login" style="position: absolute; right: 0; padding-right: 0.5rem">Login</ion-button>
+          <div>
+            <ion-item style="margin-bottom: 1rem">
+              <ion-label position="floating">Passwort</ion-label>
+              <ion-input v-model="password" type="password"></ion-input>
+            </ion-item>
+          </div>
+
+          <div>
+            <ion-item style="margin-bottom: 1rem">
+              <ion-label position="floating">Klasse</ion-label>
+              <ion-select v-model="sClass">
+                <ion-select-option v-for="c in classes" :key="c" :value="c">{{ c }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </div>
+
+          <div style="position: relative">
+            <ion-button style="position: absolute; right: 0; padding-right: 0.5rem" @click="login">Login</ion-button>
+          </div>
         </div>
       </div>
     </ion-content>
@@ -36,15 +49,13 @@
 import {
   IonButton,
   IonContent,
-  IonHeader,
   IonInput,
   IonItem,
   IonLabel,
   IonPage,
   IonSelect,
   IonSelectOption,
-  IonTitle,
-  IonToolbar, isPlatform,
+  isPlatform,
   toastController
 } from '@ionic/vue';
 
@@ -61,10 +72,7 @@ export default defineComponent({
   name: 'Login',
   components: {
     IonPage,
-    IonHeader,
-    IonToolbar,
     IonContent,
-    IonTitle,
     IonLabel,
     IonInput,
     IonItem,
