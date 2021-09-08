@@ -117,18 +117,13 @@ jobs:
           team-id: ${{ secrets.TEAM_ID }}
           workspace-path: ios/App/App.xcworkspace
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: IPA
-          path: output.ipa
-
       - name: Upload IPA to App Store Connect
         run: xcrun altool --upload-app -t ios -f "output.ipa" -u ${{ secrets.ASC_USER }} -p ${{ secrets.ASC_PASS }}
 
   release:
     name: Release App
     runs-on: ubuntu-latest
-    needs: [build, build-ios]
+    needs: [build]
 
     steps:
       - uses: actions/checkout@v2
@@ -148,10 +143,6 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: Signed app bundle
-
-      - uses: actions/download-artifact@v2
-        with:
-          name: IPA
 
 #       - uses: actions/download-artifact@v2
 #         with:
@@ -184,6 +175,7 @@ jobs:
           automatic_release_tag: 'latest'
           files: |
             app-release.apk
+            app-release.aab
 #            ${{steps.sign_app.outputs.signedReleaseFile}}
 
 #   upload:
