@@ -19,15 +19,21 @@ export default class DSBMobile {
     async login(): Promise<void> {
         const url = `${DSBMobile.BASE_URL}/authid?bundleid=${DSBMobile.BUNDLE_ID}&appversion=${DSBMobile.APP_VERSION}&osversion=${DSBMobile.OS_VERSION}&pushid&user=${this.username}&password=${this.password}`;
 
+        // the native implementations of @capacitor-community/http are kinda broken, so we can only accept the content-type 'text/json' instead of 'application/json'
         const token = await Http.request({
             method: 'GET',
-            url
-        }).then(response => response.data.replaceAll('"', ''));
+            url,
+            responseType: 'text',
+            headers: {
+                'Accept': 'text/*'
+            }
+        }).then(response => JSON.parse(response.data));
 
         if (!token) {
             throw new Error('Error while authenticating with dsbmobile');
         }
 
+        console.log('Successfully authenticated with DSB with token: ' + JSON.stringify(token));
         this.token = token;
     }
 
@@ -58,7 +64,6 @@ export default class DSBMobile {
         }
 
         return json;
-
     }
 
     async parseTimetable(url: string): Promise<Substitutions> {
