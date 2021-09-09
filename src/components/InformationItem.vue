@@ -29,7 +29,8 @@ export default defineComponent({
   },
   methods: {
     async openDocument() {
-      await Browser.open({url: this.uri});
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      await Browser.open({url: this.uri!});
     }
   }
 });

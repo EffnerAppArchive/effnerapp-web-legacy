@@ -59,8 +59,8 @@ export default defineComponent({
     };
   },
   computed: {
-    getDocuments() {
-      return this.documents.filter(e => e.key.startsWith('DATA_INFORMATION'));
+    getDocuments(): any {
+      return this.documents.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
     }
   }
 });
