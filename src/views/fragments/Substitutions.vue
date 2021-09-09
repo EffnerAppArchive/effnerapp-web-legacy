@@ -34,6 +34,9 @@
         </ion-list>
       </div>
       <div v-else>Could not fetch data from dsbmobile!</div>
+      <div class="text-right pr-4 pb-6 pt-2 ion-activatable">
+        <a class="text-blue-800" @click="showFullPlan">Gesamten Vertretungsplan anzeigen</a>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -54,6 +57,7 @@ import {
 import {defineComponent, ref} from 'vue';
 import {useStore} from 'vuex';
 import SubstitutionItem from '@/components/SubstitutionItem.vue';
+import {Browser} from '@capacitor/browser';
 
 export default defineComponent({
   name: 'Substitutions',
@@ -130,8 +134,10 @@ export default defineComponent({
       }
 
       return myClass === sClass;
+    },
+    async showFullPlan() {
+      await Browser.open({ url: this.timetable.url });
     }
-
   },
   computed: {
     getSubstitutions(): Substitution[] {

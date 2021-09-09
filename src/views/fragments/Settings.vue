@@ -19,14 +19,15 @@
         </ion-list-header>
         <ion-item class="ion-activatable ripple-parent">
           <ion-label>Night-Theme</ion-label>
-          <ion-toggle slot="end" :checked="nightModeEnabled" @ionChange="toggleNightTheme"></ion-toggle>
+          <ion-note>Nicht verfügbar</ion-note>
+          <ion-toggle slot="end" :checked="nightModeEnabled" :disabled="true" @ionChange="toggleNightTheme"></ion-toggle>
         </ion-item>
         <ion-list-header>
           <ion-label>Über EffnerApp</ion-label>
         </ion-list-header>
         <ion-item class="ion-activatable ripple-parent" @click="showFeedback">
           <ion-label>Feedback</ion-label>
-          <ion-note>Danke!</ion-note>
+          <ion-note></ion-note>
           <ion-ripple-effect />
         </ion-item>
         <ion-item class="ion-activatable ripple-parent">
@@ -59,6 +60,11 @@
           <ion-ripple-effect />
         </ion-item>
       </ion-list>
+      <div class="text-center mt-4 mb-4">
+        <ion-note>
+          © {{ new Date().getFullYear() }} EffnerApp by Luis & Sebi
+        </ion-note>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -171,7 +177,7 @@ export default defineComponent({
       const alert = await alertController
           .create({
             header: 'Feedback',
-            message: 'Schreib uns eine E-Mail, wenn du uns Verbesserungsvorschläge mitteilen möchtest oder Probleme mit der App hast!<br>Wenn du willst, kannst du die App im Play-Store bewerten! 😉',
+            message: 'Schreib uns eine E-Mail, wenn du uns Verbesserungsvorschläge mitteilen möchtest oder Probleme mit der App hast!<br>Wenn du willst, kannst du die App im Store bewerten! 😉',
             buttons: [
               {
                 text: 'OK',

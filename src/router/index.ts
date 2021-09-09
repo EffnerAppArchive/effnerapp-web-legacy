@@ -48,6 +48,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Stundenplan',
         path: 'timetable',
         component: () => import('@/views/fragments/Timetable.vue')
+      },
+      {
+        name: 'Informationen',
+        path: 'information',
+        component: () => import('@/views/fragments/Information.vue')
       }
     ]
   },

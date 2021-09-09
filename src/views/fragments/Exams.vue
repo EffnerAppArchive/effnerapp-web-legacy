@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <div id="list">
+      <div v-if="!isAdvancedLevel" id="list">
         <div v-for="(item, i) in sortedExams" :key="i">
           <div class="row">
             <term-item
@@ -16,6 +16,19 @@
             ></term-item>
           </div>
         </div>
+      </div>
+      <div v-else>
+        <ion-grid>
+          <ion-row class="text-center">
+            <ion-col>
+              <!-- TODO: Beautify -->
+              <ion-button @click="openDocument(1)">1. Halbjahr</ion-button>
+            </ion-col>
+            <ion-col>
+              <ion-button @click="openDocument(2)">2. Halbjahr</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </div>
       <div class="row">
         <div id="disclaimer">
@@ -34,19 +47,31 @@
 </template>
 
 <script lang="ts">
-import {IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonItem} from '@ionic/vue';
+import {
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonItem,
+  IonGrid,
+  IonRow,
+  IonCol, IonButton
+} from '@ionic/vue';
 import {useStore} from 'vuex';
 import {informationCircleOutline} from 'ionicons/icons';
 import TermItem from '@/components/TermItem.vue';
 import moment from 'moment';
 import {defineComponent} from 'vue';
+import {Browser} from '@capacitor/browser';
 
 export default defineComponent({
   name: 'Exams',
-  components: {TermItem, IonIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonItem},
-  created() {
+  components: {TermItem, IonIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonItem, IonGrid, IonRow, IonCol, IonButton},
+  setup() {
     const store = useStore();
-
+    const myClass = store.getters.getClass;
     const data = store.getters.getData;
 
     const exams: Exam[] = [];
@@ -59,20 +84,34 @@ export default defineComponent({
       });
     });
 
-    this.exams = exams;
-
-  },
-  data() {
     return {
-      exams: [] as Exam[],
+      store,
+      myClass,
+      data,
+      exams,
       informationCircleOutline
     };
+  },
+  methods: {
+    async openDocument(i: number) {
+      const myAdvancedLevel = this.getAdvancedLevel();
+      const document = this.data.documents.find((e: {key: string, uri: string}) => e.key.startsWith('DATA_TOP_LEVEL_SA_DOC_' + myAdvancedLevel + '_' + i));
+
+      await Browser.open({ url: document.uri });
+    },
+    getAdvancedLevel() {
+      return this.myClass.startsWith('11') ? '11' : this.myClass.startsWith('12') ? '12' : null;
+    }
   },
   computed: {
     sortedExams(): Exam[] {
       return this.exams.slice().sort((a: Exam, b: Exam) => {
         return moment(b.date, 'DD.MM.YYYY').unix() - moment(a.date, 'DD.MM.YYYY').unix();
       });
+    },
+    isAdvancedLevel(): boolean {
+      // TODO: regex
+      return this.myClass.startsWith('11') || this.myClass.startsWith('12');
     }
   }
 });

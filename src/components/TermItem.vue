@@ -1,9 +1,9 @@
 <template>
-  <ion-card class="ion-activatable ripple-parent">
+  <ion-card class="term_card ion-activatable ripple-parent">
     <ion-card-header>
       <ion-card-subtitle :color="color">{{ date }}</ion-card-subtitle>
     </ion-card-header>
-    <ion-card-content>
+    <ion-card-content class="text-white">
       {{ name }}
     </ion-card-content>
     <ion-ripple-effect />
@@ -57,5 +57,10 @@ export default defineComponent({
   --ion-color-contrast-rgb: var(--ion-color-red-contrast-rgb);
   --ion-color-shade: var(--ion-color-red-shade);
   --ion-color-tint: var(--ion-color-red-tint);
+}
+
+.term_card {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 </style>
