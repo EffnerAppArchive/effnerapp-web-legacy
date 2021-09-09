@@ -1,4 +1,4 @@
-[![CI](https://github.com/EffnerApp/EffnerApp/actions/workflows/main.yml/badge.svg)](https://github.com/EffnerApp/effnerapp-web/actions/workflows/main.yml)
+[![CI](https://github.com/EffnerApp/effnerapp-web/actions/workflows/main.yml/badge.svg)](https://github.com/EffnerApp/effnerapp-web/actions/workflows/main.yml)
 # effnerapp-web
 Vue Web-app version of the EffnerApp
 
