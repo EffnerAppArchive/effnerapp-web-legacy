@@ -9,7 +9,7 @@ export default class DSBMobile {
     private readonly username: string;
     private readonly password: string;
 
-    private token: Array<any> = [];
+    private token: string | undefined;
 
     constructor(username: string, password: string) {
         this.username = username;
@@ -19,12 +19,15 @@ export default class DSBMobile {
     async login(): Promise<void> {
         const url = `${DSBMobile.BASE_URL}/authid?bundleid=${DSBMobile.BUNDLE_ID}&appversion=${DSBMobile.APP_VERSION}&osversion=${DSBMobile.OS_VERSION}&pushid&user=${this.username}&password=${this.password}`;
 
+        // the native implementations of @capacitor-community/http are kinda broken, so we can only accept the content-type 'text/json' instead of 'application/json'
         const token = await Http.request({
             method: 'GET',
-            url
-        }).then(value => {
-            return JSON.parse(`["${value.data}"]`);
-        });//).then(response => response.data.replaceAll('"', '').toString());
+            url,
+            responseType: 'text',
+            headers: {
+                'Accept': 'text/*'
+            }
+        }).then(response => JSON.parse(response.data));
 
         if (!token) {
             throw new Error('Error while authenticating with dsbmobile');
@@ -43,8 +46,6 @@ export default class DSBMobile {
 
         const {Detail: url, Date: time} = meta[0]['Childs'][0];
 
-        console.log('Got timetable back');
-
         return {
             url,
             time,
@@ -55,14 +56,12 @@ export default class DSBMobile {
     async fetchMetaData(): Promise<any> {
         const json = await Http.request({
             method: 'GET',
-            url: `${DSBMobile.BASE_URL}/dsbtimetables?authid=` + this.token
+            url: `${DSBMobile.BASE_URL}/dsbtimetables?authid=${this.token}`
         }).then(response => response.data);
 
         if (json['Message']) {
             throw new Error('dsbError: ' + json['Message']);
         }
-
-        console.log('fetched data');
 
         return json;
     }

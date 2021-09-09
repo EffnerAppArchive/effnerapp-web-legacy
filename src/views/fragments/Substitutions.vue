@@ -32,7 +32,7 @@
               teacher="info"/>
         </ion-list>
       </div>
-      <div v-else>Native feature only! ye</div>
+      <div v-else>Could not fetch data from dsbmobile!</div>
     </ion-content>
   </ion-page>
 </template>
