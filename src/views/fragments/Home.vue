@@ -1,17 +1,18 @@
 <template>
   <ion-page>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ motd }}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
     <ion-content :fullscreen="true">
       <ion-grid>
 
         <ion-row>
           <ion-col>
-            <p style="font-size: x-large; text-align: center">{{ motd }}</p>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col>
-            <ion-card class="gradient_1 ion-activatable ripple-parent" routerDirection="forward" @click="router.push({name: 'MVV'})">
+            <ion-card class="gradient_1 ion-activatable ripple-parent" routerDirection="forward"
+                      @click="router.push({name: 'MVV'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
                 <ion-icon :icon="busOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
                 <ion-label style="font-weight: bold; font-size: 1.3rem">MVV-Abfahrtszeiten</ion-label>
@@ -47,7 +48,7 @@
               </ion-item>
 
               <ion-card-content>
-                <ion-list class="news_item">
+                <ion-list class="news_item rounded-2xl">
                   <ion-item class="ion-activatable ripple-parent">
                     <ion-icon :icon="documentOutline" class="card_icon" color="black"
                               style="margin-right: 0.75rem;"></ion-icon>
@@ -126,13 +127,16 @@ import {
   IonCol,
   IonContent,
   IonGrid,
+  IonHeader,
   IonIcon,
   IonItem,
   IonLabel,
   IonList,
   IonPage,
   IonRippleEffect,
-  IonRow
+  IonRow,
+  IonTitle,
+  IonToolbar
 } from '@ionic/vue';
 
 import {defineComponent} from 'vue';
@@ -169,7 +173,10 @@ export default defineComponent({
     IonItem,
     IonLabel,
     IonList,
-    IonRippleEffect
+    IonRippleEffect,
+    IonHeader,
+    IonToolbar,
+    IonTitle
   },
   setup() {
     const router = useRouter();
@@ -226,7 +233,7 @@ export default defineComponent({
       await Browser.open({url: uri});
     },
     getNextTimetableLesson(): string {
-      const { lessons } = this.data.timetable;
+      const {lessons} = this.data.timetable;
 
       const now = new Date();
       const dayI = now.getDay() - 1;
@@ -238,17 +245,17 @@ export default defineComponent({
 
       // TODO: improve
       const times = [
-          '8:00',
-          '8:45',
-          '9:45',
-          '10:30',
-          '11:15',
-          '12:15',
-          '13:00',
-          '13:45',
-          '14:30',
-          '15:15',
-          '16:00'
+        '8:00',
+        '8:45',
+        '9:45',
+        '10:30',
+        '11:15',
+        '12:15',
+        '13:00',
+        '13:45',
+        '14:30',
+        '15:15',
+        '16:00'
       ];
 
       const time = times.find(e => {
@@ -307,7 +314,5 @@ export default defineComponent({
 .news_item {
   -webkit-box-shadow: 5px 5px 8px 2px rgba(0, 0, 0, 0.55);
   box-shadow: 5px 5px 8px 2px rgba(0, 0, 0, 0.55);
-  border: none;
-  border-radius: 2%;
 }
 </style>

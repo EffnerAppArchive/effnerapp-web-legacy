@@ -52,10 +52,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.departure_item {
-  --ion-item-background: transparent;
-}
-
 ion-grid {
   height: 100%;
 }

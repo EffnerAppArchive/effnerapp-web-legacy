@@ -5,6 +5,7 @@
         <ion-title>Vertretungen</ion-title>
       </ion-toolbar>
     </ion-header>
+
     <ion-content :fullscreen="true">
       <div v-if="timetable">
         <ion-item>
