@@ -32,7 +32,7 @@
               teacher="info"/>
         </ion-list>
       </div>
-      <div v-else>Native feature only! Fuck CORS!</div>
+      <div v-else>Native feature only! ye</div>
     </ion-content>
   </ion-page>
 </template>

@@ -9,7 +9,7 @@ export default class DSBMobile {
     private readonly username: string;
     private readonly password: string;
 
-    private token: string | undefined;
+    private token: Array<any> = [];
 
     constructor(username: string, password: string) {
         this.username = username;
@@ -22,12 +22,15 @@ export default class DSBMobile {
         const token = await Http.request({
             method: 'GET',
             url
-        }).then(response => response.data.replaceAll('"', ''));
+        }).then(value => {
+            return JSON.parse(`["${value.data}"]`);
+        });//).then(response => response.data.replaceAll('"', '').toString());
 
         if (!token) {
             throw new Error('Error while authenticating with dsbmobile');
         }
 
+        console.log('Successfully authenticated with DSB with token: ' + JSON.stringify(token));
         this.token = token;
     }
 
@@ -40,6 +43,8 @@ export default class DSBMobile {
 
         const {Detail: url, Date: time} = meta[0]['Childs'][0];
 
+        console.log('Got timetable back');
+
         return {
             url,
             time,
@@ -50,15 +55,16 @@ export default class DSBMobile {
     async fetchMetaData(): Promise<any> {
         const json = await Http.request({
             method: 'GET',
-            url: `${DSBMobile.BASE_URL}/dsbtimetables?authid=${this.token}`
+            url: `${DSBMobile.BASE_URL}/dsbtimetables?authid=` + this.token
         }).then(response => response.data);
 
         if (json['Message']) {
             throw new Error('dsbError: ' + json['Message']);
         }
 
-        return json;
+        console.log('fetched data');
 
+        return json;
     }
 
     async parseTimetable(url: string): Promise<Substitutions> {
