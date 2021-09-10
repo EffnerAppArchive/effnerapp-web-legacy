@@ -59,11 +59,11 @@
               </ion-item>
 
               <ion-card class="drop_shadow">
-                <ion-item class="item_transparent ion-activatable ripple-parent">
+                <ion-item v-if="data.documents[0] != null" class="item_transparent ion-activatable ripple-parent">
                   <ion-icon :icon="documentOutline" class="card_icon" color="black"
                             style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label style="text-decoration: none" @click="openInBrowser(data.documents[0].uri)">
-                    {{ data.documents[0].name }} <i class="fas fa-external-link-alt" style="padding-left: 0.25rem"/>
+                  <ion-label style="text-decoration: none" @click="openInBrowser(data.documents[0]?.uri)">
+                    {{ data.documents[0]?.name }} <i class="fas fa-external-link-alt" style="padding-left: 0.25rem"/>
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
@@ -159,14 +159,14 @@ import moment from 'moment';
 
 import {
   busOutline,
+  calendarClearOutline,
+  calendarOutline,
   documentOutline,
   fileTrayFullOutline,
   informationOutline,
   restaurantOutline,
   schoolOutline,
   shuffle,
-  calendarOutline,
-  calendarClearOutline,
   warningOutline
 } from 'ionicons/icons';
 import DepartureItem from '@/components/DepartureItem.vue';
