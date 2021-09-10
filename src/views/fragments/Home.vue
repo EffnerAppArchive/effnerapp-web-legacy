@@ -8,7 +8,19 @@
 
     <ion-content :fullscreen="true">
       <ion-grid>
-
+        <ion-row v-if="data.announcement">
+          <ion-col>
+            <ion-card class="gradient_0 ion-activatable ripple-parent">
+              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem">
+                <ion-icon :icon="warningOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
+                <ion-label style="font-weight: bold; font-size: 1.3rem">Meldung</ion-label>
+              </ion-item>
+              <ion-card-content class="text-white pt-2">
+                {{ data.announcement }}
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
         <ion-row>
           <ion-col>
             <ion-card class="gradient_1 ion-activatable ripple-parent" routerDirection="forward"
@@ -105,7 +117,8 @@
               </ion-item>
               <ion-card class="drop_shadow">
                 <ion-item lines="none">
-                  <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon" color="black"
+                  <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon"
+                            color="black"
                             style="margin-right: 0.75rem;"></ion-icon>
                   <ion-label style="text-decoration: none">
                     {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
@@ -135,7 +148,8 @@ import {
   IonRippleEffect,
   IonRow,
   IonTitle,
-  IonToolbar
+  IonToolbar,
+  IonCardContent
 } from '@ionic/vue';
 
 import {defineComponent} from 'vue';
@@ -152,7 +166,8 @@ import {
   schoolOutline,
   shuffle,
   calendarOutline,
-  calendarClearOutline
+  calendarClearOutline,
+  warningOutline
 } from 'ionicons/icons';
 import DepartureItem from '@/components/DepartureItem.vue';
 import {useRouter} from 'vue-router';
@@ -175,7 +190,8 @@ export default defineComponent({
     IonRippleEffect,
     IonHeader,
     IonToolbar,
-    IonTitle
+    IonTitle,
+    IonCardContent
   },
   setup() {
     const router = useRouter();
@@ -193,6 +209,7 @@ export default defineComponent({
       restaurantOutline,
       calendarOutline,
       calendarClearOutline,
+      warningOutline,
 
       router,
       store,
@@ -255,10 +272,12 @@ export default defineComponent({
       const dayI = now.getDay() - 1;
 
       const lessonI = this.getCurrentLessonIndex();
-      const nextLesson = lessons[dayI][lessonI];
 
-      if (lessonI !== -1 && nextLesson) {
-        return nextLesson + ' beginnt um ' + this.times[lessonI + 1] + ' Uhr';
+      if (lessonI !== -1) {
+        const nextLesson = lessons[dayI][lessonI];
+        if (nextLesson) {
+          return nextLesson + ' beginnt um ' + this.times[lessonI + 1] + ' Uhr';
+        }
       }
 
       return undefined;
@@ -286,6 +305,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.gradient_0 {
+  background: linear-gradient(315deg, hsl(354, 64%, 49%) 1%, hsl(4, 85%, 58%) 100%);
+}
+
 .gradient_1 {
   background: linear-gradient(315deg, hsla(54, 100%, 62%, 1) 1%, hsla(149, 100%, 44%, 1) 100%);
 }
