@@ -26,29 +26,55 @@
               :room="item.room"
               :sub-teacher="item.subTeacher"
               :teacher="item.teacher"
-              :full-class="item.fullClass" />
+              :full-class="item.fullClass"/>
           <substitution-item
+              v-if="getInformation"
               key="info"
               :info="getInformation"
               teacher="info"/>
+          <substitution-item
+              v-if="getAbsentClasses && getAbsentClasses.length > 0"
+              key="absent_classes"
+              :absent-classes="getAbsentClasses" />
         </ion-list>
       </div>
       <div v-else>Could not fetch data from dsbmobile!</div>
-      <div class="text-right pr-4 pb-6 pt-2 ion-activatable">
-        <a class="text-blue-800" @click="showFullPlan">Gesamten Vertretungsplan anzeigen</a>
-      </div>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <div class="pr-4 pb-6">
+              <ion-item class="item_transparent" lines="none">
+                <ion-icon :icon="informationOutline" color="black"
+                          style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
+                <ion-label style="font-weight: normal; font-size: 1rem">Zuletzt aktualisiert:
+                  {{ timetable.time }}
+                </ion-label>
+              </ion-item>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="text-right pr-4 pb-6 pt-2">
+              <div class="ripple-parent ion-activatable">
+                <a class="text-blue-800" @click="showFullPlan">Gesamten Vertretungsplan anzeigen</a>
+                <ion-ripple-effect/>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
 import {
-  IonContent,
-  IonHeader,
+  IonCol,
+  IonContent, IonGrid,
+  IonHeader, IonIcon,
   IonItem,
   IonLabel,
   IonList,
-  IonPage,
+  IonPage, IonRippleEffect, IonRow,
   IonSelect,
   IonSelectOption,
   IonTitle,
@@ -58,6 +84,8 @@ import {defineComponent, ref} from 'vue';
 import {useStore} from 'vuex';
 import SubstitutionItem from '@/components/SubstitutionItem.vue';
 import {Browser} from '@capacitor/browser';
+
+import {informationOutline} from 'ionicons/icons';
 
 export default defineComponent({
   name: 'Substitutions',
@@ -72,7 +100,12 @@ export default defineComponent({
     IonSelectOption,
     IonList,
     IonLabel,
-    IonItem
+    IonItem,
+    IonIcon,
+    IonRow,
+    IonCol,
+    IonGrid,
+    IonRippleEffect
   },
   async setup() {
     const store = useStore();
@@ -90,7 +123,8 @@ export default defineComponent({
     return {
       timetable: timetable as TimetableResponse,
       select,
-      store
+      store,
+      informationOutline
     };
   },
   created() {
@@ -102,7 +136,8 @@ export default defineComponent({
   data() {
     return {
       substitutions: [] as Substitution[],
-      information: undefined as string | undefined
+      information: undefined as string | undefined,
+      currentDate: undefined as string | undefined
     };
   },
   methods: {
@@ -112,7 +147,7 @@ export default defineComponent({
       const substitutions = days?.get(date)?.filter(entry => this.matchesClass(entry.name as string))?.map(e => e.items);
 
       let tmp = [] as any[];
-      if(substitutions) {
+      if (substitutions) {
         for (let i = 0; i < substitutions.length; i++) {
           if (substitutions[i]) {
             tmp = tmp.concat(substitutions[i]);
@@ -122,6 +157,7 @@ export default defineComponent({
 
       this.substitutions = tmp as Substitution[];
       this.information = this.timetable?.items?.information?.get(date);
+      this.currentDate = date;
     },
     matchesClass(sClass: string): boolean {
       const myClass = this.store.getters.getClass;
@@ -136,7 +172,7 @@ export default defineComponent({
       return myClass === sClass;
     },
     async showFullPlan() {
-      await Browser.open({ url: this.timetable.url });
+      await Browser.open({url: this.timetable.url});
     }
   },
   computed: {
@@ -145,6 +181,10 @@ export default defineComponent({
     },
     getInformation(): string | undefined {
       return this.information;
+    },
+    getAbsentClasses(): string[] | undefined {
+      console.log(this.timetable?.items?.absentClasses);
+      return this.timetable?.items?.absentClasses?.filter((e) => e.date === this.currentDate).map((e: AbsentClass) => e.class + ': ' + e.period);
     }
     // isNative() {
     //   return (isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb')

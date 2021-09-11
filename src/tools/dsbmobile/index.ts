@@ -99,11 +99,11 @@ export default class DSBMobile {
                             }
                             break;
                         case 'K':
-                            absentClasses = absentClasses.concat(Array.from(table.querySelectorAll('tr')).map(tr => {
+                            absentClasses = absentClasses.concat(Array.from(table.querySelectorAll('tbody')).map(tr => {
                                 return {
                                     date: date,
                                     class: tr.querySelector('th')?.innerText.trim(),
-                                    period: tr.querySelector('td')?.innerText.trim()
+                                    period: Array.from(tr.querySelectorAll('td')).map(td => td.innerText.trim()).join(', ')
                                 };
                             }));
                             break;

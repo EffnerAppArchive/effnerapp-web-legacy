@@ -2,14 +2,24 @@
   <ion-card class="substitution_card ion-activatable ripple-parent">
     <div v-if="teacher === 'info'">
       <ion-card-header>
-        <ion-card-subtitle style="color: #69e369">Allgemeine Infos
-        </ion-card-subtitle>
+        <ion-card-subtitle style="color: #69e369">Allgemeine Infos</ion-card-subtitle>
       </ion-card-header>
       <ion-card-content style="margin-left: 0.5rem" class="text_dark">
         {{ info }}
       </ion-card-content>
     </div>
-
+    <div v-else-if="absentClasses">
+      <ion-card-header>
+        <ion-card-subtitle style="color: #e85b5b">Abwesende Klassen</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content style="margin-left: 1.5rem" class="text_dark">
+        <ul>
+          <li v-for="c in absentClasses" :key="c">
+            {{ c }}
+          </li>
+        </ul>
+      </ion-card-content>
+    </div>
     <div v-else>
       <ion-card-header>
         <ion-card-subtitle color="dark">
@@ -45,7 +55,8 @@ export default defineComponent({
     subTeacher: String,
     room: String,
     info: String,
-    fullClass: String
+    fullClass: String,
+    absentClasses: []
   },
   components: {
     IonCard, IonCardHeader, IonCardContent, IonRippleEffect, IonCardSubtitle, IonBadge

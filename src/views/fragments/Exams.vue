@@ -43,10 +43,11 @@
         <div id="disclaimer">
           <ion-item lines="none" style="align-self: center">
             <div id="icon">
-              <ion-icon :icon="informationCircleOutline"></ion-icon>
+              <ion-icon :icon="informationOutline"></ion-icon>
             </div>
             <div id="disclaimer-text">
-              Alle Angaben sind ohne Gewähr. Es gilt das Wort des Lehrers.
+              Alle Angaben sind ohne Gewähr. Es gilt das Wort des Lehrers.<br>
+              Zuletzt aktualisiert: {{ moment(data.exams.updatedAt, 'YYYY-MM-DD\'T\'HH:mm:ss').format('DD.MM.YYYY HH:mm:ss') }}
             </div>
           </ion-item>
         </div>
@@ -69,7 +70,7 @@ import {
   IonCol, IonButton
 } from '@ionic/vue';
 import {useStore} from 'vuex';
-import {informationCircleOutline} from 'ionicons/icons';
+import {informationOutline} from 'ionicons/icons';
 import TermItem from '@/components/TermItem.vue';
 import moment from 'moment';
 import {defineComponent} from 'vue';
@@ -111,7 +112,8 @@ export default defineComponent({
       myClass,
       data,
       exams,
-      informationCircleOutline
+      informationOutline,
+      moment
     };
   },
   methods: {

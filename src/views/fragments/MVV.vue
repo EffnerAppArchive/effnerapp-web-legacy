@@ -26,7 +26,7 @@
         <div id="disclaimer">
           <ion-item lines="none" style="align-self: center">
             <div id="icon">
-              <ion-icon :icon="informationCircleOutline"></ion-icon>
+              <ion-icon :icon="informationOutline"></ion-icon>
             </div>
             <div id="disclaimer-text">
               Alle Angaben sind ohne Gewähr. Die Daten stammen von mvv-muenchen.de.
@@ -52,7 +52,7 @@ import {
   IonTitle,
   IonToolbar
 } from '@ionic/vue';
-import {informationCircleOutline} from 'ionicons/icons';
+import {informationOutline} from 'ionicons/icons';
 import DepartureItem from '@/components/DepartureItem.vue';
 import {fetchDepartures, findStop} from '@/tools/mvv';
 
@@ -78,7 +78,7 @@ export default defineComponent({
   },
   data() {
     return {
-      informationCircleOutline,
+      informationOutline,
       departures: [] as any[],
       stops: [] as any[],
       currentQuery: undefined as string | undefined
