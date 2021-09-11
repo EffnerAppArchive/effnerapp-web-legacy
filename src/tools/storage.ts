@@ -6,6 +6,8 @@ export async function loadStorage() {
     const sClass = await Storage.get({key: 'APP_USER_CLASS'});
     const mvvState = await Storage.get({key: 'APP_MVV_STATE'});
     const notificationsEnabled = await Storage.get({key: 'APP_NOTIFICATIONS'});
+    const launched = await Storage.get({key: 'APP_LAUNCHED'});
+    const darkMode = await Storage.get({key: 'APP_DARK_MODE'});
 
     if(credentials && credentials.value) {
         store.commit('setCredentials', credentials.value);
@@ -22,6 +24,14 @@ export async function loadStorage() {
 
     if(notificationsEnabled.value === 'true') {
         store.commit('setNotificationsEnabled', true);
+    }
+
+    if(launched && launched.value === 'true') {
+        store.commit('setFirstLaunch', false);
+    }
+
+    if(darkMode && darkMode.value === 'true') {
+        store.commit('setDarkMode', true);
     }
 }
 
@@ -42,6 +52,16 @@ export async function saveNotificationsState(enabled: boolean) {
 export async function saveMVVState(state: {id: string; name: string}) {
     store.commit('setMVVState', state);
     await Storage.set({key: 'APP_MVV_STATE', value: JSON.stringify(state)});
+}
+
+export async function saveLaunched() {
+    store.commit('setFirstLaunch', false);
+    await Storage.set({key: 'APP_LAUNCHED', value: 'true'});
+}
+
+export async function saveDarkMode(enabled: boolean) {
+    store.commit('setDarkMode', enabled);
+    await Storage.set({key: 'APP_DARK_MODE', value: String(enabled)});
 }
 
 export async function reset() {

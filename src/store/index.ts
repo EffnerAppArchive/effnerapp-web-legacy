@@ -9,7 +9,9 @@ export default createStore({
     data: null,
     mvvState: null,
     error: null,
-    notificationsEnabled: false
+    notificationsEnabled: false,
+    firstLaunch: true,
+    darkMode: false
   },
   mutations: {
     setCredentials(state, to) {
@@ -35,6 +37,12 @@ export default createStore({
     },
     setNotificationsEnabled(state, to) {
       state.notificationsEnabled = to;
+    },
+    setFirstLaunch(state, to) {
+      state.firstLaunch = to;
+    },
+    setDarkMode(state, to) {
+      state.darkMode = to;
     },
     reset(state) {
       state.credentials = null;
@@ -69,6 +77,12 @@ export default createStore({
     },
     getNotificationsEnabled(state) {
       return state.notificationsEnabled;
+    },
+    isFirstLaunch(state) {
+      return state.firstLaunch;
+    },
+    getDarkMode(state) {
+      return state.darkMode;
     }
   },
   actions: {

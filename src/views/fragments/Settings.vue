@@ -19,8 +19,7 @@
         </ion-list-header>
         <ion-item class="ion-activatable ripple-parent">
           <ion-label>Night-Theme</ion-label>
-          <ion-note>Nicht verfügbar</ion-note>
-          <ion-toggle slot="end" :checked="nightModeEnabled" :disabled="true" @ionChange="toggleNightTheme"></ion-toggle>
+          <ion-toggle slot="end" :checked="darkModeEnabled" @ionChange="toggleNightTheme"></ion-toggle>
         </ion-item>
         <ion-list-header>
           <ion-label>Über EffnerApp</ion-label>
@@ -91,7 +90,7 @@ import {
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
 import {Browser} from '@capacitor/browser';
-import {reset, saveNotificationsState} from '@/tools/storage';
+import {reset, saveDarkMode, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
 
 export default defineComponent({
@@ -102,13 +101,13 @@ export default defineComponent({
     const store = useStore();
 
     const notificationEnabled = store.getters.getNotificationsEnabled;
-    const nightModeEnabled = false;
+    const darkModeEnabled = store.getters.getDarkMode;
 
     return {
       router,
       store,
       notificationEnabled,
-      nightModeEnabled
+      darkModeEnabled
     };
   },
   methods: {
@@ -208,9 +207,10 @@ export default defineComponent({
         return 'https://effner.app';
       }
     },
-    toggleNightTheme() {
-      this.nightModeEnabled = !this.nightModeEnabled;
-      document.body.classList.toggle('dark', this.nightModeEnabled);
+    async toggleNightTheme() {
+      this.darkModeEnabled = !this.darkModeEnabled;
+      document.body.classList.toggle('dark', this.darkModeEnabled);
+      await saveDarkMode(this.darkModeEnabled);
     }
   }
 });

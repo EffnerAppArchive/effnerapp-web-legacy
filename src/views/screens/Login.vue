@@ -142,7 +142,7 @@ export default defineComponent({
           (async () => {
             await saveCredentials(credentials, sClass);
 
-            if ((isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb')) {
+            if (this.isNative()) {
               // subscribe to FCM channels
               await FCM.subscribeTo({topic: 'APP_GENERAL_NOTIFICATIONS'});
               await FCM.subscribeTo({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
@@ -166,6 +166,9 @@ export default defineComponent({
     },
     validateInput() {
       return this.id && this.password && this.sClass;
+    },
+    isNative() {
+      return (isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb');
     }
   },
   computed: {
