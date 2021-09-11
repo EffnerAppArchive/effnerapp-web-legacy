@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
-      <div v-if="!isAdvancedLevel" id="list">
+      <div v-if="!isAdvancedLevel && sortedExams && sortedExams.length > 0" id="list">
         <div v-for="(item, i) in sortedExams" :key="i">
           <div class="row">
             <term-item
@@ -17,7 +17,16 @@
           </div>
         </div>
       </div>
-      <div v-else>
+      <div v-else-if="!sortedExams || sortedExams.length === 0">
+        <ion-grid>
+          <ion-row class="text-center">
+            <ion-col>
+              Keine Einträge!
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+      <div v-else-if="isAdvancedLevel">
         <ion-grid>
           <ion-row class="text-center">
             <ion-col>
@@ -68,7 +77,20 @@ import {Browser} from '@capacitor/browser';
 
 export default defineComponent({
   name: 'Exams',
-  components: {TermItem, IonIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonItem, IonGrid, IonRow, IonCol, IonButton},
+  components: {
+    TermItem,
+    IonIcon,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonPage,
+    IonItem,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonButton
+  },
   setup() {
     const store = useStore();
     const myClass = store.getters.getClass;
@@ -95,9 +117,9 @@ export default defineComponent({
   methods: {
     async openDocument(i: number) {
       const myAdvancedLevel = this.getAdvancedLevel();
-      const document = this.data.documents.find((e: {key: string, uri: string}) => e.key.startsWith('DATA_TOP_LEVEL_SA_DOC_' + myAdvancedLevel + '_' + i));
+      const document = this.data.documents.find((e: { key: string, uri: string }) => e.key.startsWith('DATA_TOP_LEVEL_SA_DOC_' + myAdvancedLevel + '_' + i));
 
-      await Browser.open({ url: document.uri });
+      await Browser.open({url: document.uri});
     },
     getAdvancedLevel() {
       return this.myClass.startsWith('11') ? '11' : this.myClass.startsWith('12') ? '12' : null;
@@ -126,6 +148,7 @@ export default defineComponent({
   font-size: 3.5vh;
   padding: 1vh;
 }
+
 #disclaimer {
   --ion-item-background: transparent;
   padding-top: 1rem;

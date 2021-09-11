@@ -5,14 +5,14 @@
         <ion-card-subtitle style="color: #69e369">Allgemeine Infos
         </ion-card-subtitle>
       </ion-card-header>
-      <ion-card-content style="margin-left: 0.5rem" class="text-white">
+      <ion-card-content style="margin-left: 0.5rem" class="text_dark">
         {{ info }}
       </ion-card-content>
     </div>
 
     <div v-else>
       <ion-card-header>
-        <ion-card-subtitle class="text-white">
+        <ion-card-subtitle color="dark">
           {{ period }}. Stunde
           {{ (info === 'entfällt' ? 'entfällt' : 'vertreten durch ' + subTeacher) }}
           <ion-badge v-if="fullClass !== myClass" style="margin-left: 0.3rem; padding: 0.3rem; min-width: 2rem; background: #e85b5b" class="inline">
@@ -20,7 +20,7 @@
           </ion-badge>
         </ion-card-subtitle>
       </ion-card-header>
-      <ion-card-content style="margin-left: 1.5rem" class="text-white">
+      <ion-card-content style="margin-left: 1.5rem" class="text_dark">
         <ul>
           <li v-if="teacher">Ausfall: {{ teacher }}</li>
           <li v-if="room">Raum: {{ room }}</li>
@@ -70,5 +70,9 @@ export default defineComponent({
 
 li {
   list-style: disc;
+}
+
+.text_dark {
+  color: var(--ion-text-color)
 }
 </style>

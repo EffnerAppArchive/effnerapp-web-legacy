@@ -1,5 +1,5 @@
 <template>
-  <ion-item class="ion-activatable ripple-parent text-white" @click="openDocument">
+  <ion-item class="ion-activatable ripple-parent" @click="openDocument">
     <ion-icon :icon="documentOutline" slot="start"/>
     <ion-label>{{ title }}</ion-label>
     <i class="fas fa-external-link-alt"/>

@@ -3,7 +3,7 @@
     <ion-card-header>
       <ion-card-subtitle :color="color">{{ date }}</ion-card-subtitle>
     </ion-card-header>
-    <ion-card-content class="text-white">
+    <ion-card-content color="dark">
       {{ name }}
     </ion-card-content>
     <ion-ripple-effect />

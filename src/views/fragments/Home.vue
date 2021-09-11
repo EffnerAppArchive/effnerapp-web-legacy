@@ -13,7 +13,7 @@
             <ion-card class="gradient_0 ion-activatable ripple-parent">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem">
                 <ion-icon :icon="warningOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
-                <ion-label style="font-weight: bold; font-size: 1.3rem">Meldung</ion-label>
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Meldung</ion-label>
               </ion-item>
               <ion-card-content class="text-white pt-2">
                 {{ data.announcement }}
@@ -27,10 +27,10 @@
                       @click="router.push({name: 'MVV'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
                 <ion-icon :icon="busOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
-                <ion-label style="font-weight: bold; font-size: 1.3rem">MVV-Abfahrtszeiten</ion-label>
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">MVV-Abfahrtszeiten</ion-label>
               </ion-item>
 
-              <ion-card class="drop_shadow">
+              <ion-card class="drop_shadow card_dark">
                 <departure-item
                     v-if="nextDeparture"
                     :direction="nextDeparture.direction"
@@ -41,9 +41,9 @@
                 ></departure-item>
                 <div v-else>
                   <ion-item class="item_transparent" lines="none">
-                    <ion-icon :icon="informationOutline" color="black"
+                    <ion-icon :icon="informationOutline" class="card_icon"
                               style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
-                    <ion-label style="font-weight: normal; font-size: 1rem">Derzeit keine Abfahrten</ion-label>
+                    <ion-label class="card_dark_label" style="font-weight: normal; font-size: 1rem">Derzeit keine Abfahrten</ion-label>
                   </ion-item>
                 </div>
               </ion-card>
@@ -54,33 +54,33 @@
           <ion-col>
             <ion-card class="gradient_2 ion-activatable ripple-parent">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
-                <ion-icon :icon="fileTrayFullOutline" class="card_icon" color="black" style="margin-right: 0.75rem;"/>
-                <ion-label style="font-weight: bold; font-size: 1.3rem">News</ion-label>
+                <ion-icon :icon="fileTrayFullOutline" class="card_icon" style="margin-right: 0.75rem;"/>
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">News</ion-label>
               </ion-item>
 
-              <ion-card class="drop_shadow">
-                <ion-item v-if="data.documents[0] != null" class="item_transparent ion-activatable ripple-parent">
-                  <ion-icon :icon="documentOutline" class="card_icon" color="black"
+              <ion-card class="drop_shadow card_dark">
+                <ion-item v-if="getDocuments[0] != null" class="item_transparent ion-activatable ripple-parent">
+                  <ion-icon :icon="documentOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label style="text-decoration: none" @click="openInBrowser(data.documents[0]?.uri)">
-                    {{ data.documents[0]?.name }} <i class="fas fa-external-link-alt" style="padding-left: 0.25rem"/>
+                  <ion-label class="card_dark_label" style="text-decoration: none" @click="openInBrowser(getDocuments[0]?.uri)">
+                    {{ getDocuments[0]?.name }} <i class="fas fa-external-link-alt" style="padding-left: 0.25rem"/>
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
 
-                <ion-item v-if="data.exams.exams[0] != null" class="ion-activatable ripple-parent">
-                  <ion-icon :icon="schoolOutline" class="card_icon" color="black"
+                <ion-item v-if="data.exams?.exams[0] != null" class="ion-activatable ripple-parent">
+                  <ion-icon :icon="schoolOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label style="text-decoration: none" @click.prevent="router.push({name: 'Schulaufgaben'})">
+                  <ion-label class="card_dark_label" style="text-decoration: none" @click.prevent="router.push({name: 'Schulaufgaben'})">
                     {{ data.exams?.exams[data.exams?.exams.length - 1]?.name }}
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
 
                 <ion-item class="ion-activatable ripple-parent" lines="none">
-                  <ion-icon :icon="shuffle" class="card_icon"
-                            color="black" style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label style="text-decoration: none" @click.prevent="router.push({name: 'Vertretungen'})">
+                  <ion-icon :icon="shuffle" class="card_icon text-white"
+                            style="margin-right: 0.75rem;"></ion-icon>
+                  <ion-label class="card_dark_label" style="text-decoration: none;" @click.prevent="router.push({name: 'Vertretungen'})">
                     {{ getSubstitutions?.length || 0 }} Vertretungen heute
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
@@ -97,14 +97,14 @@
             <ion-card class="gradient_3 ion-activatable ripple-parent"
                       @click.prevent="openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
-                <ion-label style="font-weight: bold; font-size: 1.3rem">Speiseplan <i class="fas fa-external-link-alt"/>
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Speiseplan <i class="fas fa-external-link-alt"/>
                 </ion-label>
               </ion-item>
               <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
             <ion-card class="gradient_4 ion-activatable ripple-parent" @click="router.push({name: 'Informationen'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
-                <ion-label style="font-weight: bold; font-size: 1.3rem">Informationen</ion-label>
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Informationen</ion-label>
               </ion-item>
               <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
@@ -113,14 +113,13 @@
           <ion-col>
             <ion-card class="gradient_5 ion-activatable ripple-parent" @click="router.push({name: 'Stundenplan'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
-                <ion-label style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
               </ion-item>
-              <ion-card class="drop_shadow">
+              <ion-card class="drop_shadow card_dark">
                 <ion-item lines="none">
                   <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon"
-                            color="black"
                             style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label style="text-decoration: none">
+                  <ion-label style="text-decoration: none" class="card_dark_label">
                     {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
                   </ion-label>
                 </ion-item>
@@ -198,6 +197,7 @@ export default defineComponent({
     const store = useStore();
 
     const substitutions = store.getters.getSubstitutions;
+    const data = store.getters.getData;
 
     return {
       busOutline,
@@ -214,24 +214,17 @@ export default defineComponent({
       router,
       store,
 
-      substitutions
+      substitutions,
+      data
     };
   },
   created() {
-    this.data = this.store.getters.getData;
-
     if (this.store.getters.getMVVState) {
       this.loadDeparture(this.store.getters.getMVVState.id);
     }
   },
   data() {
     return {
-      data: {
-        motd: '',
-        timetable: {
-          lessons: []
-        }
-      },
       // TODO: improve
       times: [
         '7:15',
@@ -268,15 +261,17 @@ export default defineComponent({
     getNextTimetableLesson(): string | undefined {
       const {lessons} = this.data.timetable;
 
-      const now = new Date();
-      const dayI = now.getDay() - 1;
+      if (lessons) {
+        const now = new Date();
+        const dayI = now.getDay() - 1;
 
-      const lessonI = this.getCurrentLessonIndex();
+        const lessonI = this.getCurrentLessonIndex();
 
-      if (lessonI !== -1) {
-        const nextLesson = lessons[dayI][lessonI];
-        if (nextLesson) {
-          return nextLesson + ' beginnt um ' + this.times[lessonI + 1] + ' Uhr';
+        if (lessonI !== -1 && dayI < 5) {
+          const nextLesson = lessons[dayI][lessonI];
+          if (nextLesson) {
+            return nextLesson + ' beginnt um ' + this.times[lessonI + 1] + ' Uhr';
+          }
         }
       }
 
@@ -299,6 +294,9 @@ export default defineComponent({
     getSubstitutions(): Array<Substitution> {
       const date = this.substitutions?.items?.dates[0];
       return this.substitutions?.items?.days?.get(date)?.find((entry: any) => entry.name === this.store.getters.getClass)?.items;
+    },
+    getDocuments(): any {
+      return this.data.documents.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
     }
   }
 });
@@ -342,6 +340,14 @@ export default defineComponent({
   --ion-item-background: transparent;
   -webkit-box-shadow: 5px 5px 8px 2px rgba(0, 0, 0, 0.55);
   box-shadow: 5px 5px 8px 2px rgba(0, 0, 0, 0.55);
+}
+
+.card_dark {
+  --ion-item-background: #121212;
+}
+
+.card_dark_label {
+  color: white;
 }
 
 </style>
