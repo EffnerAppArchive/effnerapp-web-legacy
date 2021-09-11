@@ -68,11 +68,11 @@
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
 
-                <ion-item v-if="!!data.exams" class="ion-activatable ripple-parent">
+                <ion-item v-if="data.exams.exams[0] != null" class="ion-activatable ripple-parent">
                   <ion-icon :icon="schoolOutline" class="card_icon" color="black"
                             style="margin-right: 0.75rem;"></ion-icon>
                   <ion-label style="text-decoration: none" @click.prevent="router.push({name: 'Schulaufgaben'})">
-                    {{ data.exams?.exams[data.exams.exams.length - 1].name }}
+                    {{ data.exams?.exams[data.exams?.exams.length - 1]?.name }}
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
@@ -137,6 +137,7 @@
 <script lang="ts">
 import {
   IonCard,
+  IonCardContent,
   IonCol,
   IonContent,
   IonGrid,
@@ -148,8 +149,7 @@ import {
   IonRippleEffect,
   IonRow,
   IonTitle,
-  IonToolbar,
-  IonCardContent
+  IonToolbar
 } from '@ionic/vue';
 
 import {defineComponent} from 'vue';
