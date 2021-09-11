@@ -64,7 +64,8 @@
               </ion-item>
 
               <ion-card class="drop_shadow card_dark">
-                <ion-item v-if="getDocuments && getDocuments[0] != null" class="item_transparent ion-activatable ripple-parent">
+                <ion-item v-if="getDocuments && getDocuments[0] != null"
+                          class="item_transparent ion-activatable ripple-parent">
                   <ion-icon :icon="documentOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
                   <ion-label class="card_dark_label" style="text-decoration: none"
@@ -306,7 +307,9 @@ export default defineComponent({
     },
     async refreshContent(e: any) {
       console.log('Refreshing data (home) ...');
-      await this.loadDeparture(this.store.getters.getMVVState.id);
+      if (this.store.getters.getMVVState?.id) {
+        await this.loadDeparture(this.store.getters.getMVVState.id);
+      }
       await refreshContent(e);
     }
   },
