@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import {IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonBadge, IonRippleEffect} from '@ionic/vue';
+import {IonBadge, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonRippleEffect} from '@ionic/vue';
 import {defineComponent} from 'vue';
 import {useStore} from 'vuex';
 
@@ -56,7 +56,7 @@ export default defineComponent({
     room: String,
     info: String,
     fullClass: String,
-    absentClasses: []
+    absentClasses: Array
   },
   components: {
     IonCard, IonCardHeader, IonCardContent, IonRippleEffect, IonCardSubtitle, IonBadge

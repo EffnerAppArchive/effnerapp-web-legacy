@@ -5,6 +5,7 @@
         <ion-title>Schulaufgaben</ion-title>
       </ion-toolbar>
     </ion-header>
+
     <ion-content :fullscreen="true">
       <div v-if="!isAdvancedLevel && sortedExams && sortedExams.length > 0" id="list">
         <div v-for="(item, i) in sortedExams" :key="i">
@@ -67,16 +68,20 @@
 
 <script lang="ts">
 import {
+  IonButton,
+  IonCol,
   IonContent,
+  IonFooter,
+  IonGrid,
   IonHeader,
   IonIcon,
+  IonItem,
+  IonLabel,
   IonPage,
+  IonRow,
   IonTitle,
   IonToolbar,
-  IonItem,
-  IonGrid,
-  IonRow,
-  IonCol, IonButton, toastController, IonFooter, IonLabel
+  toastController
 } from '@ionic/vue';
 import {useStore} from 'vuex';
 import {informationOutline} from 'ionicons/icons';

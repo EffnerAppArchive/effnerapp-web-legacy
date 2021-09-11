@@ -27,7 +27,8 @@
                       @click="router.push({name: 'MVV'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
                 <ion-icon :icon="busOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
-                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">MVV-Abfahrtszeiten</ion-label>
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">MVV-Abfahrtszeiten
+                </ion-label>
               </ion-item>
 
               <ion-card class="drop_shadow card_dark">
@@ -38,12 +39,14 @@
                     :time="nextDeparture.time"
                     class="text-white"
                     style="padding-top: 0.5rem; padding-bottom: 0.5rem"
-                ></departure-item>
+                />
                 <div v-else>
                   <ion-item class="item_transparent" lines="none">
                     <ion-icon :icon="informationOutline" class="card_icon"
                               style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
-                    <ion-label class="card_dark_label" style="font-weight: normal; font-size: 1rem">Derzeit keine Abfahrten</ion-label>
+                    <ion-label class="card_dark_label" style="font-weight: normal; font-size: 1rem">Derzeit keine
+                      Abfahrten
+                    </ion-label>
                   </ion-item>
                 </div>
               </ion-card>
@@ -62,25 +65,28 @@
                 <ion-item v-if="getDocuments[0] != null" class="item_transparent ion-activatable ripple-parent">
                   <ion-icon :icon="documentOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label class="card_dark_label" style="text-decoration: none" @click="openInBrowser(getDocuments[0]?.uri)">
+                  <ion-label class="card_dark_label" style="text-decoration: none"
+                             @click="openInBrowser(getDocuments[0]?.uri)">
                     {{ getDocuments[0]?.name }} <i class="fas fa-external-link-alt" style="padding-left: 0.25rem"/>
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
 
-                <ion-item v-if="data.exams?.exams[0] != null" class="ion-activatable ripple-parent">
+                <ion-item v-if="data.exams?.exams[0] != null" class="item_transparent ion-activatable ripple-parent">
                   <ion-icon :icon="schoolOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label class="card_dark_label" style="text-decoration: none" @click.prevent="router.push({name: 'Schulaufgaben'})">
+                  <ion-label class="card_dark_label" style="text-decoration: none"
+                             @click.prevent="router.push({name: 'Schulaufgaben'})">
                     {{ data.exams?.exams[data.exams?.exams.length - 1]?.name }}
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
 
-                <ion-item class="ion-activatable ripple-parent" lines="none">
+                <ion-item class="item_transparent ion-activatable ripple-parent" lines="none">
                   <ion-icon :icon="shuffle" class="card_icon text-white"
                             style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label class="card_dark_label" style="text-decoration: none;" @click.prevent="router.push({name: 'Vertretungen'})">
+                  <ion-label class="card_dark_label" style="text-decoration: none;"
+                             @click.prevent="router.push({name: 'Vertretungen'})">
                     {{ getSubstitutions?.length || 0 }} Vertretungen heute
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
@@ -97,14 +103,16 @@
             <ion-card class="gradient_3 ion-activatable ripple-parent"
                       @click.prevent="openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
-                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Speiseplan <i class="fas fa-external-link-alt"/>
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Speiseplan <i
+                    class="fas fa-external-link-alt"/>
                 </ion-label>
               </ion-item>
               <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
             <ion-card class="gradient_4 ion-activatable ripple-parent" @click="router.push({name: 'Informationen'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
-                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Informationen</ion-label>
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Informationen
+                </ion-label>
               </ion-item>
               <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
@@ -116,10 +124,10 @@
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
               </ion-item>
               <ion-card class="drop_shadow card_dark">
-                <ion-item lines="none">
+                <ion-item class="item_transparent" lines="none">
                   <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label v-if="data.timetable?.lessons" style="text-decoration: none" class="card_dark_label">
+                  <ion-label v-if="data.timetable?.lessons" class="card_dark_label" style="text-decoration: none">
                     {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
                   </ion-label>
                 </ion-item>
@@ -242,6 +250,11 @@ export default defineComponent({
       ],
       nextDeparture: undefined
     };
+  },
+  watch: {
+    '$store.getters.getMVVState': function () {
+      this.loadDeparture(this.store.getters.getMVVState.id);
+    }
   },
   methods: {
     async loadDeparture(id: string) {

@@ -33,7 +33,6 @@ export default class DSBMobile {
             throw new Error('Error while authenticating with dsbmobile');
         }
 
-        console.log('Successfully authenticated with DSB with token: ' + JSON.stringify(token));
         this.token = token;
     }
 
