@@ -6,7 +6,10 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="false">
+      <ion-refresher slot="fixed" @ionRefresh="refreshContent($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
       <div v-if="timetable">
         <ion-item>
           <ion-label>Datum</ion-label>
@@ -35,7 +38,7 @@
           <substitution-item
               v-if="getAbsentClasses && getAbsentClasses.length > 0"
               key="absent_classes"
-              :absent-classes="getAbsentClasses" />
+              :absent-classes="getAbsentClasses"/>
         </ion-list>
       </div>
       <div v-else>Could not fetch data from dsbmobile!</div>
@@ -74,7 +77,7 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonPage, IonRippleEffect, IonRow,
+  IonPage, IonRefresher, IonRefresherContent, IonRippleEffect, IonRow,
   IonSelect,
   IonSelectOption,
   IonTitle,
@@ -86,6 +89,8 @@ import SubstitutionItem from '@/components/SubstitutionItem.vue';
 import {Browser} from '@capacitor/browser';
 
 import {informationOutline} from 'ionicons/icons';
+
+import {refreshContent} from '@/tools/data';
 
 export default defineComponent({
   name: 'Substitutions',
@@ -105,31 +110,26 @@ export default defineComponent({
     IonRow,
     IonCol,
     IonGrid,
-    IonRippleEffect
+    IonRippleEffect,
+    IonRefresher,
+    IonRefresherContent
   },
   async setup() {
     const store = useStore();
 
-    let timetable, select;
-
-    try {
-      timetable = await store.getters.getSubstitutions;
-      select = ref(timetable.items?.dates[0]);
-    } catch (e) {
-      console.error(e);
-    }
-
+    const select = ref('');
 
     return {
-      timetable: timetable as TimetableResponse,
       select,
       store,
-      informationOutline
+      informationOutline,
+      refreshContent
     };
   },
   created() {
     // improve this ugly shit
     if (this.timetable) {
+      this.select = this.timetable.items?.dates[0] as string;
       this.selectDate(this.timetable.items?.dates[0] as string);
     }
   },
@@ -176,6 +176,9 @@ export default defineComponent({
     }
   },
   computed: {
+    timetable(): TimetableResponse {
+      return this.store.getters.getSubstitutions;
+    },
     getSubstitutions(): Substitution[] {
       return this.substitutions;
     },
@@ -183,12 +186,13 @@ export default defineComponent({
       return this.information;
     },
     getAbsentClasses(): string[] | undefined {
-      console.log(this.timetable?.items?.absentClasses);
       return this.timetable?.items?.absentClasses?.filter((e) => e.date === this.currentDate).map((e: AbsentClass) => e.class + ': ' + e.period);
     }
-    // isNative() {
-    //   return (isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb')
-    // }
+  },
+  watch: {
+    timetable: function () {
+      this.select = this.timetable.items?.dates[0] as string;
+    }
   }
 });
 </script>

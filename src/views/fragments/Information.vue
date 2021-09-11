@@ -9,7 +9,10 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="false">
+      <ion-refresher slot="fixed" @ionRefresh="refreshContent($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
       <ion-card class="item_transparent pt-4 pb-4 pr-4">
         <information-item
             v-for="(item, i) in getDocuments" :key="i"
@@ -32,10 +35,12 @@ import {
   IonCard,
   IonPage,
   IonTitle,
-  IonToolbar
+  IonToolbar, IonRefresher, IonRefresherContent
 } from '@ionic/vue';
 import InformationItem from '@/components/InformationItem.vue';
 import {useStore} from 'vuex';
+
+import {refreshContent} from '@/tools/data';
 
 export default defineComponent({
   name: 'Information',
@@ -48,19 +53,24 @@ export default defineComponent({
     IonCard,
     IonPage,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    IonRefresher,
+    IonRefresherContent
   },
   setup() {
     const store = useStore();
-    const { documents } = store.getters.getData;
 
     return {
-      documents
+      store,
+      refreshContent
     };
   },
   computed: {
+    documents(): any {
+      return this.store.getters.getData.documents;
+    },
     getDocuments(): any {
-      return this.documents.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
+      return this.documents?.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
     }
   }
 });

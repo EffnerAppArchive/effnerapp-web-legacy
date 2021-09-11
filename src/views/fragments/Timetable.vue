@@ -9,7 +9,10 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="false">
+      <ion-refresher slot="fixed" @ionRefresh="refreshContent($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
       <table v-if="maxDepth() > 0" class="table-auto mt-8" style="width: 100%">
         <thead>
         <tr>
@@ -72,13 +75,15 @@ import {
   IonFooter,
   IonGrid,
   IonRow,
-  IonCol
+  IonCol, IonRefresher, IonRefresherContent
 } from '@ionic/vue';
 import {informationOutline} from 'ionicons/icons';
 
 import {defineComponent} from 'vue';
 import {useStore} from 'vuex';
 import moment from 'moment';
+
+import {refreshContent} from '@/tools/data';
 
 export default defineComponent({
   name: 'Timetable',
@@ -96,7 +101,9 @@ export default defineComponent({
     IonFooter,
     IonGrid,
     IonRow,
-    IonCol
+    IonCol,
+    IonRefresher,
+    IonRefresherContent
   },
   setup() {
     const store = useStore();
@@ -107,7 +114,8 @@ export default defineComponent({
     return {
       lessons, meta, updatedAt,
       informationOutline,
-      moment
+      moment,
+      refreshContent
     };
   },
   methods: {

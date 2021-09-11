@@ -5,8 +5,10 @@
         <ion-title>{{ motd }}</ion-title>
       </ion-toolbar>
     </ion-header>
-
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="false">
+      <ion-refresher slot="fixed" @ionRefresh="refreshContent($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
       <ion-grid>
         <ion-row v-if="data.announcement">
           <ion-col>
@@ -62,7 +64,7 @@
               </ion-item>
 
               <ion-card class="drop_shadow card_dark">
-                <ion-item v-if="getDocuments[0] != null" class="item_transparent ion-activatable ripple-parent">
+                <ion-item v-if="getDocuments && getDocuments[0] != null" class="item_transparent ion-activatable ripple-parent">
                   <ion-icon :icon="documentOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
                   <ion-label class="card_dark_label" style="text-decoration: none"
@@ -152,7 +154,7 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonPage,
+  IonPage, IonRefresher, IonRefresherContent,
   IonRippleEffect,
   IonRow,
   IonTitle,
@@ -181,6 +183,8 @@ import {useRouter} from 'vue-router';
 import {fetchDepartures} from '@/tools/mvv';
 import {Browser} from '@capacitor/browser';
 
+import {refreshContent} from '@/tools/data';
+
 export default defineComponent({
   name: 'Home',
   components: {
@@ -198,14 +202,15 @@ export default defineComponent({
     IonHeader,
     IonToolbar,
     IonTitle,
-    IonCardContent
+    IonCardContent,
+    IonRefresher,
+    IonRefresherContent
   },
   setup() {
     const router = useRouter();
     const store = useStore();
 
     const substitutions = store.getters.getSubstitutions;
-    const data = store.getters.getData;
 
     return {
       busOutline,
@@ -222,8 +227,7 @@ export default defineComponent({
       router,
       store,
 
-      substitutions,
-      data
+      substitutions
     };
   },
   created() {
@@ -258,6 +262,7 @@ export default defineComponent({
   },
   methods: {
     async loadDeparture(id: string) {
+      console.log('Fetching departures ...');
       const departures = await fetchDepartures(id);
 
       this.nextDeparture = departures.map((item: any) => {
@@ -298,18 +303,26 @@ export default defineComponent({
         const end = moment(e, 'HH:mm').add(45, 'minutes');
         return now.isBetween(start, end);
       });
+    },
+    async refreshContent(e: any) {
+      console.log('Refreshing data (home) ...');
+      await this.loadDeparture(this.store.getters.getMVVState.id);
+      await refreshContent(e);
     }
   },
   computed: {
+    data(): any {
+      return this.store.getters.getData;
+    },
     motd(): string {
       return this.data.motd;
     },
     getSubstitutions(): Array<Substitution> {
-      const date = this.substitutions?.items?.dates[0];
-      return this.substitutions?.items?.days?.get(date)?.find((entry: any) => entry.name === this.store.getters.getClass)?.items;
+      const date = this.store.getters.getSubstitutions?.items?.dates[0];
+      return this.store.getters.getSubstitutions?.items?.days?.get(date)?.find((entry: any) => entry.name === this.store.getters.getClass)?.items;
     },
     getDocuments(): any {
-      return this.data.documents.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
+      return this.data.documents?.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
     }
   }
 });

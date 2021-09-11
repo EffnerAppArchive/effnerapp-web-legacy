@@ -9,7 +9,10 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="false">
+      <ion-refresher slot="fixed" @ionRefresh="refreshContent($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
       <ion-searchbar v-model="search" style="padding: 1rem" @ionChange="queryStops"></ion-searchbar>
       <ion-list v-if="getStops.length > 0">
         <ion-item v-for="(item, i) in getStops" :key="i" button @click="selectStop(item)">
@@ -22,8 +25,9 @@
             :direction="item.direction"
             :line="item.line"
             :time="item.time"
+            :in-time="item.inTime"
         ></departure-item>
-        <div id="disclaimer">
+        <div id="disclaimer" class="py-4 px-2">
           <ion-item lines="none" style="align-self: center">
             <div id="icon">
               <ion-icon :icon="informationOutline"></ion-icon>
@@ -47,7 +51,7 @@ import {
   IonIcon,
   IonItem,
   IonList,
-  IonPage,
+  IonPage, IonRefresher, IonRefresherContent,
   IonSearchbar,
   IonTitle,
   IonToolbar
@@ -59,6 +63,9 @@ import {fetchDepartures, findStop} from '@/tools/mvv';
 import {defineComponent, ref} from 'vue';
 import {useStore} from 'vuex';
 import {saveMVVState} from '@/tools/storage';
+import {refreshContent} from '@/tools/data';
+
+import moment from 'moment';
 
 export default defineComponent({
   name: 'MVV',
@@ -74,7 +81,9 @@ export default defineComponent({
     IonList,
     IonSearchbar,
     IonBackButton,
-    IonButtons
+    IonButtons,
+    IonRefresher,
+    IonRefresherContent
   },
   data() {
     return {
@@ -85,16 +94,17 @@ export default defineComponent({
     };
   },
   setup() {
+    const store = useStore();
     const search = ref('');
 
     return {
+      store,
       search
     };
   },
   created() {
-    const store = useStore();
-    if (store.getters.getMVVState) {
-      const state = store.getters.getMVVState;
+    if (this.store.getters.getMVVState) {
+      const state = this.store.getters.getMVVState;
       this.selectStop(state);
     }
   },
@@ -125,11 +135,13 @@ export default defineComponent({
     async loadDepartures(id: string) {
       const departures = await fetchDepartures(id);
 
-      this.departures = departures.map((item: { line: { number: any }; direction: any; departureLive: any }) => {
+      this.departures = departures.map((item: { line: { number: any }; direction: any; departureLive: any; departurePlanned: any }) => {
+        const inTime = moment(item.departureLive, 'HH:mm').isSameOrBefore(moment(item.departurePlanned, 'HH:mm'));
         return {
           line: item.line.number,
           direction: item.direction,
-          time: item.departureLive
+          time: item.departureLive,
+          inTime
         };
       });
     },
@@ -142,6 +154,14 @@ export default defineComponent({
 
         saveMVVState(item);
       }
+    },
+    async refreshContent(e: any) {
+      if (this.store.getters.getMVVState) {
+        const state = this.store.getters.getMVVState;
+        this.selectStop(state);
+      }
+
+      await refreshContent(e);
     }
   },
   computed: {
@@ -162,8 +182,6 @@ export default defineComponent({
 }
 
 #disclaimer {
-  padding-top: 1rem;
-  padding-bottom: 0.5rem;
   --ion-item-background: transparent;
 }
 

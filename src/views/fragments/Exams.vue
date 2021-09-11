@@ -6,7 +6,10 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="false">
+      <ion-refresher slot="fixed" @ionRefresh="refreshContent($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
       <div v-if="!isAdvancedLevel && sortedExams && sortedExams.length > 0" id="list">
         <div v-for="(item, i) in sortedExams" :key="i">
           <div class="row">
@@ -77,7 +80,7 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonPage,
+  IonPage, IonRefresher, IonRefresherContent,
   IonRow,
   IonTitle,
   IonToolbar,
@@ -89,6 +92,8 @@ import TermItem from '@/components/TermItem.vue';
 import moment from 'moment';
 import {defineComponent} from 'vue';
 import {Browser} from '@capacitor/browser';
+
+import {refreshContent} from '@/tools/data';
 
 export default defineComponent({
   name: 'Exams',
@@ -106,30 +111,20 @@ export default defineComponent({
     IonCol,
     IonButton,
     IonFooter,
-    IonLabel
+    IonLabel,
+    IonRefresher,
+    IonRefresherContent
   },
   setup() {
     const store = useStore();
     const myClass = store.getters.getClass;
-    const data = store.getters.getData;
-
-    const exams: Exam[] = [];
-
-    data.exams?.exams?.forEach((exam: Exam) => {
-      exams.push({
-        name: exam.name,
-        date: exam.date,
-        color: moment(exam.date, 'DD.MM.YYYY') < moment() ? 'danger' : 'success'
-      });
-    });
 
     return {
       store,
       myClass,
-      data,
-      exams,
       informationOutline,
-      moment
+      moment,
+      refreshContent
     };
   },
   methods: {
@@ -157,6 +152,22 @@ export default defineComponent({
     }
   },
   computed: {
+    data(): any {
+      return this.store.getters.getData;
+    },
+    exams(): Exam[] {
+      const exams: Exam[] = [];
+
+      this.data.exams?.exams?.forEach((exam: Exam) => {
+        exams.push({
+          name: exam.name,
+          date: exam.date,
+          color: moment(exam.date, 'DD.MM.YYYY') < moment() ? 'danger' : 'success'
+        });
+      });
+
+      return exams;
+    },
     sortedExams(): Exam[] {
       return this.exams.slice().sort((a: Exam, b: Exam) => {
         return moment(b.date, 'DD.MM.YYYY').unix() - moment(a.date, 'DD.MM.YYYY').unix();

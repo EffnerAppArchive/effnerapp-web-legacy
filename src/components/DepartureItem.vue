@@ -12,7 +12,7 @@
         <ion-label class="ellipsis">{{ direction }}</ion-label>
       </ion-col>
       <ion-col class="ion-text-end" style="padding-right: 1rem">
-        <span style="color: var(--ion-color-success)">{{ time }}</span>
+        <span :style="'color: var(' + (inTime ? '--ion-color-success' : '--ion-color-danger') + ')'">{{ time }}</span>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -26,7 +26,8 @@ export default defineComponent({
   props: {
     line: String,
     direction: String,
-    time: String
+    time: String,
+    inTime: Boolean
   },
   components: {
     IonGrid, IonRow, IonCol, IonBadge, IonLabel
