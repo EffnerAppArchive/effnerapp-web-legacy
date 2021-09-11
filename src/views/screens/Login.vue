@@ -123,7 +123,7 @@ export default defineComponent({
   methods: {
     async login() {
       if (!this.validateInput()) {
-        await this.openToast('Please fill in the fields.');
+        await this.openToast('Bitte fülle alle Felder aus.');
         return;
       }
 

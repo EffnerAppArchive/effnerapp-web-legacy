@@ -17,17 +17,13 @@
           </div>
         </div>
       </div>
-      <div v-else-if="!sortedExams || sortedExams.length === 0">
-        <ion-grid>
-          <ion-row class="text-center">
-            <ion-col>
-              Keine Einträge!
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
       <div v-else-if="isAdvancedLevel">
         <ion-grid>
+          <ion-row class="text-center">
+            <ion-col class="p-8">
+              Bitte wähle das entsprechende Dokument aus, um die Schulaufgaben anzuzeigen
+            </ion-col>
+          </ion-row>
           <ion-row class="text-center">
             <ion-col>
               <!-- TODO: Beautify -->
@@ -39,20 +35,33 @@
           </ion-row>
         </ion-grid>
       </div>
-      <div class="row">
-        <div id="disclaimer">
-          <ion-item lines="none" style="align-self: center">
-            <div id="icon">
-              <ion-icon :icon="informationOutline"></ion-icon>
-            </div>
-            <div id="disclaimer-text">
-              Alle Angaben sind ohne Gewähr. Es gilt das Wort des Lehrers.<br>
-              Zuletzt aktualisiert: {{ moment(data.exams.updatedAt, 'YYYY-MM-DD\'T\'HH:mm:ss').format('DD.MM.YYYY HH:mm:ss') }}
-            </div>
-          </ion-item>
-        </div>
+      <div v-else-if="!sortedExams || sortedExams.length === 0">
+        <ion-grid>
+          <ion-row class="text-center">
+            <ion-col>
+              Keine Einträge!
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </div>
+
+
     </ion-content>
+    <ion-footer>
+      <div class="row pb-4 px-4">
+        <ion-item class="item_transparent" lines="none">
+          <ion-icon :icon="informationOutline" color="black"
+                    style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
+          <ion-label text-wrap style="font-weight: normal; font-size: 1rem">
+              Alle Angaben sind ohne Gewähr. Es gilt das Wort des Lehrers.<br>
+              <div v-if="data.exams?.updatedAt">
+                Zuletzt aktualisiert:
+                {{ moment(data.exams?.updatedAt, 'YYYY-MM-DD\'T\'HH:mm:ss').format('DD.MM.YYYY HH:mm:ss') }}
+              </div>
+          </ion-label>
+        </ion-item>
+      </div>
+    </ion-footer>
   </ion-page>
 </template>
 
@@ -67,7 +76,7 @@ import {
   IonItem,
   IonGrid,
   IonRow,
-  IonCol, IonButton
+  IonCol, IonButton, toastController, IonFooter, IonLabel
 } from '@ionic/vue';
 import {useStore} from 'vuex';
 import {informationOutline} from 'ionicons/icons';
@@ -90,7 +99,9 @@ export default defineComponent({
     IonGrid,
     IonRow,
     IonCol,
-    IonButton
+    IonButton,
+    IonFooter,
+    IonLabel
   },
   setup() {
     const store = useStore();
@@ -121,10 +132,23 @@ export default defineComponent({
       const myAdvancedLevel = this.getAdvancedLevel();
       const document = this.data.documents.find((e: { key: string, uri: string }) => e.key.startsWith('DATA_TOP_LEVEL_SA_DOC_' + myAdvancedLevel + '_' + i));
 
-      await Browser.open({url: document.uri});
+      if (document) {
+        await Browser.open({url: document.uri});
+      } else {
+        await this.openToast('Dieses Dokument wurde nicht gefunden.');
+      }
+
     },
     getAdvancedLevel() {
       return this.myClass.startsWith('11') ? '11' : this.myClass.startsWith('12') ? '12' : null;
+    },
+    async openToast(message: string) {
+      const toast = await toastController
+          .create({
+            message: message,
+            duration: 2000
+          });
+      return toast.present();
     }
   },
   computed: {
@@ -146,14 +170,7 @@ export default defineComponent({
   padding-top: 1vh;
 }
 
-#icon {
-  font-size: 3.5vh;
-  padding: 1vh;
-}
-
-#disclaimer {
+.item_transparent {
   --ion-item-background: transparent;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 </style>

@@ -119,7 +119,7 @@
                 <ion-item lines="none">
                   <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label style="text-decoration: none" class="card_dark_label">
+                  <ion-label v-if="data.timetable?.lessons" style="text-decoration: none" class="card_dark_label">
                     {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
                   </ion-label>
                 </ion-item>
