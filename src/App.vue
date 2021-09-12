@@ -26,8 +26,7 @@
 import {IonApp, IonRouterOutlet, isPlatform} from '@ionic/vue';
 import {defineComponent} from 'vue';
 import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
-import {useStore} from 'vuex';
-import {saveDarkMode, saveLaunched} from '@/tools/storage';
+import {initTheme} from '@/tools/theme';
 
 export default defineComponent({
   name: 'App',
@@ -38,16 +37,7 @@ export default defineComponent({
   setup() {
     console.log('Initializing app ...');
 
-    const store = useStore();
-
-    if(store.getters.isFirstLaunch) {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-      console.log('Initializing dark mode to: ' + prefersDark.matches);
-      toggleDarkTheme(prefersDark.matches);
-      saveLaunched();
-    } else  {
-      toggleDarkTheme(store.getters.getDarkMode);
-    }
+    initTheme();
 
     if (isNative()) {
       // Request permission to use push notifications
@@ -89,12 +79,6 @@ export default defineComponent({
             console.log('Push action performed: ' + JSON.stringify(notification));
           }
       );
-    }
-
-    // Add or remove the "dark" class based on if the media query matches
-    function toggleDarkTheme(shouldAdd: boolean) {
-      document.body.classList.toggle('dark', shouldAdd);
-      saveDarkMode(shouldAdd);
     }
 
     function isNative() {

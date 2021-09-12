@@ -92,6 +92,7 @@ import {useStore} from 'vuex';
 import {Browser} from '@capacitor/browser';
 import {reset, saveDarkMode, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
+import {toggleDarkTheme} from "@/tools/theme";
 
 export default defineComponent({
   name: 'Settings',
@@ -209,8 +210,7 @@ export default defineComponent({
     },
     async toggleNightTheme() {
       this.darkModeEnabled = !this.darkModeEnabled;
-      document.body.classList.toggle('dark', this.darkModeEnabled);
-      await saveDarkMode(this.darkModeEnabled);
+      await toggleDarkTheme(this.darkModeEnabled);
     }
   }
 });
