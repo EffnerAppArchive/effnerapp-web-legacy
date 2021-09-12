@@ -90,9 +90,9 @@ import {
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
 import {Browser} from '@capacitor/browser';
-import {reset, saveDarkMode, saveNotificationsState} from '@/tools/storage';
+import {reset, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
-import {toggleDarkTheme} from "@/tools/theme";
+import {toggleDarkTheme} from '@/tools/theme';
 
 export default defineComponent({
   name: 'Settings',
