@@ -23,7 +23,7 @@
     "@capacitor/status-bar": "^1.0.3",
     "@capacitor/storage": "^1.0.3",
     "@ionic/vue": "^5.8.0",
-    "@ionic/vue-router": "^5.4.0",
+    "@ionic/vue-router": "^5.8.0",
     "axios": "^0.21.4",
     "core-js": "^3.17.3",
     "crypto": "^1.0.1",
