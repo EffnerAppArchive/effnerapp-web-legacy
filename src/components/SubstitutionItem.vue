@@ -24,7 +24,7 @@
       <ion-card-header>
         <ion-card-subtitle color="dark">
           {{ period }}. Stunde
-          {{ (info === 'entfällt' ? 'entfällt' : 'vertreten durch ' + subTeacher) }}
+          {{ (info === 'entfällt' || info === 'Bibliotheksarbeit' ? 'entfällt' : 'vertreten durch ' + subTeacher) }}
           <ion-badge v-if="fullClass !== myClass" style="margin-left: 0.3rem; padding: 0.3rem; min-width: 2rem; background: #e85b5b" class="inline">
             {{ fullClass }}
           </ion-badge>
