@@ -28,7 +28,7 @@ export const loadData = async (): Promise<void> => {
     const time = Date.now();
 
     try {
-        const response = await axios.get('https://api.effner.app/data?class=' + sClass, {
+        const response = await axios.get('https://api.effner.app/v2/data?class=' + sClass, {
             headers: {
                 'Authorization': 'Basic ' + sha512(credentials + ':' + time),
                 'X-Time': time

@@ -201,4 +201,8 @@ export default defineComponent({
 .substitutions_wrapper {
   --ion-item-background: transparent;
 }
+
+.item_transparent {
+  --ion-item-background: transparent;
+}
 </style>

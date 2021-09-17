@@ -13,6 +13,14 @@
       <ion-refresher slot="fixed" @ionRefresh="refreshContent($event)">
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
+      <ion-item v-if="classes.length > 1">
+        <ion-label>Kurs</ion-label>
+        <ion-select v-model="select">
+          <ion-select-option v-for="c in classes" :key="c" :value="c">
+            {{ c }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
       <table v-if="maxDepth() > 0" class="table-auto mt-8" style="width: 100%">
         <thead>
         <tr>
@@ -75,11 +83,11 @@ import {
   IonFooter,
   IonGrid,
   IonRow,
-  IonCol, IonRefresher, IonRefresherContent
+  IonCol, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption
 } from '@ionic/vue';
 import {informationOutline} from 'ionicons/icons';
 
-import {defineComponent} from 'vue';
+import {defineComponent, ref} from 'vue';
 import {useStore} from 'vuex';
 import moment from 'moment';
 
@@ -103,20 +111,24 @@ export default defineComponent({
     IonRow,
     IonCol,
     IonRefresher,
-    IonRefresherContent
+    IonRefresherContent,
+    IonSelect,
+    IonSelectOption
   },
   setup() {
     const store = useStore();
-
-    const timetable = store.getters.getData.timetable;
-    const {lessons, meta, updatedAt} = timetable;
+    const select = ref('');
 
     return {
-      lessons, meta, updatedAt,
+      store,
+      select,
       informationOutline,
       moment,
       refreshContent
     };
+  },
+  created() {
+    this.select = this.classes[0];
   },
   methods: {
     maxDepth() {
@@ -136,6 +148,31 @@ export default defineComponent({
       }
 
       return 0;
+    }
+  },
+  computed: {
+    timetables() : any {
+      return this.store.getters.getData.timetables;
+    },
+    timetable(): any {
+      return this.timetables.find((t: any) => t.class === this.select) || this.timetables[0];
+    },
+    lessons(): any {
+      return this.timetable?.lessons;
+    },
+    meta(): any {
+      return this.timetable.meta;
+    },
+    updatedAt(): any {
+      return this.timetable.updatedAt;
+    },
+    classes(): any {
+      return this.timetables.map((t: any) => t.class);
+    }
+  },
+  watch: {
+    timetables: function () {
+      this.select = this.classes[0];
     }
   }
 });

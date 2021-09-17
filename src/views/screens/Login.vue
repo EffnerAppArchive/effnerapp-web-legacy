@@ -94,7 +94,7 @@ export default defineComponent({
 
     let classes = [];
     try {
-      classes = await axios.get('https://api.effner.app/data/classes').then(value => value.data);
+      classes = await axios.get('https://api.effner.app/v2/data/classes').then(value => value.data);
     } catch (e) {
       console.error(e);
     }
@@ -132,7 +132,7 @@ export default defineComponent({
 
       const time = Date.now();
 
-      axios.post('https://api.effner.app/auth/login', {}, {
+      axios.post('https://api.effner.app/v1/auth/login', {}, {
         headers: {
           'Authorization': 'Basic ' + sha512(credentials + ':' + time),
           'X-Time': time
