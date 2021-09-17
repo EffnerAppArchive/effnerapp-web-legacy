@@ -14,9 +14,9 @@
         <div v-for="(item, i) in sortedExams" :key="i">
           <div class="row">
             <term-item
-                :name="item.name"
-                :date="item.date"
                 :color="item.color"
+                :date="item.date"
+                :name="item.name"
             ></term-item>
           </div>
         </div>
@@ -51,20 +51,22 @@
 
 
     </ion-content>
-    <ion-footer>
-      <div class="row pb-4 px-4">
-        <ion-item class="item_transparent" lines="none">
-          <ion-icon :icon="informationOutline" color="black"
-                    style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
-          <ion-label text-wrap style="font-weight: normal; font-size: 1rem">
+    <ion-footer class="ion-no-border">
+      <ion-toolbar>
+        <div class="row">
+          <ion-item class="item_transparent" lines="none">
+            <ion-icon :icon="informationOutline" color="black"
+                      style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
+            <ion-label style="font-weight: normal; font-size: 1rem" text-wrap>
               Alle Angaben sind ohne Gewähr. Es gilt das Wort des Lehrers.<br>
               <div v-if="data.exams?.updatedAt">
                 Zuletzt aktualisiert:
                 {{ moment(data.exams?.updatedAt, 'YYYY-MM-DD\'T\'HH:mm:ss').format('DD.MM.YYYY HH:mm:ss') }}
               </div>
-          </ion-label>
-        </ion-item>
-      </div>
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-toolbar>
     </ion-footer>
   </ion-page>
 </template>
@@ -80,7 +82,9 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonPage, IonRefresher, IonRefresherContent,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonRow,
   IonTitle,
   IonToolbar,

@@ -37,8 +37,9 @@
           <td class="text-center">
             {{ hour }}
           </td>
-          <td v-for="day in 5" :key="day" class="break-all text-center py-2"
-              :style="'background: ' + meta.find(e => e.subject === lessons[day - 1][hour - 1])?.color || 'black'">
+          <td v-for="day in 5" :key="day"
+              :style="'background: ' + meta.find(e => e.subject === lessons[day - 1][hour - 1])?.color || 'black'"
+              class="break-all text-center py-2">
             {{ lessons[day - 1][hour - 1] }}
           </td>
         </tr>
@@ -54,36 +55,42 @@
         </ion-grid>
       </div>
     </ion-content>
-    <ion-footer>
-      <div class="row pb-4 px-4">
-        <ion-item class="item_transparent" lines="none">
-          <ion-icon :icon="informationOutline" color="black"
-                    style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
-          <ion-label text-wrap style="font-weight: normal; font-size: 1rem">Zuletzt aktualisiert:
-            {{ moment(updatedAt, 'YYYY-MM-DD\'T\'HH:mm:ss').format('DD.MM.YYYY HH:mm:ss') }}
-          </ion-label>
-        </ion-item>
-      </div>
+    <ion-footer class="ion-no-border">
+      <ion-toolbar>
+        <div class="row">
+          <ion-item class="item_transparent" lines="none">
+            <ion-icon :icon="informationOutline" color="black"
+                      style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
+            <ion-label style="font-weight: normal; font-size: 1rem" text-wrap>Zuletzt aktualisiert:
+              {{ moment(updatedAt, 'YYYY-MM-DD\'T\'HH:mm:ss').format('DD.MM.YYYY HH:mm:ss') }}
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-toolbar>
     </ion-footer>
   </ion-page>
 </template>
 
 <script lang="ts">
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
   IonBackButton,
-  IonTitle,
+  IonButtons,
+  IonCol,
   IonContent,
-  IonItem,
-  IonIcon,
-  IonLabel,
   IonFooter,
   IonGrid,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonRow,
-  IonCol, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption
+  IonSelect,
+  IonSelectOption,
+  IonTitle,
+  IonToolbar
 } from '@ionic/vue';
 import {informationOutline} from 'ionicons/icons';
 
@@ -151,7 +158,7 @@ export default defineComponent({
     }
   },
   computed: {
-    timetables() : any {
+    timetables(): any {
       return this.store.getters.getData.timetables;
     },
     timetable(): any {
