@@ -15,7 +15,7 @@
                 android:name="de.effnerapp.effner.MainActivity"
                 android:label="@string/title_activity_main"
                 android:theme="@style/AppTheme.NoActionBarLaunch"
-                android:screenOrientation="portrait"
+                android:screenOrientation="fullSensor"
                 android:launchMode="singleTask">
 
             <intent-filter>
