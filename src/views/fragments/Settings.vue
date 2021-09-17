@@ -21,30 +21,36 @@
           <ion-label>Night-Theme</ion-label>
           <ion-toggle slot="end" :checked="darkModeEnabled" @ionChange="toggleNightTheme"></ion-toggle>
         </ion-item>
+        <ion-item class="ion-activatable ripple-parent">
+          <ion-label>Stundenplan-Farbe</ion-label>
+          <ion-select v-model="timetableColorTheme" :value="timetableColorTheme" @ionChange="setTimetableColorTheme(timetableColorTheme)" slot="end">
+            <ion-select-option v-for="(e, i) in themes" :key="i" :value="i">{{ e }}</ion-select-option>
+          </ion-select>
+        </ion-item>
         <ion-list-header>
           <ion-label>Über EffnerApp</ion-label>
         </ion-list-header>
         <ion-item class="ion-activatable ripple-parent" @click="showFeedback">
           <ion-label>Feedback</ion-label>
           <ion-note></ion-note>
-          <ion-ripple-effect />
+          <ion-ripple-effect/>
         </ion-item>
         <ion-item class="ion-activatable ripple-parent">
           <ion-label>App-Version</ion-label>
           <ion-note>Version: 1.x</ion-note>
-          <ion-ripple-effect />
+          <ion-ripple-effect/>
         </ion-item>
         <ion-item class="ion-activatable ripple-parent" @click="openInBrowser('https://go.effner.app/privacy')">
           <ion-label>Datenschutzerklärung</ion-label>
-          <ion-ripple-effect />
+          <ion-ripple-effect/>
         </ion-item>
         <ion-item class="ion-activatable ripple-parent" @click="openInBrowser('https://go.effner.app/imprint')">
           <ion-label>Impressum</ion-label>
-          <ion-ripple-effect />
+          <ion-ripple-effect/>
         </ion-item>
         <ion-item class="ion-activatable ripple-parent" @click="showAbout">
           <ion-label>Über die App</ion-label>
-          <ion-ripple-effect />
+          <ion-ripple-effect/>
         </ion-item>
         <ion-list-header>
           <ion-label>Account</ion-label>
@@ -52,11 +58,11 @@
         <ion-item class="ion-activatable ripple-parent">
           <ion-label>Deine Klasse</ion-label>
           <ion-note>{{ $store.getters.getClass }}</ion-note>
-          <ion-ripple-effect />
+          <ion-ripple-effect/>
         </ion-item>
         <ion-item class="ion-activatable ripple-parent" @click="confirmLogout">
           <ion-label>Abmelden</ion-label>
-          <ion-ripple-effect />
+          <ion-ripple-effect/>
         </ion-item>
       </ion-list>
       <div class="text-center mt-4 mb-4">
@@ -69,7 +75,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {defineComponent, ref} from 'vue';
 import {
   alertController,
   IonContent,
@@ -80,7 +86,7 @@ import {
   IonListHeader,
   IonNote,
   IonPage,
-  IonRippleEffect,
+  IonRippleEffect, IonSelect, IonSelectOption,
   IonTitle,
   IonToggle,
   IonToolbar,
@@ -92,11 +98,26 @@ import {useStore} from 'vuex';
 import {Browser} from '@capacitor/browser';
 import {reset, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
-import {toggleDarkTheme} from '@/tools/theme';
+import {setTimetableColorTheme, TIMETABLE_COLOR_THEME_VALUES, toggleDarkTheme} from '@/tools/theme';
 
 export default defineComponent({
   name: 'Settings',
-  components: {IonPage, IonHeader, IonToolbar, IonTitle, IonItem, IonList, IonContent, IonLabel, IonListHeader, IonRippleEffect, IonNote, IonToggle},
+  components: {
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonItem,
+    IonList,
+    IonContent,
+    IonLabel,
+    IonListHeader,
+    IonRippleEffect,
+    IonNote,
+    IonToggle,
+    IonSelect,
+    IonSelectOption
+  },
   setup() {
     const router = useRouter();
     const store = useStore();
@@ -104,11 +125,16 @@ export default defineComponent({
     const notificationEnabled = store.getters.getNotificationsEnabled;
     const darkModeEnabled = store.getters.getDarkMode;
 
+    const timetableColorTheme = ref(store.getters.getTimetableColorTheme);
+
     return {
+      timetableColorTheme,
       router,
       store,
       notificationEnabled,
-      darkModeEnabled
+      darkModeEnabled,
+      themes: TIMETABLE_COLOR_THEME_VALUES,
+      setTimetableColorTheme
     };
   },
   methods: {
@@ -129,7 +155,7 @@ export default defineComponent({
       this.notificationEnabled = !this.notificationEnabled;
       const sClass = this.store.getters.getClass;
 
-      if(this.notificationEnabled) {
+      if (this.notificationEnabled) {
         // subscribe to FCM channels
         await FCM.subscribeTo({topic: 'APP_GENERAL_NOTIFICATIONS'});
         await FCM.subscribeTo({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
@@ -200,9 +226,9 @@ export default defineComponent({
       return alert.present();
     },
     getStoreUrl() {
-      if(isPlatform('ios')) {
+      if (isPlatform('ios')) {
         return 'https://go.effner.app/ios';
-      } else if(isPlatform('android')) {
+      } else if (isPlatform('android')) {
         return 'https://go.effner.app/android';
       } else {
         return 'https://effner.app';

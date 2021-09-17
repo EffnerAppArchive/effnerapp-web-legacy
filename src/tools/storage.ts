@@ -8,30 +8,40 @@ export async function loadStorage() {
     const notificationsEnabled = await Storage.get({key: 'APP_NOTIFICATIONS'});
     const launched = await Storage.get({key: 'APP_LAUNCHED'});
     const darkMode = await Storage.get({key: 'APP_DARK_MODE'});
+    const timetableColorTheme = await Storage.get({key: 'APP_TIMETABLE_COLOR_THEME'});
+    const preferredTimetable = await Storage.get({key: 'APP_PREFERRED_TIMETABLE'});
 
-    if(credentials && credentials.value) {
+    if (credentials && credentials.value) {
         store.commit('setCredentials', credentials.value);
         store.commit('setRegistered', !!credentials.value);
     }
 
-    if(sClass && sClass.value) {
+    if (sClass && sClass.value) {
         store.commit('setClass', sClass.value);
     }
 
-    if(mvvState && mvvState.value) {
+    if (mvvState && mvvState.value) {
         store.commit('setMVVState', JSON.parse(mvvState.value));
     }
 
-    if(notificationsEnabled.value === 'true') {
+    if (notificationsEnabled.value === 'true') {
         store.commit('setNotificationsEnabled', true);
     }
 
-    if(launched && launched.value === 'true') {
+    if (launched && launched.value === 'true') {
         store.commit('setFirstLaunch', false);
     }
 
-    if(darkMode && darkMode.value === 'true') {
+    if (darkMode && darkMode.value === 'true') {
         store.commit('setDarkMode', true);
+    }
+
+    if (timetableColorTheme && timetableColorTheme.value) {
+        store.commit('setTimetableColorTheme', parseInt(timetableColorTheme.value));
+    }
+
+    if (preferredTimetable && preferredTimetable.value) {
+        store.commit('setPreferredTimetable', parseInt(preferredTimetable.value));
     }
 }
 
@@ -49,7 +59,7 @@ export async function saveNotificationsState(enabled: boolean) {
     await Storage.set({key: 'APP_NOTIFICATIONS', value: String(enabled)});
 }
 
-export async function saveMVVState(state: {id: string; name: string}) {
+export async function saveMVVState(state: { id: string; name: string }) {
     store.commit('setMVVState', state);
     await Storage.set({key: 'APP_MVV_STATE', value: JSON.stringify(state)});
 }
@@ -62,6 +72,16 @@ export async function saveLaunched() {
 export async function saveDarkMode(enabled: boolean) {
     store.commit('setDarkMode', enabled);
     await Storage.set({key: 'APP_DARK_MODE', value: String(enabled)});
+}
+
+export async function saveTimetableColorTheme(id: number) {
+    store.commit('setTimetableColorTheme', id);
+    await Storage.set({key: 'APP_TIMETABLE_COLOR_THEME', value: String(id)});
+}
+
+export async function savePreferredTimetable(i: number) {
+    store.commit('setPreferredTimetable', i);
+    await Storage.set({key: 'APP_PREFERRED_TIMETABLE', value: String(i)});
 }
 
 export async function reset() {

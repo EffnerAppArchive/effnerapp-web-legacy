@@ -15,7 +15,7 @@
       </ion-refresher>
       <ion-item v-if="classes.length > 1">
         <ion-label>Kurs</ion-label>
-        <ion-select v-model="select">
+        <ion-select v-model="select" :value="select" @ionChange="savePreferredTimetable(classes.indexOf(select))">
           <ion-select-option v-for="c in classes" :key="c" :value="c">
             {{ c }}
           </ion-select-option>
@@ -38,8 +38,8 @@
             {{ hour }}
           </td>
           <td v-for="day in 5" :key="day"
-              :style="'background: ' + meta.find(e => e.subject === lessons[day - 1][hour - 1])?.color || 'black'"
-              class="break-all text-center py-2">
+              :style="'background: ' + getColor(day, hour)"
+              class="inner_cell break-all text-center py-2">
             {{ lessons[day - 1][hour - 1] }}
           </td>
         </tr>
@@ -99,6 +99,8 @@ import {useStore} from 'vuex';
 import moment from 'moment';
 
 import {refreshContent} from '@/tools/data';
+import {TIMETABLE_COLOR_THEME_KEYS} from '@/tools/theme';
+import {savePreferredTimetable} from '@/tools/storage';
 
 export default defineComponent({
   name: 'Timetable',
@@ -131,11 +133,12 @@ export default defineComponent({
       select,
       informationOutline,
       moment,
-      refreshContent
+      refreshContent,
+      savePreferredTimetable
     };
   },
   created() {
-    this.select = this.classes[0];
+    this.select = this.classes[this.store.getters.getPreferredTimetable];
   },
   methods: {
     maxDepth() {
@@ -155,6 +158,14 @@ export default defineComponent({
       }
 
       return 0;
+    },
+    getColor(x: number, y: number): string {
+      switch (this.colorTheme) {
+        case 0:
+          return this.meta.find((e: any) => e.subject === this.lessons[x - 1][y - 1])?.color || 'transparent';
+        default:
+          return TIMETABLE_COLOR_THEME_KEYS[this.colorTheme - 1];
+      }
     }
   },
   computed: {
@@ -175,11 +186,14 @@ export default defineComponent({
     },
     classes(): any {
       return this.timetables.map((t: any) => t.class);
+    },
+    colorTheme(): number {
+      return this.store.getters.getTimetableColorTheme;
     }
   },
   watch: {
     timetables: function () {
-      this.select = this.classes[0];
+      this.select = this.classes[this.store.getters.getPreferredTimetable];
     }
   }
 });
@@ -188,5 +202,9 @@ export default defineComponent({
 <style scoped>
 .item_transparent {
   --ion-item-background: transparent;
+}
+
+.inner_cell {
+  border: 1px solid
 }
 </style>

@@ -130,7 +130,7 @@
                 <ion-item class="item_transparent" lines="none">
                   <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label v-if="data.timetables[0]?.lessons" class="card_dark_label" style="text-decoration: none">
+                  <ion-label v-if="data.timetables[store.getters.getPreferredTimetable]?.lessons" class="card_dark_label" style="text-decoration: none">
                     {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
                   </ion-label>
                 </ion-item>
@@ -278,7 +278,7 @@ export default defineComponent({
       await Browser.open({url: uri});
     },
     getNextTimetableLesson(): string | undefined {
-      const {lessons} = this.data.timetables[0];
+      const {lessons} = this.data.timetables[this.store.getters.getPreferredTimetable];
 
       if (lessons) {
         const now = new Date();

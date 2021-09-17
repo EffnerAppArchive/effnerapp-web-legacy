@@ -91,6 +91,7 @@ import {Browser} from '@capacitor/browser';
 import {informationOutline} from 'ionicons/icons';
 
 import {refreshContent} from '@/tools/data';
+import moment from 'moment';
 
 export default defineComponent({
   name: 'Substitutions',
@@ -129,8 +130,27 @@ export default defineComponent({
   created() {
     // improve this ugly shit
     if (this.timetable) {
-      this.select = this.timetable.items?.dates[0] as string;
-      this.selectDate(this.timetable.items?.dates[0] as string);
+
+      const dates = this.timetable.items?.dates;
+      const now = new Date();
+      const hour = now.getHours();
+
+      let newDate;
+
+      if (dates) {
+        if (hour >= 14 || dates[0] !== moment(now).format('DD.MM.YYYY')) {
+          if (dates.length >= 2) {
+            newDate = dates[1];
+          } else {
+            newDate = dates[0];
+          }
+        } else {
+          newDate = dates[0];
+        }
+
+        this.select = newDate;
+        this.selectDate(newDate);
+      }
     }
   },
   data() {

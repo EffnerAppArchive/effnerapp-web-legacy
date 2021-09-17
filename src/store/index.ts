@@ -11,7 +11,9 @@ export default createStore({
     error: null,
     notificationsEnabled: false,
     firstLaunch: true,
-    darkMode: false
+    darkMode: false,
+    timetableColorTheme: 0,
+    preferredTimetable: 0
   },
   mutations: {
     setCredentials(state, to) {
@@ -43,6 +45,12 @@ export default createStore({
     },
     setDarkMode(state, to) {
       state.darkMode = to;
+    },
+    setTimetableColorTheme(state, to) {
+      state.timetableColorTheme = to;
+    },
+    setPreferredTimetable(state, to) {
+      state.preferredTimetable = to;
     },
     reset(state) {
       state.credentials = null;
@@ -83,6 +91,12 @@ export default createStore({
     },
     getDarkMode(state) {
       return state.darkMode;
+    },
+    getTimetableColorTheme(state) {
+      return state.timetableColorTheme;
+    },
+    getPreferredTimetable(state) {
+      return state.preferredTimetable;
     }
   },
   actions: {
