@@ -1,7 +1,7 @@
 {
-  "versionName": 2.0,
+  "versionName": 2.0.1,
   "versionCodes": {
-    "iOS": 18,
-    "android": 68
+    "iOS": 19
+    "android": 69
   }
 }
