@@ -6,14 +6,14 @@ versionName=$(jq '.versionName' $versionFile)
 versionCodeIos=$(jq '.versionCodes.iOS' $versionFile)
 versionCodeAndroid=$(jq '.versionCodes.android' $versionFile)
 
-echo $versionName, $versionCodeIos, $versionCodeAndroid
+echo "$versionName", "$versionCodeIos", "$versionCodeAndroid"
 
 # Replace values in Android build.gradle
-sed -i'.backup' -e "s/##VERSIONNAME##/$versionName/gI" $androidFile
-sed -i'.backup' -e "s/696969/$versionCodeAndroid/gI" $androidFile
+sed -i'.backup' -e "s/##VERSIONNAME##/$versionName/g" $androidFile
+sed -i'.backup' -e "s/696969/$versionCodeAndroid/g" $androidFile
 cat $androidFile
 
 # Replace values in iOS project file
-sed -i'.backup' -e "s/##VERSIONNAME##/$versionName/gI" $iOSFile
-sed -i'.backup' -e "s/696969/$versionCodeIos/gI" $iOSFile
+sed -i'.backup' -e "s/##VERSIONNAME##/$versionName/g" $iOSFile
+sed -i'.backup' -e "s/696969/$versionCodeIos/g" $iOSFile
 cat $iOSFile
