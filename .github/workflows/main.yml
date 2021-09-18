@@ -9,12 +9,11 @@ on:
       - "versions.json"
 
 jobs:
-  build:
+  build-android:
     name: Build APK
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
       - name: Set up JDK 11
@@ -26,7 +25,7 @@ jobs:
         uses: actions/setup-node@v2.2.0
 
       - name: update versions
-        run: apt-get install jq && ./scripts/update-versions.sh
+        run: sudo apt-get install jq && ./scripts/update-versions.sh
 
       - name: Setup Ionic
         run: npm install -D @ionic/cli
@@ -105,6 +104,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: update versions
+        run: sudo apt-get install jq && ./scripts/update-versions.sh
+
       - name: Grant execute permission for build script
         run: chmod +x scripts/build-ios.sh
 
@@ -126,7 +128,7 @@ jobs:
   release:
     name: Release App
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [ build-android ]
 
     steps:
       - uses: actions/checkout@v2
