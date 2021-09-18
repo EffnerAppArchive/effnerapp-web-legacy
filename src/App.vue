@@ -5,7 +5,7 @@
         <ion-router-outlet/>
       </template>
       <template #fallback>
-        <div>Loading ...</div>
+        <LoadingAnimation />
       </template>
     </Suspense>
   </ion-app>
@@ -17,10 +17,12 @@ import {defineComponent} from 'vue';
 import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
 import {initTheme} from '@/tools/theme';
 import {isNative} from '@/tools/native';
+import LoadingAnimation from '@/components/LoadingAnimation.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
+    LoadingAnimation,
     IonApp,
     IonRouterOutlet
   },
