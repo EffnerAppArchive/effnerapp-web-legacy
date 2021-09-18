@@ -29,6 +29,7 @@ jobs:
 
       - name: update versions
         run: sudo apt-get install jq && ./scripts/update-versions.sh
+        working-directory: ./scripts
 
       - name: Setup Ionic
         run: npm install -D @ionic/cli
@@ -102,7 +103,8 @@ jobs:
         run: chmod -R 777 scripts
 
       - name: update versions
-        run: sudo apt-get install jq && ./scripts/update-versions.sh
+        run: ./scripts/update-versions.sh
+        working-directory: ./scripts
 
       - name: Setup Ionic
         run: npm install -D @ionic/cli
