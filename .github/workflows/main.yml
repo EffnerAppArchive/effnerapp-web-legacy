@@ -133,6 +133,7 @@ jobs:
     needs: [build-android]
 
     steps:
+      - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
           name: Signed APK
@@ -142,6 +143,13 @@ jobs:
           name: Signed app bundle
 
       - run: mv app-release-unsigned-signed.apk app-release.apk
+      
+      - name: Grant execute permission
+        run: chmod -R 777 scripts
+        
+      - name: update versions
+        run: ./update-versions.sh
+        working-directory: ./scripts
 
       - name: Expose version name
         uses: michpohl/android-expose-version-name-action@v1.0.0
