@@ -1,13 +1,12 @@
-versionFile='../versions.json'
+versionFile='../release/versions.json'
 iOSFile='../ios/App/App.xcodeproj/project.pbxproj'
 androidFile='../android/app/build.gradle'
 
 versionName=$(jq '.versionName' $versionFile)
-message=$(jq '.message' $versionFile)
 versionCodeIos=$(jq '.versionCodes.iOS' $versionFile)
 versionCodeAndroid=$(jq '.versionCodes.android' $versionFile)
 
-echo $versionName, $message, $versionCodeIos, $versionCodeAndroid
+echo $versionName, $versionCodeIos, $versionCodeAndroid
 
 # Replace values in Android build.gradle
 sed -i "s/##VERSIONNAME##/$versionName/gI" $androidFile
