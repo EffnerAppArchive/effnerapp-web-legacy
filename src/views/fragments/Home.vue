@@ -99,6 +99,26 @@
               <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
           </ion-col>
+
+          <ion-col>
+            <ion-card class="gradient_5 ion-activatable ripple-parent" @click="router.push({name: 'Stundenplan'})">
+              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
+              </ion-item>
+              <ion-card class="drop_shadow card_dark">
+                <ion-item class="item_transparent" lines="none">
+                  <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon"
+                            style="margin-right: 0.75rem;"></ion-icon>
+                  <ion-label v-if="data?.timetables[store.getters.getPreferredTimetable]?.lessons"
+                             class="card_dark_label" style="text-decoration: none">
+                    {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
+                  </ion-label>
+                </ion-item>
+              </ion-card>
+              <ion-ripple-effect></ion-ripple-effect>
+            </ion-card>
+          </ion-col>
+
         </ion-row>
 
         <ion-row>
@@ -121,23 +141,6 @@
             </ion-card>
           </ion-col>
 
-          <ion-col>
-            <ion-card class="gradient_5 ion-activatable ripple-parent" @click="router.push({name: 'Stundenplan'})">
-              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
-                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
-              </ion-item>
-              <ion-card class="drop_shadow card_dark">
-                <ion-item class="item_transparent" lines="none">
-                  <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon"
-                            style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label v-if="data?.timetables[store.getters.getPreferredTimetable]?.lessons" class="card_dark_label" style="text-decoration: none">
-                    {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
-                  </ion-label>
-                </ion-item>
-              </ion-card>
-              <ion-ripple-effect></ion-ripple-effect>
-            </ion-card>
-          </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
@@ -155,7 +158,9 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonPage, IonRefresher, IonRefresherContent,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonRippleEffect,
   IonRow,
   IonTitle,

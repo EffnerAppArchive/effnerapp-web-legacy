@@ -5,14 +5,14 @@
         <ion-router-outlet/>
       </template>
       <template #fallback>
-        <div>Loading ...</div>
+        <div>Loading...</div>
       </template>
     </Suspense>
   </ion-app>
 </template>
 
 <script lang="ts">
-import {IonApp, IonRouterOutlet} from '@ionic/vue';
+import {alertController, IonApp, IonRouterOutlet} from '@ionic/vue';
 import {defineComponent} from 'vue';
 import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
 import {initTheme} from '@/tools/theme';
@@ -60,6 +60,13 @@ export default defineComponent({
       PushNotifications.addListener('pushNotificationReceived',
           (notification: PushNotificationSchema) => {
             console.log('Push received: ' + JSON.stringify(notification));
+
+            alertController
+                .create({
+                  header: notification.title,
+                  message: notification.body,
+                  buttons: ['OK']
+                }).then(alert => alert.present());
           }
       );
 

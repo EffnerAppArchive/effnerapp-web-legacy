@@ -13,7 +13,8 @@ export default createStore({
     firstLaunch: true,
     darkMode: false,
     timetableColorTheme: 0,
-    preferredTimetable: 0
+    preferredTimetable: 0,
+    developer: false
   },
   mutations: {
     setCredentials(state, to) {
@@ -52,6 +53,9 @@ export default createStore({
     setPreferredTimetable(state, to) {
       state.preferredTimetable = to;
     },
+    setDeveloper(state, to) {
+      state.developer = to;
+    },
     reset(state) {
       state.credentials = null;
       state.registered = false;
@@ -59,6 +63,12 @@ export default createStore({
       state.data = null;
       state.mvvState = null;
       state.error = null;
+      state.notificationsEnabled = false;
+      state.firstLaunch = false;
+      state.darkMode = false;
+      state.timetableColorTheme = 0;
+      state.preferredTimetable = 0;
+      state.developer = false;
     }
   },
   getters: {
@@ -97,6 +107,9 @@ export default createStore({
     },
     getPreferredTimetable(state) {
       return state.preferredTimetable;
+    },
+    getDeveloper(state) {
+      return state.developer;
     }
   },
   actions: {

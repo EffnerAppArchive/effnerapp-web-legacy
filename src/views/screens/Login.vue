@@ -155,7 +155,14 @@ export default defineComponent({
         } else {
           this.openToast(value.status + ' ' + value.statusText);
         }
-      }).catch(reason => this.openToast(reason));
+      }).catch(reason => {
+        if (reason.response.status === 401) {
+          this.openToast('Überprüfe deine Anmeldedaten');
+          return;
+        }
+
+        this.openToast(reason.response?.data?.status?.error || reason);
+      });
     },
     async openToast(message: string) {
       const toast = await toastController
