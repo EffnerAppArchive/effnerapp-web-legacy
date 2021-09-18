@@ -24,12 +24,12 @@
           <substitution-item
               v-for="(item, i) in getSubstitutions"
               :key="i"
+              :full-class="item.fullClass"
               :info="item.info"
               :period="item.period"
               :room="item.room"
               :sub-teacher="item.subTeacher"
-              :teacher="item.teacher"
-              :full-class="item.fullClass"/>
+              :teacher="item.teacher"/>
           <substitution-item
               v-if="getInformation"
               key="info"
@@ -45,17 +45,6 @@
       <ion-grid>
         <ion-row>
           <ion-col>
-            <div class="pr-4 pb-6">
-              <ion-item class="item_transparent" lines="none">
-                <ion-icon :icon="informationOutline" color="black"
-                          style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
-                <ion-label style="font-weight: normal; font-size: 1rem">Zuletzt aktualisiert:
-                  {{ timetable.time }}
-                </ion-label>
-              </ion-item>
-            </div>
-          </ion-col>
-          <ion-col>
             <div class="text-right pr-4 pb-6 pt-2">
               <div class="ripple-parent ion-activatable">
                 <a class="text-blue-800" @click="showFullPlan">Gesamten Vertretungsplan anzeigen</a>
@@ -66,18 +55,38 @@
         </ion-row>
       </ion-grid>
     </ion-content>
+
+    <ion-footer class="ion-no-border">
+      <ion-toolbar>
+        <div>
+          <ion-item class="item_transparent" lines="none">
+            <ion-icon :icon="informationOutline" color="black"
+                      style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
+            <ion-label style="font-weight: normal; font-size: 1rem">Zuletzt aktualisiert:
+              {{ timetable.time }}
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-toolbar>
+    </ion-footer>
   </ion-page>
 </template>
 
 <script lang="ts">
 import {
   IonCol,
-  IonContent, IonGrid,
-  IonHeader, IonIcon,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
-  IonPage, IonRefresher, IonRefresherContent, IonRippleEffect, IonRow,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
+  IonRippleEffect,
+  IonRow,
   IonSelect,
   IonSelectOption,
   IonTitle,

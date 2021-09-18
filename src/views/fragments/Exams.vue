@@ -48,12 +48,12 @@
           </ion-row>
         </ion-grid>
       </div>
-
-
     </ion-content>
+
+
     <ion-footer class="ion-no-border">
       <ion-toolbar>
-        <div class="row">
+        <div>
           <ion-item class="item_transparent" lines="none">
             <ion-icon :icon="informationOutline" color="black"
                       style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
