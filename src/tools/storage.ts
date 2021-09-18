@@ -15,6 +15,21 @@ export async function loadStorage(): Promise<void> {
     if (credentials && credentials.value) {
         store.commit('setCredentials', credentials.value);
         store.commit('setRegistered', !!credentials.value);
+    } else {
+        // check legacy storage keys
+        const id = await Storage.get({key: 'APP_DSB_LOGIN_ID'});
+        const password = await Storage.get({key: 'APP_DSB_LOGIN_PASSWORD'});
+
+        if(id && id.value && password && password.value) {
+            // store values in new storage keys
+            store.commit('setCredentials', id.value + ':' + password.value);
+            store.commit('setRegistered', true);
+            await Storage.set({key: 'APP_CREDENTIALS', value: id.value + ':' + password.value});
+
+            // remove legacy storage keys
+            await Storage.remove({key: 'APP_DSB_LOGIN_ID'});
+            await Storage.remove({key: 'APP_DSB_LOGIN_PASSWORD'});
+        }
     }
 
     if (sClass && sClass.value) {
@@ -35,6 +50,18 @@ export async function loadStorage(): Promise<void> {
 
     if (darkMode && darkMode.value === 'true') {
         store.commit('setDarkMode', true);
+    } else {
+        // check legacy storage key
+        const designDark = await Storage.get({key: 'APP_DESIGN_DARK'});
+
+        if(designDark && designDark.value === 'true') {
+            // store values in new storage keys
+            store.commit('setDarkMode', true);
+            await Storage.set({key: 'APP_DARK_MODE', value: 'true'});
+
+            // remove legacy storage key
+            await Storage.remove({key: 'APP_DESIGN_DARK'});
+        }
     }
 
     if (timetableColorTheme && timetableColorTheme.value) {
