@@ -6,7 +6,7 @@ on:
   push:
     branches: [ master ]
     paths:
-      - "ios/App/App.xcodeproj/**"
+      - "versions.json"
 
 jobs:
   build:
@@ -24,6 +24,9 @@ jobs:
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.2.0
+
+      - name: update versions
+        run: apt-get install jq && ./scripts/update-versions.sh
 
       - name: Setup Ionic
         run: npm install -D @ionic/cli
