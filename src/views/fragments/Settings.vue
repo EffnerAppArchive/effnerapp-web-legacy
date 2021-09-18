@@ -41,11 +41,11 @@
           <ion-note>Version: 1.x</ion-note>
           <ion-ripple-effect/>
         </ion-item>
-        <ion-item class="ion-activatable ripple-parent" @click="openInBrowser('https://go.effner.app/privacy')">
+        <ion-item class="ion-activatable ripple-parent" @click="this.openInBrowser('https://go.effner.app/privacy')">
           <ion-label>Datenschutzerklärung</ion-label>
           <ion-ripple-effect/>
         </ion-item>
-        <ion-item class="ion-activatable ripple-parent" @click="openInBrowser('https://go.effner.app/imprint')">
+        <ion-item class="ion-activatable ripple-parent" @click="this.openInBrowser('https://go.effner.app/imprint')">
           <ion-label>Impressum</ion-label>
           <ion-ripple-effect/>
         </ion-item>
@@ -108,17 +108,15 @@ import {
   IonTitle,
   IonToggle,
   IonToolbar,
-  isPlatform,
-  toastController
+  isPlatform
 } from '@ionic/vue';
 
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
-import {Browser} from '@capacitor/browser';
 import {reset, saveDeveloper, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
 import {setTimetableColorTheme, TIMETABLE_COLOR_THEME_VALUES, toggleDarkTheme} from '@/tools/theme';
-import {isNative} from '@/tools/native';
+import {isNative, openInBrowser, openSimpleAlert, openToast} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Settings',
@@ -192,9 +190,6 @@ export default defineComponent({
 
       await saveNotificationsState(this.notificationEnabled);
     },
-    async openInBrowser(uri: string) {
-      await Browser.open({url: uri});
-    },
     async confirmLogout() {
       const alert = await alertController
           .create({
@@ -217,48 +212,29 @@ export default defineComponent({
     },
     async joinDeveloper() {
       if (this.store.getters.getDeveloper) {
-        await this.openToast('Du bist bereits Developer');
+        await openToast('Du bist bereits Developer');
         return;
       }
       this.developerClick++;
 
       if (this.developerClick == 20) {
-        await this.openToast('Du bist jetzt Developer');
+        await openToast('Du bist jetzt Developer');
         this.developerClick = 0;
         await saveDeveloper(true);
         await FCM.subscribeTo({topic: 'APP_DEV_NOTIFICATIONS'});
       }
     },
     async leaveDeveloper() {
-      await this.openToast('Du bist kein Developer mehr');
+      await openToast('Du bist kein Developer mehr');
       await saveDeveloper(false);
       await FCM.unsubscribeFrom({topic: 'APP_DEV_NOTIFICATIONS'});
     },
     async showFCMToken() {
-      const alert = await alertController
-          .create({
-            header: 'FCMToken',
-            message: (await FCM.getToken()).token,
-            buttons: ['OK']
-          });
-      return alert.present();
-    },
-    async openToast(message: string) {
-      const toast = await toastController
-          .create({
-            message: message,
-            duration: 2000
-          });
-      return toast.present();
+      await openSimpleAlert('FCMToken', (await FCM.getToken()).token);
     },
     async showAbout() {
-      const alert = await alertController
-          .create({
-            header: 'Über die App',
-            message: 'EffnerApp - by Luis & Sebi!<br><br>© ' + new Date().getFullYear() + ' EffnerApp - Danke an alle Mitwirkenden ❤',
-            buttons: ['OK']
-          });
-      return alert.present();
+      await openSimpleAlert('Über die App',
+          'EffnerApp - by Luis & Sebi!<br><br>© ' + new Date().getFullYear() + ' EffnerApp - Danke an alle Mitwirkenden ❤');
     },
     async showFeedback() {
       const alert = await alertController
@@ -273,13 +249,13 @@ export default defineComponent({
               {
                 text: 'App bewerten',
                 handler: () => {
-                  this.openInBrowser(this.getStoreUrl());
+                  openInBrowser(this.getStoreUrl());
                 }
               },
               {
                 text: 'E-Mail senden',
                 handler: () => {
-                  this.openInBrowser('mailto:info@effner.app');
+                  openInBrowser('mailto:info@effner.app');
                 }
               }
             ]

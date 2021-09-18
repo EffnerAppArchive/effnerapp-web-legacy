@@ -69,7 +69,7 @@
                   <ion-icon :icon="documentOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
                   <ion-label class="card_dark_label" style="text-decoration: none"
-                             @click="openInBrowser(getDocuments[0]?.uri)">
+                             @click="this.openInBrowser(getDocuments[0]?.uri)">
                     {{ getDocuments[0]?.name }} <i class="fas fa-external-link-alt" style="padding-left: 0.25rem"/>
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
@@ -124,7 +124,7 @@
         <ion-row>
           <ion-col>
             <ion-card class="gradient_3 ion-activatable ripple-parent"
-                      @click.prevent="openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
+                      @click.prevent="this.openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Speiseplan <i
                     class="fas fa-external-link-alt"/>
@@ -187,7 +187,6 @@ import {
 import DepartureItem from '@/components/DepartureItem.vue';
 import {useRouter} from 'vue-router';
 import {fetchDepartures} from '@/tools/mvv';
-import {Browser} from '@capacitor/browser';
 
 import {refreshContent} from '@/tools/data';
 
@@ -278,9 +277,6 @@ export default defineComponent({
           time: item.departureLive
         };
       })[0];
-    },
-    async openInBrowser(uri: string) {
-      await Browser.open({url: uri});
     },
     getNextTimetableLesson(): string | undefined {
       const lessons = this.data?.timetables[this.store.getters.getPreferredTimetable]?.lessons;

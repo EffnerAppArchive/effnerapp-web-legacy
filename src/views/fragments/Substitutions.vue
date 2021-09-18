@@ -76,6 +76,7 @@
 import {
   IonCol,
   IonContent,
+  IonFooter,
   IonGrid,
   IonHeader,
   IonIcon,
@@ -90,18 +91,17 @@ import {
   IonSelect,
   IonSelectOption,
   IonTitle,
-  IonToolbar,
-  IonFooter
+  IonToolbar
 } from '@ionic/vue';
 import {defineComponent, ref} from 'vue';
 import {useStore} from 'vuex';
 import SubstitutionItem from '@/components/SubstitutionItem.vue';
-import {Browser} from '@capacitor/browser';
 
 import {informationOutline} from 'ionicons/icons';
 
 import {refreshContent} from '@/tools/data';
 import moment from 'moment';
+import {openInBrowser} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Substitutions',
@@ -203,7 +203,7 @@ export default defineComponent({
       return myClass === sClass;
     },
     async showFullPlan() {
-      await Browser.open({url: this.timetable.url});
+      await openInBrowser(this.timetable.url);
     }
   },
   computed: {

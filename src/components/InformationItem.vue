@@ -1,6 +1,6 @@
 <template>
   <ion-item class="ion-activatable ripple-parent" @click="openDocument">
-    <ion-icon :icon="documentOutline" slot="start"/>
+    <ion-icon slot="start" :icon="documentOutline"/>
     <ion-label>{{ title }}</ion-label>
     <i class="fas fa-external-link-alt"/>
     <ion-ripple-effect/>
@@ -9,10 +9,10 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import {IonItem, IonRippleEffect, IonIcon, IonLabel} from '@ionic/vue';
+import {IonIcon, IonItem, IonLabel, IonRippleEffect} from '@ionic/vue';
 
-import {documentOutline, arrowForward} from 'ionicons/icons';
-import {Browser} from '@capacitor/browser';
+import {arrowForward, documentOutline} from 'ionicons/icons';
+import {openInBrowser} from '@/tools/helper';
 
 export default defineComponent({
   name: 'InformationItem',
@@ -30,7 +30,7 @@ export default defineComponent({
   methods: {
     async openDocument() {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      await Browser.open({url: this.uri!});
+      await openInBrowser(this.uri!);
     }
   }
 });
