@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import {IonApp, IonRouterOutlet} from '@ionic/vue';
+import {IonApp, IonRouterOutlet, isPlatform} from '@ionic/vue';
 import {defineComponent} from 'vue';
 import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
 import {initTheme} from '@/tools/theme';
@@ -63,7 +63,9 @@ export default defineComponent({
           (notification: PushNotificationSchema) => {
             console.log('Push received: ' + JSON.stringify(notification));
 
-            openSimpleAlert(notification.title, notification.body);
+            if (!isPlatform('ios')) {
+              openSimpleAlert(notification.title, notification.body);
+            }
           }
       );
 
