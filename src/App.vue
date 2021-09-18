@@ -85,6 +85,10 @@ body {
   box-sizing: border-box;
 }
 
+.md ion-alert > .alert-wrapper {
+  border-radius: 15px;
+}
+
 .md ion-card {
   margin: 24px 16px;
   border-radius: 8px;
