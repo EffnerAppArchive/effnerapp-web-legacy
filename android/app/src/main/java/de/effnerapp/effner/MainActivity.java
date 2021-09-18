@@ -2,9 +2,11 @@ package de.effnerapp.effner;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.community.fcm.FCMPlugin;
@@ -53,10 +55,15 @@ public class MainActivity extends BridgeActivity {
         // night mode support
         int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         WebSettings webSettings = this.bridge.getWebView().getSettings();
+        WebView webView = this.bridge.getWebView();
+
         if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+            webView.setBackgroundColor(Color.BLACK);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 webSettings.setForceDark(WebSettings.FORCE_DARK_ON);
             }
+        } else {
+            webView.setBackgroundColor(Color.WHITE);
         }
     }
 }
