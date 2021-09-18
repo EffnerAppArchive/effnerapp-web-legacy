@@ -24,6 +24,9 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.2.0
 
+      - name: Grant execute permission
+        run: chmod -R 777 scripts
+
       - name: update versions
         run: sudo apt-get install jq && ./scripts/update-versions.sh
 
@@ -32,9 +35,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Grant execute permission for build script
-        run: chmod +x scripts/build-android.sh
 
       - name: Build ionic web app
         run: ./scripts/build-android.sh
@@ -98,17 +98,17 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.2.0
 
+      - name: Grant execute permission
+        run: chmod -R 777 scripts
+
+      - name: update versions
+        run: sudo apt-get install jq && ./scripts/update-versions.sh
+
       - name: Setup Ionic
         run: npm install -D @ionic/cli
 
       - name: Install dependencies
         run: npm install
-
-      - name: update versions
-        run: sudo apt-get install jq && ./scripts/update-versions.sh
-
-      - name: Grant execute permission for build script
-        run: chmod +x scripts/build-ios.sh
 
       - name: Build ionic web app
         run: ./scripts/build-ios.sh
