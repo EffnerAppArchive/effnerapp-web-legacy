@@ -36,7 +36,7 @@
           <ion-note></ion-note>
           <ion-ripple-effect/>
         </ion-item>
-        <ion-item class="ion-activatable ripple-parent" @click.prevent="developer">
+        <ion-item class="ion-activatable ripple-parent" @click="joinDeveloper">
           <ion-label>App-Version</ion-label>
           <ion-note>Version: 1.x</ion-note>
           <ion-ripple-effect/>
@@ -71,9 +71,12 @@
           <ion-list-header>
             <ion-label>Developer</ion-label>
           </ion-list-header>
-          <ion-item class="ion-activatable ripple-parent">
+          <ion-item class="ion-activatable ripple-parent" @click="showFCMToken">
             <ion-label>FCMToken</ion-label>
-            <ion-note>{{ getFCMToken }}</ion-note>
+            <ion-ripple-effect/>
+          </ion-item>
+          <ion-item class="ion-activatable ripple-parent" @click="leaveDeveloper">
+            <ion-label>Leave</ion-label>
             <ion-ripple-effect/>
           </ion-item>
         </div>
@@ -212,7 +215,7 @@ export default defineComponent({
           });
       return alert.present();
     },
-    async developer() {
+    async joinDeveloper() {
       if (this.store.getters.getDeveloper) {
         await this.openToast('Du bist bereits Developer');
         return;
@@ -221,12 +224,24 @@ export default defineComponent({
 
       if (this.developerClick == 20) {
         await this.openToast('Du bist jetzt Developer');
+        this.developerClick = 0;
         await saveDeveloper(true);
         await FCM.subscribeTo({topic: 'APP_DEV_NOTIFICATIONS'});
       }
     },
-    async getFCMToken() {
-      return (await FCM.getToken()).token;
+    async leaveDeveloper() {
+      await this.openToast('Du bist kein Developer mehr');
+      await saveDeveloper(false);
+      await FCM.unsubscribeFrom({topic: 'APP_DEV_NOTIFICATIONS'});
+    },
+    async showFCMToken() {
+      const alert = await alertController
+          .create({
+            header: 'FCMToken',
+            message: (await FCM.getToken()).token,
+            buttons: ['OK']
+          });
+      return alert.present();
     },
     async openToast(message: string) {
       const toast = await toastController
