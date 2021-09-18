@@ -47,6 +47,7 @@
 
 <script lang="ts">
 import {
+  alertController,
   IonButton,
   IonContent,
   IonInput,
@@ -55,7 +56,6 @@ import {
   IonPage,
   IonSelect,
   IonSelectOption,
-  isPlatform,
   toastController
 } from '@ionic/vue';
 
@@ -67,6 +67,7 @@ import {saveCredentials, saveNotificationsState} from '@/tools/storage';
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
 import {FCM} from '@capacitor-community/fcm';
+import {isNative} from '@/tools/native';
 
 export default defineComponent({
   name: 'Login',
@@ -84,9 +85,9 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
 
-    if (store.getters.isRegistered && !store.getters.getError) {
-      await router.push({path: '/main'});
-    }
+    // if (store.getters.isRegistered && !store.getters.getError) {
+    //   await router.push({path: '/main'});
+    // }
 
     const id = ref('');
     const password = ref('');
@@ -116,7 +117,7 @@ export default defineComponent({
   },
   created() {
     if (this.store.getters.getError) {
-      this.openToast(this.store.getters.getError);
+      this.showErrorAlert(this.store.getters.getError);
       this.store.commit('setError', null);
     }
   },
@@ -142,14 +143,14 @@ export default defineComponent({
           (async () => {
             await saveCredentials(credentials, sClass);
 
-            if (this.isNative()) {
+            if (isNative()) {
               // subscribe to FCM channels
               await FCM.subscribeTo({topic: 'APP_GENERAL_NOTIFICATIONS'});
               await FCM.subscribeTo({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
               await saveNotificationsState(true);
             }
 
-            await this.router.push({name: 'Home'});
+            await this.router.push({path: '/main'});
           })();
         } else {
           this.openToast(value.status + ' ' + value.statusText);
@@ -164,30 +165,49 @@ export default defineComponent({
           });
       return toast.present();
     },
+    async showErrorAlert(message: string) {
+      const alert = await alertController
+          .create({
+            header: 'Anmeldevorgang fehlgeschlagen',
+            message,
+            buttons: [
+              {
+                text: 'OK',
+                role: 'cancel'
+              },
+              {
+                text: 'Neu versuchen',
+                handler: () => {
+                  this.router.push({path: '/main'});
+                }
+              }
+            ]
+          });
+      return alert.present();
+    },
     validateInput() {
       return this.id && this.password && this.sClass;
-    },
-    isNative() {
-      return (isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb');
     }
   },
   computed: {
     getClasses(): string[] {
       return this.classes;
     }
+  },
+  watch: {
+    $route(to, from) {
+      if (to.name === 'Login') {
+        console.log('Reattached to login component ...');
+        if (this.store.getters.getError) {
+          this.showErrorAlert(this.store.getters.getError);
+          this.store.commit('setError', null);
+        }
+      }
+    }
   }
 });
 </script>
 
 <style scoped>
-#container {
-  text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
+
 </style>

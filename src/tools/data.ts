@@ -2,7 +2,6 @@ import axios from 'axios';
 import {sha512} from '@/tools/hash';
 import DSBMobile from '@/tools/dsbmobile';
 import store from '@/store';
-import router from '@/router';
 
 let lastFetchTime = 0;
 
@@ -15,7 +14,7 @@ export const refreshContent = async (e: any): Promise<void> => {
 
 export const refreshContentIfNeeded = async (): Promise<void> => {
     const now = new Date().getTime();
-    if(now - lastFetchTime >= 10 * 60 * 1000) {
+    if (now - lastFetchTime >= 10 * 60 * 1000) {
         await loadData();
     }
 };
@@ -36,9 +35,9 @@ export const loadData = async (): Promise<void> => {
         });
 
         store.commit('setData', response.data.data);
-    } catch (e) {
-        store.commit('setError', e);
-        await router.push({name: 'Login'});
+    } catch (e: any) {
+        store.commit('setError', e.response?.data?.status?.error || e);
+        return Promise.reject(e);
     }
 
     const creds = credentials.split(':');

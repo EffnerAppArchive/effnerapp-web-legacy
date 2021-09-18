@@ -10,7 +10,7 @@
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
       <ion-grid>
-        <ion-row v-if="data.announcement">
+        <ion-row v-if="data?.announcement">
           <ion-col>
             <ion-card class="gradient_0 ion-activatable ripple-parent">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem">
@@ -18,7 +18,7 @@
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Meldung</ion-label>
               </ion-item>
               <ion-card-content class="text-white pt-2">
-                {{ data.announcement }}
+                {{ data?.announcement }}
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -75,12 +75,12 @@
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
 
-                <ion-item v-if="data.exams?.exams[0] != null" class="item_transparent ion-activatable ripple-parent">
+                <ion-item v-if="data?.exams?.exams[0] != null" class="item_transparent ion-activatable ripple-parent">
                   <ion-icon :icon="schoolOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
                   <ion-label class="card_dark_label" style="text-decoration: none"
                              @click.prevent="router.push({name: 'Schulaufgaben'})">
-                    {{ data.exams?.exams[data.exams?.exams.length - 1]?.name }}
+                    {{ data?.exams?.exams[data.exams?.exams.length - 1]?.name }}
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
@@ -130,7 +130,7 @@
                 <ion-item class="item_transparent" lines="none">
                   <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label v-if="data.timetables[store.getters.getPreferredTimetable]?.lessons" class="card_dark_label" style="text-decoration: none">
+                  <ion-label v-if="data?.timetables[store.getters.getPreferredTimetable]?.lessons" class="card_dark_label" style="text-decoration: none">
                     {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
                   </ion-label>
                 </ion-item>
@@ -278,7 +278,7 @@ export default defineComponent({
       await Browser.open({url: uri});
     },
     getNextTimetableLesson(): string | undefined {
-      const {lessons} = this.data.timetables[this.store.getters.getPreferredTimetable];
+      const lessons = this.data?.timetables[this.store.getters.getPreferredTimetable]?.lessons;
 
       if (lessons) {
         const now = new Date();
@@ -318,14 +318,15 @@ export default defineComponent({
       return this.store.getters.getData;
     },
     motd(): string {
-      return this.data.motd;
+      return this.data?.motd;
     },
     getSubstitutions(): Array<Substitution> {
-      const date = this.store.getters.getSubstitutions?.items?.dates[0];
+      const today = moment().format('DD.MM.YYYY');
+      const date = this.store.getters.getSubstitutions?.items?.dates.find((d: string) => d === today);
       return this.store.getters.getSubstitutions?.items?.days?.get(date)?.find((entry: any) => entry.name === this.store.getters.getClass)?.items;
     },
     getDocuments(): any {
-      return this.data.documents?.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
+      return this.data?.documents?.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
     }
   }
 });

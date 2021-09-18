@@ -99,6 +99,7 @@ import {Browser} from '@capacitor/browser';
 import {reset, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
 import {setTimetableColorTheme, TIMETABLE_COLOR_THEME_VALUES, toggleDarkTheme} from '@/tools/theme';
+import {isNative} from '@/tools/native';
 
 export default defineComponent({
   name: 'Settings',
@@ -141,9 +142,11 @@ export default defineComponent({
     async logout() {
       const sClass = this.store.getters.getClass;
 
-      // unsubscribe from FCM channels
-      await FCM.unsubscribeFrom({topic: 'APP_GENERAL_NOTIFICATIONS'});
-      await FCM.unsubscribeFrom({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+      if(isNative()) {
+        // unsubscribe from FCM channels
+        await FCM.unsubscribeFrom({topic: 'APP_GENERAL_NOTIFICATIONS'});
+        await FCM.unsubscribeFrom({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+      }
 
       // reset storage
       await reset();

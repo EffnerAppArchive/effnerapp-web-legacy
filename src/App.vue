@@ -12,10 +12,11 @@
 </template>
 
 <script lang="ts">
-import {IonApp, IonRouterOutlet, isPlatform} from '@ionic/vue';
+import {IonApp, IonRouterOutlet} from '@ionic/vue';
 import {defineComponent} from 'vue';
 import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
 import {initTheme} from '@/tools/theme';
+import {isNative} from '@/tools/native';
 
 export default defineComponent({
   name: 'App',
@@ -68,10 +69,6 @@ export default defineComponent({
             console.log('Push action performed: ' + JSON.stringify(notification));
           }
       );
-    }
-
-    function isNative() {
-      return (isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb');
     }
   }
 });

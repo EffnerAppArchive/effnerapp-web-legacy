@@ -90,7 +90,8 @@ import {
   IonSelect,
   IonSelectOption,
   IonTitle,
-  IonToolbar
+  IonToolbar,
+  IonFooter
 } from '@ionic/vue';
 import {defineComponent, ref} from 'vue';
 import {useStore} from 'vuex';
@@ -122,7 +123,8 @@ export default defineComponent({
     IonGrid,
     IonRippleEffect,
     IonRefresher,
-    IonRefresherContent
+    IonRefresherContent,
+    IonFooter
   },
   async setup() {
     const store = useStore();
