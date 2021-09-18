@@ -1,7 +1,7 @@
 import {Storage} from '@capacitor/storage';
 import store from '../store';
 
-export async function loadStorage() {
+export async function loadStorage(): Promise<void> {
     const credentials = await Storage.get({key: 'APP_CREDENTIALS'});
     const sClass = await Storage.get({key: 'APP_USER_CLASS'});
     const mvvState = await Storage.get({key: 'APP_MVV_STATE'});
@@ -45,7 +45,7 @@ export async function loadStorage() {
     }
 }
 
-export async function saveCredentials(credentials: string, sClass: string) {
+export async function saveCredentials(credentials: string, sClass: string): Promise<void> {
     store.commit('setCredentials', credentials);
     store.commit('setRegistered', !!credentials);
     store.commit('setClass', sClass);
@@ -54,37 +54,37 @@ export async function saveCredentials(credentials: string, sClass: string) {
     await Storage.set({key: 'APP_USER_CLASS', value: sClass});
 }
 
-export async function saveNotificationsState(enabled: boolean) {
+export async function saveNotificationsState(enabled: boolean): Promise<void> {
     store.commit('setNotificationsEnabled', enabled);
     await Storage.set({key: 'APP_NOTIFICATIONS', value: String(enabled)});
 }
 
-export async function saveMVVState(state: { id: string; name: string }) {
+export async function saveMVVState(state: { id: string; name: string }): Promise<void> {
     store.commit('setMVVState', state);
     await Storage.set({key: 'APP_MVV_STATE', value: JSON.stringify(state)});
 }
 
-export async function saveLaunched() {
+export async function saveLaunched(): Promise<void> {
     store.commit('setFirstLaunch', false);
     await Storage.set({key: 'APP_LAUNCHED', value: 'true'});
 }
 
-export async function saveDarkMode(enabled: boolean) {
+export async function saveDarkMode(enabled: boolean): Promise<void> {
     store.commit('setDarkMode', enabled);
     await Storage.set({key: 'APP_DARK_MODE', value: String(enabled)});
 }
 
-export async function saveTimetableColorTheme(id: number) {
+export async function saveTimetableColorTheme(id: number): Promise<void> {
     store.commit('setTimetableColorTheme', id);
     await Storage.set({key: 'APP_TIMETABLE_COLOR_THEME', value: String(id)});
 }
 
-export async function savePreferredTimetable(i: number) {
+export async function savePreferredTimetable(i: number): Promise<void> {
     store.commit('setPreferredTimetable', i);
     await Storage.set({key: 'APP_PREFERRED_TIMETABLE', value: String(i)});
 }
 
-export async function reset() {
+export async function reset(): Promise<void> {
     store.commit('reset');
     await Storage.clear();
 }

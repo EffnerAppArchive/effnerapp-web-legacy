@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Settings</ion-title>
+        <ion-title>Einstellungen</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content fullscreen>
@@ -243,5 +243,19 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.md ion-list ion-item ion-note {
+  align-self: center;
+  padding: 0;
+}
 
+.md ion-note {
+  font-size: 1rem;
+}
+
+.md ion-list-header {
+  font-size: 24px;
+  font-weight: bold;
+  padding-top: 1rem;
+  padding-bottom: 0.25rem;
+}
 </style>

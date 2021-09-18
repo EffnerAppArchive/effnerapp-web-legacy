@@ -125,7 +125,7 @@ export default defineComponent({
       const stops = await findStop(this.currentQuery);
       this.currentQuery = undefined;
 
-      this.stops = stops.map((item: { name: any; id: any }) => {
+      this.stops = stops.map((item: Stop) => {
         return {
           name: item.name,
           id: item.id
@@ -135,7 +135,7 @@ export default defineComponent({
     async loadDepartures(id: string) {
       const departures = await fetchDepartures(id);
 
-      this.departures = departures.map((item: { line: { number: any }; direction: any; departureLive: any; departurePlanned: any }) => {
+      this.departures = departures.map((item: Departure) => {
         const inTime = moment(item.departureLive, 'HH:mm').isSameOrBefore(moment(item.departurePlanned, 'HH:mm'));
         return {
           line: item.line.number,

@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>{{ motd }}</ion-title>
+        <ion-title class="text-center">{{ motd }}</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="false">
@@ -253,7 +253,7 @@ export default defineComponent({
         '15:15',
         '16:00'
       ],
-      nextDeparture: undefined
+      nextDeparture: undefined as { line: number; direction: string; time: string; } | undefined
     };
   },
   watch: {
@@ -266,7 +266,7 @@ export default defineComponent({
       console.log('Fetching departures ...');
       const departures = await fetchDepartures(id);
 
-      this.nextDeparture = departures.map((item: any) => {
+      this.nextDeparture = departures.map((item: Departure) => {
         return {
           line: item.line.number,
           direction: item.direction,
