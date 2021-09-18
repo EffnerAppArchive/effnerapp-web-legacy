@@ -41,11 +41,11 @@
           <ion-note>Version: 1.x</ion-note>
           <ion-ripple-effect/>
         </ion-item>
-        <ion-item class="ion-activatable ripple-parent" @click="this.openInBrowser('https://go.effner.app/privacy')">
+        <ion-item class="ion-activatable ripple-parent" @click="openInBrowser('https://go.effner.app/privacy')">
           <ion-label>Datenschutzerklärung</ion-label>
           <ion-ripple-effect/>
         </ion-item>
-        <ion-item class="ion-activatable ripple-parent" @click="this.openInBrowser('https://go.effner.app/imprint')">
+        <ion-item class="ion-activatable ripple-parent" @click="openInBrowser('https://go.effner.app/imprint')">
           <ion-label>Impressum</ion-label>
           <ion-ripple-effect/>
         </ion-item>
@@ -153,6 +153,7 @@ export default defineComponent({
       notificationEnabled,
       darkModeEnabled,
       developerClick,
+      openInBrowser,
       themes: TIMETABLE_COLOR_THEME_VALUES,
       setTimetableColorTheme
     };
