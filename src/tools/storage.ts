@@ -10,6 +10,7 @@ export async function loadStorage(): Promise<void> {
     const darkMode = await Storage.get({key: 'APP_DARK_MODE'});
     const timetableColorTheme = await Storage.get({key: 'APP_TIMETABLE_COLOR_THEME'});
     const preferredTimetable = await Storage.get({key: 'APP_PREFERRED_TIMETABLE'});
+    const developer = await Storage.get({key: 'APP_DEVELOPER'});
 
     if (credentials && credentials.value) {
         store.commit('setCredentials', credentials.value);
@@ -42,6 +43,10 @@ export async function loadStorage(): Promise<void> {
 
     if (preferredTimetable && preferredTimetable.value) {
         store.commit('setPreferredTimetable', parseInt(preferredTimetable.value));
+    }
+
+    if (developer && developer.value === 'true') {
+        store.commit('setDeveloper', true);
     }
 }
 
@@ -82,6 +87,11 @@ export async function saveTimetableColorTheme(id: number): Promise<void> {
 export async function savePreferredTimetable(i: number): Promise<void> {
     store.commit('setPreferredTimetable', i);
     await Storage.set({key: 'APP_PREFERRED_TIMETABLE', value: String(i)});
+}
+
+export async function saveDeveloper(enabled: boolean): Promise<void> {
+    store.commit('setDeveloper', enabled);
+    await Storage.set({key: 'APP_DEVELOPER', value: String(enabled)});
 }
 
 export async function reset(): Promise<void> {

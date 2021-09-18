@@ -55,8 +55,7 @@ import {
   IonLabel,
   IonPage,
   IonSelect,
-  IonSelectOption,
-  toastController
+  IonSelectOption
 } from '@ionic/vue';
 
 import {defineComponent, ref} from 'vue';
@@ -67,7 +66,7 @@ import {saveCredentials, saveNotificationsState} from '@/tools/storage';
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
 import {FCM} from '@capacitor-community/fcm';
-import {isNative} from '@/tools/native';
+import {isNative, openToast} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Login',
@@ -124,7 +123,7 @@ export default defineComponent({
   methods: {
     async login() {
       if (!this.validateInput()) {
-        await this.openToast('Bitte fülle alle Felder aus.');
+        await openToast('Bitte fülle alle Felder aus.');
         return;
       }
 
@@ -153,17 +152,16 @@ export default defineComponent({
             await this.router.push({path: '/main'});
           })();
         } else {
-          this.openToast(value.status + ' ' + value.statusText);
+          openToast(value.status + ' ' + value.statusText);
         }
-      }).catch(reason => this.openToast(reason));
-    },
-    async openToast(message: string) {
-      const toast = await toastController
-          .create({
-            message: message,
-            duration: 2000
-          });
-      return toast.present();
+      }).catch(reason => {
+        if (reason.response.status === 401) {
+          openToast('Überprüfe deine Anmeldedaten');
+          return;
+        }
+
+        openToast(reason.response?.data?.status?.error || reason);
+      });
     },
     async showErrorAlert(message: string) {
       const alert = await alertController
@@ -195,9 +193,9 @@ export default defineComponent({
     }
   },
   watch: {
-    $route(to, from) {
+    $route(to) {
       if (to.name === 'Login') {
-        console.log('Reattached to login component ...');
+        console.log('Reattached to login component...');
         if (this.store.getters.getError) {
           this.showErrorAlert(this.store.getters.getError);
           this.store.commit('setError', null);

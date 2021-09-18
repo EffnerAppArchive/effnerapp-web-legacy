@@ -23,7 +23,8 @@
         </ion-item>
         <ion-item class="ion-activatable ripple-parent">
           <ion-label>Stundenplan-Farbe</ion-label>
-          <ion-select v-model="timetableColorTheme" :value="timetableColorTheme" @ionChange="setTimetableColorTheme(timetableColorTheme)" slot="end">
+          <ion-select slot="end" v-model="timetableColorTheme"
+                      :value="timetableColorTheme" @ionChange="setTimetableColorTheme(timetableColorTheme)">
             <ion-select-option v-for="(e, i) in themes" :key="i" :value="i">{{ e }}</ion-select-option>
           </ion-select>
         </ion-item>
@@ -35,7 +36,7 @@
           <ion-note></ion-note>
           <ion-ripple-effect/>
         </ion-item>
-        <ion-item class="ion-activatable ripple-parent">
+        <ion-item class="ion-activatable ripple-parent" @click="joinDeveloper">
           <ion-label>App-Version</ion-label>
           <ion-note>Version: 1.x</ion-note>
           <ion-ripple-effect/>
@@ -52,6 +53,7 @@
           <ion-label>Über die App</ion-label>
           <ion-ripple-effect/>
         </ion-item>
+
         <ion-list-header>
           <ion-label>Account</ion-label>
         </ion-list-header>
@@ -64,6 +66,20 @@
           <ion-label>Abmelden</ion-label>
           <ion-ripple-effect/>
         </ion-item>
+
+        <div v-if="store.getters.getDeveloper">
+          <ion-list-header>
+            <ion-label>Developer</ion-label>
+          </ion-list-header>
+          <ion-item class="ion-activatable ripple-parent" @click="showFCMToken">
+            <ion-label>FCMToken</ion-label>
+            <ion-ripple-effect/>
+          </ion-item>
+          <ion-item class="ion-activatable ripple-parent" @click="leaveDeveloper">
+            <ion-label>Leave</ion-label>
+            <ion-ripple-effect/>
+          </ion-item>
+        </div>
       </ion-list>
       <div class="text-center mt-4 mb-4">
         <ion-note>
@@ -86,7 +102,9 @@ import {
   IonListHeader,
   IonNote,
   IonPage,
-  IonRippleEffect, IonSelect, IonSelectOption,
+  IonRippleEffect,
+  IonSelect,
+  IonSelectOption,
   IonTitle,
   IonToggle,
   IonToolbar,
@@ -95,11 +113,10 @@ import {
 
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
-import {Browser} from '@capacitor/browser';
-import {reset, saveNotificationsState} from '@/tools/storage';
+import {reset, saveDeveloper, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
 import {setTimetableColorTheme, TIMETABLE_COLOR_THEME_VALUES, toggleDarkTheme} from '@/tools/theme';
-import {isNative} from '@/tools/native';
+import {isNative, openInBrowser, openSimpleAlert, openToast} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Settings',
@@ -125,6 +142,7 @@ export default defineComponent({
 
     const notificationEnabled = store.getters.getNotificationsEnabled;
     const darkModeEnabled = store.getters.getDarkMode;
+    const developerClick = 0;
 
     const timetableColorTheme = ref(store.getters.getTimetableColorTheme);
 
@@ -134,6 +152,8 @@ export default defineComponent({
       store,
       notificationEnabled,
       darkModeEnabled,
+      developerClick,
+      openInBrowser,
       themes: TIMETABLE_COLOR_THEME_VALUES,
       setTimetableColorTheme
     };
@@ -142,10 +162,11 @@ export default defineComponent({
     async logout() {
       const sClass = this.store.getters.getClass;
 
-      if(isNative()) {
+      if (isNative()) {
         // unsubscribe from FCM channels
         await FCM.unsubscribeFrom({topic: 'APP_GENERAL_NOTIFICATIONS'});
         await FCM.unsubscribeFrom({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+        await FCM.unsubscribeFrom({topic: 'APP_DEV_NOTIFICATIONS'});
       }
 
       // reset storage
@@ -170,9 +191,6 @@ export default defineComponent({
 
       await saveNotificationsState(this.notificationEnabled);
     },
-    async openInBrowser(uri: string) {
-      await Browser.open({url: uri});
-    },
     async confirmLogout() {
       const alert = await alertController
           .create({
@@ -193,14 +211,31 @@ export default defineComponent({
           });
       return alert.present();
     },
+    async joinDeveloper() {
+      if (this.store.getters.getDeveloper) {
+        await openToast('Du bist bereits Developer');
+        return;
+      }
+      this.developerClick++;
+
+      if (this.developerClick == 20) {
+        await openToast('Du bist jetzt Developer');
+        this.developerClick = 0;
+        await saveDeveloper(true);
+        await FCM.subscribeTo({topic: 'APP_DEV_NOTIFICATIONS'});
+      }
+    },
+    async leaveDeveloper() {
+      await openToast('Du bist kein Developer mehr');
+      await saveDeveloper(false);
+      await FCM.unsubscribeFrom({topic: 'APP_DEV_NOTIFICATIONS'});
+    },
+    async showFCMToken() {
+      await openSimpleAlert('FCMToken', (await FCM.getToken()).token);
+    },
     async showAbout() {
-      const alert = await alertController
-          .create({
-            header: 'Über die App',
-            message: 'EffnerApp - by Luis & Sebi!<br><br>© ' + new Date().getFullYear() + ' EffnerApp - Danke an alle Mitwirkenden ❤',
-            buttons: ['OK']
-          });
-      return alert.present();
+      await openSimpleAlert('Über die App',
+          'EffnerApp - by Luis & Sebi!<br><br>© ' + new Date().getFullYear() + ' EffnerApp - Danke an alle Mitwirkenden ❤');
     },
     async showFeedback() {
       const alert = await alertController
@@ -215,13 +250,13 @@ export default defineComponent({
               {
                 text: 'App bewerten',
                 handler: () => {
-                  this.openInBrowser(this.getStoreUrl());
+                  openInBrowser(this.getStoreUrl());
                 }
               },
               {
                 text: 'E-Mail senden',
                 handler: () => {
-                  this.openInBrowser('mailto:info@effner.app');
+                  openInBrowser('mailto:info@effner.app');
                 }
               }
             ]

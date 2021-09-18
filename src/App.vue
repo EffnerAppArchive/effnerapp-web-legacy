@@ -16,8 +16,8 @@ import {IonApp, IonRouterOutlet} from '@ionic/vue';
 import {defineComponent} from 'vue';
 import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
 import {initTheme} from '@/tools/theme';
-import {isNative} from '@/tools/native';
 import LoadingAnimation from '@/components/LoadingAnimation.vue';
+import {isNative, openSimpleAlert} from '@/tools/helper';
 
 export default defineComponent({
   name: 'App',
@@ -62,6 +62,8 @@ export default defineComponent({
       PushNotifications.addListener('pushNotificationReceived',
           (notification: PushNotificationSchema) => {
             console.log('Push received: ' + JSON.stringify(notification));
+
+            openSimpleAlert(notification.title, notification.body);
           }
       );
 
@@ -81,10 +83,6 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-.md ion-alert > .alert-wrapper {
-  border-radius: 15px;
 }
 
 .md ion-card {

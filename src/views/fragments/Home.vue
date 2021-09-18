@@ -69,7 +69,7 @@
                   <ion-icon :icon="documentOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
                   <ion-label class="card_dark_label" style="text-decoration: none"
-                             @click="openInBrowser(getDocuments[0]?.uri)">
+                             @click="this.openInBrowser(getDocuments[0]?.uri)">
                     {{ getDocuments[0]?.name }} <i class="fas fa-external-link-alt" style="padding-left: 0.25rem"/>
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
@@ -99,12 +99,32 @@
               <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
           </ion-col>
+
+          <ion-col>
+            <ion-card class="gradient_5 ion-activatable ripple-parent" @click="router.push({name: 'Stundenplan'})">
+              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
+              </ion-item>
+              <ion-card class="drop_shadow card_dark">
+                <ion-item class="item_transparent" lines="none">
+                  <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon"
+                            style="margin-right: 0.75rem;"></ion-icon>
+                  <ion-label v-if="data?.timetables[store.getters.getPreferredTimetable]?.lessons"
+                             class="card_dark_label" style="text-decoration: none">
+                    {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
+                  </ion-label>
+                </ion-item>
+              </ion-card>
+              <ion-ripple-effect></ion-ripple-effect>
+            </ion-card>
+          </ion-col>
+
         </ion-row>
 
         <ion-row>
           <ion-col>
             <ion-card class="gradient_3 ion-activatable ripple-parent"
-                      @click.prevent="openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
+                      @click.prevent="this.openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Speiseplan <i
                     class="fas fa-external-link-alt"/>
@@ -121,23 +141,6 @@
             </ion-card>
           </ion-col>
 
-          <ion-col>
-            <ion-card class="gradient_5 ion-activatable ripple-parent" @click="router.push({name: 'Stundenplan'})">
-              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
-                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
-              </ion-item>
-              <ion-card class="drop_shadow card_dark">
-                <ion-item class="item_transparent" lines="none">
-                  <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon"
-                            style="margin-right: 0.75rem;"></ion-icon>
-                  <ion-label v-if="data?.timetables[store.getters.getPreferredTimetable]?.lessons" class="card_dark_label" style="text-decoration: none">
-                    {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
-                  </ion-label>
-                </ion-item>
-              </ion-card>
-              <ion-ripple-effect></ion-ripple-effect>
-            </ion-card>
-          </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
@@ -155,7 +158,9 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonPage, IonRefresher, IonRefresherContent,
+  IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonRippleEffect,
   IonRow,
   IonTitle,
@@ -182,7 +187,6 @@ import {
 import DepartureItem from '@/components/DepartureItem.vue';
 import {useRouter} from 'vue-router';
 import {fetchDepartures} from '@/tools/mvv';
-import {Browser} from '@capacitor/browser';
 
 import {refreshContent} from '@/tools/data';
 
@@ -273,9 +277,6 @@ export default defineComponent({
           time: item.departureLive
         };
       })[0];
-    },
-    async openInBrowser(uri: string) {
-      await Browser.open({url: uri});
     },
     getNextTimetableLesson(): string | undefined {
       const lessons = this.data?.timetables[this.store.getters.getPreferredTimetable]?.lessons;

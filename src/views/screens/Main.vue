@@ -3,25 +3,25 @@
     <ion-tabs v-if="renderComponent">
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="tab1" href="/main/home" class="ion-activatable ripple-parent">
+        <ion-tab-button class="ion-activatable ripple-parent" href="/main/home" tab="tab1">
           <ion-icon :icon="homeOutline"/>
           <ion-label>Home</ion-label>
           <ion-ripple-effect/>
         </ion-tab-button>
 
-        <ion-tab-button tab="tab2" href="/main/substitutions" class="ion-activatable ripple-parent">
+        <ion-tab-button class="ion-activatable ripple-parent" href="/main/substitutions" tab="tab2">
           <ion-icon :icon="listOutline"/>
           <ion-label>Vertretungen</ion-label>
           <ion-ripple-effect/>
         </ion-tab-button>
 
-        <ion-tab-button tab="tab3" href="/main/exams" class="ion-activatable ripple-parent">
+        <ion-tab-button class="ion-activatable ripple-parent" href="/main/exams" tab="tab3">
           <ion-icon :icon="schoolOutline"/>
           <ion-label>Schulaufgaben</ion-label>
           <ion-ripple-effect/>
         </ion-tab-button>
 
-        <ion-tab-button href="/main/settings" tab="tab4" class="ion-activatable ripple-parent">
+        <ion-tab-button class="ion-activatable ripple-parent" href="/main/settings" tab="tab4">
           <ion-icon :icon="settingsOutline"/>
           <ion-label>Einstellungen</ion-label>
           <ion-ripple-effect/>
@@ -29,7 +29,7 @@
       </ion-tab-bar>
     </ion-tabs>
     <div v-else>
-      Loading ...
+      Loading...
     </div>
   </ion-page>
 </template>
@@ -83,7 +83,6 @@ export default defineComponent({
       schoolOutline,
       settingsOutline
     };
-
   },
   watch: {
     $route(to, from) {
@@ -94,8 +93,8 @@ export default defineComponent({
               this.renderComponent = true;
             })
             .catch(() => {
-          this.router.push({name: 'Login'});
-        });
+              this.router.push({name: 'Login'});
+            });
       }
     }
   }

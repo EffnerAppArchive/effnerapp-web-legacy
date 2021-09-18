@@ -87,17 +87,16 @@ import {
   IonRefresherContent,
   IonRow,
   IonTitle,
-  IonToolbar,
-  toastController
+  IonToolbar
 } from '@ionic/vue';
 import {useStore} from 'vuex';
 import {informationOutline} from 'ionicons/icons';
 import TermItem from '@/components/TermItem.vue';
 import moment from 'moment';
 import {defineComponent} from 'vue';
-import {Browser} from '@capacitor/browser';
 
 import {refreshContent} from '@/tools/data';
+import {openInBrowser, openToast} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Exams',
@@ -137,22 +136,14 @@ export default defineComponent({
       const document = this.data.documents.find((e: { key: string, uri: string }) => e.key.startsWith('DATA_TOP_LEVEL_SA_DOC_' + myAdvancedLevel + '_' + i));
 
       if (document) {
-        await Browser.open({url: document.uri});
+        await openInBrowser(document.uri);
       } else {
-        await this.openToast('Dieses Dokument wurde nicht gefunden.');
+        await openToast('Dieses Dokument wurde nicht gefunden.');
       }
 
     },
     getAdvancedLevel() {
       return this.myClass.startsWith('11') ? '11' : this.myClass.startsWith('12') ? '12' : null;
-    },
-    async openToast(message: string) {
-      const toast = await toastController
-          .create({
-            message: message,
-            duration: 2000
-          });
-      return toast.present();
     }
   },
   computed: {
