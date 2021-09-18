@@ -1,10 +1,15 @@
 import {StatusBar, Style} from '@capacitor/status-bar';
 import {saveDarkMode, saveLaunched, saveTimetableColorTheme} from '@/tools/storage';
 import store from '@/store';
+import {isPlatform} from '@ionic/vue';
 
 export const toggleDarkTheme = async (shouldAdd: boolean): Promise<void> => {
     document.body.classList.toggle('dark', shouldAdd);
-    await StatusBar.setStyle({style: shouldAdd ? Style.Dark : Style.Light});
+
+    if (isPlatform('ios')) {
+        await StatusBar.setStyle({style: shouldAdd ? Style.Dark : Style.Light});
+    }
+
     await saveDarkMode(shouldAdd);
 };
 
