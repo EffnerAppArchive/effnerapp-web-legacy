@@ -1,4 +1,4 @@
-[![CI](https://github.com/EffnerApp/effnerapp-web/actions/workflows/main.yml/badge.svg)](https://github.com/EffnerApp/effnerapp-web/actions/workflows/main.yml)
+[![Build android](https://github.com/EffnerApp/effnerapp-web/actions/workflows/android.yml/badge.svg)](https://github.com/EffnerApp/effnerapp-web/actions/workflows/android.yml) [![Build iOS](https://github.com/EffnerApp/effnerapp-web/actions/workflows/ios.yml/badge.svg)](https://github.com/EffnerApp/effnerapp-web/actions/workflows/ios.yml)
 # effnerapp-web
 Vue Web-app version of the EffnerApp
 
