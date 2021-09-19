@@ -1,4 +1,4 @@
-name: Application CI/CD
+name: Build iOS
 
 # Controls when the action will run.
 on:
