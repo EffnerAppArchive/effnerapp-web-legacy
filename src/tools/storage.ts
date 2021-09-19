@@ -16,20 +16,7 @@ export async function loadStorage(): Promise<void> {
         store.commit('setCredentials', credentials.value);
         store.commit('setRegistered', !!credentials.value);
     } else {
-        // check legacy storage keys
-        const id = await Storage.get({key: 'APP_DSB_LOGIN_ID'});
-        const password = await Storage.get({key: 'APP_DSB_LOGIN_PASSWORD'});
-
-        if(id && id.value && password && password.value) {
-            // store values in new storage keys
-            store.commit('setCredentials', id.value + ':' + password.value);
-            store.commit('setRegistered', true);
-            await Storage.set({key: 'APP_CREDENTIALS', value: id.value + ':' + password.value});
-
-            // remove legacy storage keys
-            await Storage.remove({key: 'APP_DSB_LOGIN_ID'});
-            await Storage.remove({key: 'APP_DSB_LOGIN_PASSWORD'});
-        }
+        await searchLegacyStorageGroup();
     }
 
     if (sClass && sClass.value) {
@@ -50,18 +37,6 @@ export async function loadStorage(): Promise<void> {
 
     if (darkMode && darkMode.value === 'true') {
         store.commit('setDarkMode', true);
-    } else {
-        // check legacy storage key
-        const designDark = await Storage.get({key: 'APP_DESIGN_DARK'});
-
-        if(designDark && designDark.value === 'true') {
-            // store values in new storage keys
-            store.commit('setDarkMode', true);
-            await Storage.set({key: 'APP_DARK_MODE', value: 'true'});
-
-            // remove legacy storage key
-            await Storage.remove({key: 'APP_DESIGN_DARK'});
-        }
     }
 
     if (timetableColorTheme && timetableColorTheme.value) {
@@ -124,4 +99,29 @@ export async function saveDeveloper(enabled: boolean): Promise<void> {
 export async function reset(): Promise<void> {
     store.commit('reset');
     await Storage.clear();
+}
+
+async function searchLegacyStorageGroup(): Promise<void> {
+    // configure storage to use the legacy group name
+    await Storage.configure({
+        group: 'de.effnerapp.effner_preferences'
+    });
+
+    // check legacy storage keys
+    const id = await Storage.get({key: 'APP_DSB_LOGIN_ID'});
+    const password = await Storage.get({key: 'APP_DSB_LOGIN_PASSWORD'});
+
+    if(id && id.value && password && password.value) {
+        // store values in new storage keys
+        await store.commit('setCredentials', id.value + ':' + password.value);
+        await store.commit('setRegistered', true);
+        await Storage.set({key: 'APP_CREDENTIALS', value: id.value + ':' + password.value});
+
+        // remove legacy storage keys
+        await Storage.remove({key: 'APP_DSB_LOGIN_ID'});
+        await Storage.remove({key: 'APP_DSB_LOGIN_PASSWORD'});
+    }
+
+    // switch back to the default group
+    await Storage.configure({});
 }

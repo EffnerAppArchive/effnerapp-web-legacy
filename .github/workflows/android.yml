@@ -6,9 +6,10 @@ on:
   push:
     branches: [master]
     paths:
-      - "release/versions.json"
+      - "release/android.json"
 
 jobs:
+
   build-android:
     name: Build android app
     runs-on: ubuntu-latest
@@ -20,7 +21,7 @@ jobs:
         run: chmod -R 777 scripts
 
       - name: update versions
-        run: ./update-versions.sh
+        run: ./update-versions-android.sh
         working-directory: ./scripts
 
       - name: Set up JDK 11
@@ -88,45 +89,6 @@ jobs:
           name: Signed app bundle
           path: ${{steps.sign_bundle.outputs.signedReleaseFile}}
 
-  build-and-release-ios:
-    name: Build and release iOS app
-    runs-on: macos-latest
-
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2.2.0
-
-      - name: Grant execute permission
-        run: chmod -R 777 scripts
-
-      - name: update versions
-        run: ./update-versions.sh
-        working-directory: ./scripts
-
-      - name: Setup Ionic
-        run: npm install -D @ionic/cli
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build ionic web app
-        run: ./scripts/build-ios.sh
-
-      - uses: sparkfabrik/ios-build-action@v1.1.0
-        with:
-          project-path: ios/App/App.xcodeproj
-          p12-base64: ${{ secrets.P12_BASE64 }}
-          mobileprovision-base64: ${{ secrets.MOBILEPROVISION_BASE64 }}
-          code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
-          team-id: ${{ secrets.TEAM_ID }}
-          workspace-path: ios/App/App.xcworkspace
-
-      - name: Upload IPA to App Store Connect
-        run: xcrun altool --upload-app -t ios -f "output.ipa" -u ${{ secrets.ASC_USER }} -p ${{ secrets.ASC_PASS }}
-
   release-github:
     name: Create GitHub release
     runs-on: ubuntu-latest
@@ -143,12 +105,12 @@ jobs:
           name: Signed app bundle
 
       - run: mv app-release-unsigned-signed.apk app-release.apk
-      
+
       - name: Grant execute permission
         run: chmod -R 777 scripts
-        
+
       - name: update versions
-        run: ./update-versions.sh
+        run: ./update-versions-android.sh
         working-directory: ./scripts
 
       - name: Expose version name
@@ -174,7 +136,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
+
       - uses: actions/download-artifact@v2
         with:
           name: Signed app bundle

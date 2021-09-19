@@ -1,0 +1,51 @@
+name: Application CI/CD
+
+# Controls when the action will run.
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "release/ios.json"
+
+jobs:
+
+  build-and-release-ios:
+    name: Build and release iOS app
+    runs-on: macos-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.2.0
+
+      - name: Grant execute permission
+        run: chmod -R 777 scripts
+
+      - name: update versions
+        run: ./update-versions-ios.sh
+        working-directory: ./scripts
+
+      - name: Setup Ionic
+        run: npm install -D @ionic/cli
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build ionic web app
+        run: ./scripts/build-ios.sh
+
+      - uses: sparkfabrik/ios-build-action@v1.1.0
+        with:
+          project-path: ios/App/App.xcodeproj
+          p12-base64: ${{ secrets.P12_BASE64 }}
+          mobileprovision-base64: ${{ secrets.MOBILEPROVISION_BASE64 }}
+          code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
+          team-id: ${{ secrets.TEAM_ID }}
+          workspace-path: ios/App/App.xcworkspace
+
+      - name: Upload IPA to App Store Connect
+        run: xcrun altool --upload-app -t ios -f "output.ipa" -u ${{ secrets.ASC_USER }} -p ${{ secrets.ASC_PASS }}
+
