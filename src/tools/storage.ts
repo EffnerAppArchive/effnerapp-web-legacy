@@ -1,5 +1,6 @@
 import {Storage} from '@capacitor/storage';
 import store from '../store';
+import {isPlatform} from '@ionic/vue';
 
 export async function loadStorage(): Promise<void> {
     const credentials = await Storage.get({key: 'APP_CREDENTIALS'});
@@ -16,7 +17,9 @@ export async function loadStorage(): Promise<void> {
         store.commit('setCredentials', credentials.value);
         store.commit('setRegistered', !!credentials.value);
     } else {
-        await searchLegacyStorageGroup();
+        if (isPlatform('android')) {
+            await searchLegacyStorageGroup();
+        }
     }
 
     if (sClass && sClass.value) {
@@ -110,18 +113,36 @@ async function searchLegacyStorageGroup(): Promise<void> {
     // check legacy storage keys
     const id = await Storage.get({key: 'APP_DSB_LOGIN_ID'});
     const password = await Storage.get({key: 'APP_DSB_LOGIN_PASSWORD'});
+    const sClass = await Storage.get({key: 'APP_USER_CLASS'});
+    const darkMode = await Storage.get({key: 'APP_DESIGN_DARK'});
+    const notificationsEnabled = await Storage.get({key: 'APP_NOTIFICATIONS'});
 
-    if(id && id.value && password && password.value) {
+    if (id && id.value && password && password.value && sClass && sClass.value) {
         // store values in new storage keys
         await store.commit('setCredentials', id.value + ':' + password.value);
         await store.commit('setRegistered', true);
-        await Storage.set({key: 'APP_CREDENTIALS', value: id.value + ':' + password.value});
+        await store.commit('setClass', sClass.value);
+        await store.commit('setDarkMode', darkMode?.value === 'true');
+        await store.commit('setNotificationsEnabled', notificationsEnabled?.value === 'true');
+
 
         // remove legacy storage keys
         await Storage.remove({key: 'APP_DSB_LOGIN_ID'});
         await Storage.remove({key: 'APP_DSB_LOGIN_PASSWORD'});
-    }
+        await Storage.remove({key: 'APP_USER_CLASS'});
+        await Storage.remove({key: 'APP_DESIGN_DARK'});
+        await Storage.remove({key: 'APP_NOTIFICATIONS'});
 
-    // switch back to the default group
-    await Storage.configure({});
+        // switch back to the default group
+        await Storage.configure({});
+
+        // store values in new group
+        await Storage.set({key: 'APP_CREDENTIALS', value: id.value + ':' + password.value});
+        await Storage.set({key: 'APP_USER_CLASS', value: sClass.value});
+        await Storage.set({key: 'APP_DARK_MODE', value: darkMode?.value || 'false'});
+        await Storage.set({key: 'APP_NOTIFICATIONS', value: notificationsEnabled?.value || 'false'});
+    } else {
+        // switch back to the default group
+        await Storage.configure({});
+    }
 }
