@@ -84,10 +84,6 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
 
-    // if (store.getters.isRegistered && !store.getters.getError) {
-    //   await router.push({path: '/main'});
-    // }
-
     const id = ref('');
     const password = ref('');
     const sClass = ref('');
@@ -149,7 +145,7 @@ export default defineComponent({
               await saveNotificationsState(true);
             }
 
-            await this.router.push({path: '/main'});
+            await this.router.replace({path: '/main'});
           })();
         } else {
           openToast(value.status + ' ' + value.statusText);
@@ -176,7 +172,7 @@ export default defineComponent({
               {
                 text: 'Neu versuchen',
                 handler: () => {
-                  this.router.push({path: '/main'});
+                  this.router.replace({path: '/main'});
                 }
               }
             ]

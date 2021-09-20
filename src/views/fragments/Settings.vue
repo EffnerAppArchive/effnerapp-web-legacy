@@ -173,7 +173,7 @@ export default defineComponent({
       await reset();
 
       // redirect to login page
-      await this.router.push({name: 'Login'});
+      await this.router.replace({name: 'Login'});
     },
     async toggleNotifications() {
       this.notificationEnabled = !this.notificationEnabled;
