@@ -90,15 +90,9 @@ export default defineComponent({
 
     let classes = [];
     try {
-      classes = await axios.get('https://api.effner.app/v2/data/classes').then(value => value.data);
+      classes = await axios.get('https://api.effner.app/v2.1/data/classes').then(value => value.data);
     } catch (e) {
       console.error(e);
-    }
-
-    for (const c of ['11Q', '12Q']) {
-      for (let i = 1; i <= 6; i++) {
-        classes.push(c + i);
-      }
     }
 
     return {
