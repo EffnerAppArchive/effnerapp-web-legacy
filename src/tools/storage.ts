@@ -1,6 +1,7 @@
 import {Storage} from '@capacitor/storage';
 import store from '../store';
 import {isPlatform} from '@ionic/vue';
+import {FCM} from '@capacitor-community/fcm';
 
 export async function loadStorage(): Promise<void> {
     const credentials = await Storage.get({key: 'APP_CREDENTIALS'});
@@ -114,17 +115,12 @@ async function searchLegacyStorageGroup(): Promise<void> {
     const id = await Storage.get({key: 'APP_DSB_LOGIN_ID'});
     const password = await Storage.get({key: 'APP_DSB_LOGIN_PASSWORD'});
     const sClass = await Storage.get({key: 'APP_USER_CLASS'});
-    const darkMode = await Storage.get({key: 'APP_DESIGN_DARK'});
-    const notificationsEnabled = await Storage.get({key: 'APP_NOTIFICATIONS'});
 
     if (id && id.value && password && password.value && sClass && sClass.value) {
         // store values in new storage keys
         await store.commit('setCredentials', id.value + ':' + password.value);
         await store.commit('setRegistered', true);
         await store.commit('setClass', sClass.value);
-        await store.commit('setDarkMode', darkMode?.value === 'true');
-        await store.commit('setNotificationsEnabled', notificationsEnabled?.value === 'true');
-
 
         // remove legacy storage keys
         await Storage.remove({key: 'APP_DSB_LOGIN_ID'});
@@ -139,8 +135,11 @@ async function searchLegacyStorageGroup(): Promise<void> {
         // store values in new group
         await Storage.set({key: 'APP_CREDENTIALS', value: id.value + ':' + password.value});
         await Storage.set({key: 'APP_USER_CLASS', value: sClass.value});
-        await Storage.set({key: 'APP_DARK_MODE', value: darkMode?.value || 'false'});
-        await Storage.set({key: 'APP_NOTIFICATIONS', value: notificationsEnabled?.value || 'false'});
+
+        // subscribe automatically to notifications
+        await FCM.subscribeTo({topic: 'APP_GENERAL_NOTIFICATIONS'});
+        await FCM.subscribeTo({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass.value}`});
+        await saveNotificationsState(true);
     } else {
         // switch back to the default group
         await Storage.configure({});
