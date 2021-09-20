@@ -28,9 +28,6 @@
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
-    <div v-else>
-      Loading...
-    </div>
   </ion-page>
 </template>
 
