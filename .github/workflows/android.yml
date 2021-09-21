@@ -66,7 +66,7 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: "30.0.3"
 
-      - uses: r0adkll/sign-android-release@v1
+      - uses: r0adkll/sign-android-release@master
         name: Sign app bundle
         id: sign_bundle
         with:
