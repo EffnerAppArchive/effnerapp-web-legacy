@@ -41,11 +41,11 @@
           <ion-note>Version: 2</ion-note>
           <ion-ripple-effect/>
         </ion-item>
-        <ion-item class="ion-activatable ripple-parent" @click="openInBrowser('https://go.effner.app/privacy')">
+        <ion-item class="ion-activatable ripple-parent" @click="openInBrowser('https://go.effner.app/privacy', 'pdf')">
           <ion-label>Datenschutzerklärung</ion-label>
           <ion-ripple-effect/>
         </ion-item>
-        <ion-item class="ion-activatable ripple-parent" @click="openInBrowser('https://go.effner.app/imprint')">
+        <ion-item class="ion-activatable ripple-parent" @click="openInBrowser('https://go.effner.app/imprint', 'pdf')">
           <ion-label>Impressum</ion-label>
           <ion-ripple-effect/>
         </ion-item>
@@ -117,7 +117,7 @@ import {
 
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
-import {reset, saveClass, saveJulianMode, saveDeveloper, saveNotificationsState} from '@/tools/storage';
+import {reset, saveClass, saveDeveloper, saveJulianMode, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
 import {setTimetableColorTheme, TIMETABLE_COLOR_THEME_VALUES, toggleDarkTheme} from '@/tools/theme';
 import {isNative, openInBrowser, openSimpleAlert, openToast} from '@/tools/helper';

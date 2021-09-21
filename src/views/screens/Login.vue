@@ -37,14 +37,30 @@
           </div>
 
           <div style="position: relative">
-            <ion-button style="position: absolute; right: 0; padding-right: 0.5rem" :disabled="loggingIn"
+            <ion-button :disabled="loggingIn" style="position: absolute; right: 0; padding-right: 0.5rem"
                         @click="login">Login
             </ion-button>
           </div>
         </div>
       </div>
     </ion-content>
+
     <LoadingAnimation v-else/>
+
+    <ion-footer class="ion-no-border">
+      <ion-toolbar>
+        <div>
+          <ion-item class="item_transparent" lines="none">
+            <ion-icon :icon="informationOutline" color="black"
+                      style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
+            <ion-label style="font-weight: normal; font-size: 1rem">
+              <div @click="openInBrowser('https://go.effner.app/privacy', 'pdf')">Datenschutzerklärung</div>
+            </ion-label>
+          </ion-item>
+        </div>
+      </ion-toolbar>
+    </ion-footer>
+
   </ion-page>
 </template>
 
@@ -53,13 +69,17 @@ import {
   alertController,
   IonButton,
   IonContent,
+  IonFooter,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonPage,
   IonSelect,
-  IonSelectOption
+  IonSelectOption,
+  IonToolbar
 } from '@ionic/vue';
+import {informationOutline} from 'ionicons/icons';
 
 import {defineComponent, ref} from 'vue';
 
@@ -69,7 +89,7 @@ import {saveCredentials, saveNotificationsState} from '@/tools/storage';
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
 import {FCM} from '@capacitor-community/fcm';
-import {isNative, openToast} from '@/tools/helper';
+import {isNative, openInBrowser, openToast} from '@/tools/helper';
 import LoadingAnimation from '@/components/LoadingAnimation.vue';
 
 export default defineComponent({
@@ -83,7 +103,10 @@ export default defineComponent({
     IonItem,
     IonButton,
     IonSelect,
-    IonSelectOption
+    IonSelectOption,
+    IonIcon,
+    IonToolbar,
+    IonFooter
   },
   async setup() {
     const router = useRouter();
@@ -108,7 +131,10 @@ export default defineComponent({
       password,
       sClass,
       loggingIn: false,
-      classes: classes as string[]
+      classes: classes as string[],
+
+      informationOutline,
+      openInBrowser
     };
   },
   created() {
