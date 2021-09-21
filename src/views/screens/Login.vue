@@ -9,23 +9,27 @@
             </div>
           </div>
 
+          <div class="pt-2 text-center text-weight-100 text-4xl">
+            EffnerApp
+          </div>
+
           <div class="pt-8 smolest:pt-16 smol:pt-20 norm:pt-24 thiccc:pt-32">
             <ion-item style="margin-bottom: 1rem">
-              <ion-label position="floating">ID</ion-label>
+              <ion-label position="stacked">ID</ion-label>
               <ion-input v-model="id" type="number"></ion-input>
             </ion-item>
           </div>
 
           <div>
             <ion-item style="margin-bottom: 1rem">
-              <ion-label position="floating">Passwort</ion-label>
+              <ion-label position="stacked">Passwort</ion-label>
               <ion-input v-model="password" type="password"></ion-input>
             </ion-item>
           </div>
 
           <div>
             <ion-item style="margin-bottom: 1rem">
-              <ion-label position="floating">Klasse</ion-label>
+              <ion-label position="stacked">Klasse</ion-label>
               <ion-select v-model="sClass">
                 <ion-select-option v-for="c in classes" :key="c" :value="c">{{ c }}</ion-select-option>
               </ion-select>
@@ -33,12 +37,14 @@
           </div>
 
           <div style="position: relative">
-            <ion-button style="position: absolute; right: 0; padding-right: 0.5rem" :disabled="loggingIn" @click="login">Login</ion-button>
+            <ion-button style="position: absolute; right: 0; padding-right: 0.5rem" :disabled="loggingIn"
+                        @click="login">Login
+            </ion-button>
           </div>
         </div>
       </div>
     </ion-content>
-    <LoadingAnimation v-else />
+    <LoadingAnimation v-else/>
   </ion-page>
 </template>
 
@@ -82,7 +88,6 @@ export default defineComponent({
   async setup() {
     const router = useRouter();
     const store = useStore();
-
 
 
     let classes = [];
@@ -204,5 +209,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+.text-weight-100 {
+  font-weight: 100;
+}
 </style>
