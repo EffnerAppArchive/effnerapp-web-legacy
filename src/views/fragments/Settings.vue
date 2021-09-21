@@ -294,9 +294,20 @@ export default defineComponent({
               {
                 text: 'Klasse ändern',
                 handler: (data) => {
+
+                  if (this.notificationEnabled) {
+                    // unsubscribe from FCM channel
+                    await FCM.unsubscribeFrom({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
+                  }
+
                   saveClass(data).then(() => {
                     console.log('Updated class to: ' + data);
                     loadData();
+
+                    if (this.notificationEnabled) {
+                      // unsubscribe from FCM channel
+                      await FCM.unsubscribeFrom({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${data}`});
+                    }
                   });
                 }
               }
