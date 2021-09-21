@@ -370,11 +370,11 @@ export default defineComponent({
 }
 
 .gradient_4 {
-  background: linear-gradient(135deg, #4A00E0, #8E2DE2);
+  background: linear-gradient(135deg, #5f0a87, #f8ceec);
 }
 
 .gradient_5 {
-  background: linear-gradient(135deg, #c21500, #e1eec3);
+  background: linear-gradient(135deg, #D31027, #e1eec3);
 }
 
 .gradient_julian {
