@@ -13,6 +13,7 @@ export async function loadStorage(): Promise<void> {
     const timetableColorTheme = await Storage.get({key: 'APP_TIMETABLE_COLOR_THEME'});
     const preferredTimetable = await Storage.get({key: 'APP_PREFERRED_TIMETABLE'});
     const developer = await Storage.get({key: 'APP_DEVELOPER'});
+    const julianMode = await Storage.get({key: 'APP_JULIAN_MODE'});
 
     if (credentials && credentials.value) {
         store.commit('setCredentials', credentials.value);
@@ -53,6 +54,10 @@ export async function loadStorage(): Promise<void> {
 
     if (developer && developer.value === 'true') {
         store.commit('setDeveloper', true);
+    }
+
+    if (julianMode && julianMode.value === 'true') {
+        store.commit('setJulianMode', true);
     }
 }
 
@@ -98,6 +103,11 @@ export async function savePreferredTimetable(i: number): Promise<void> {
 export async function saveDeveloper(enabled: boolean): Promise<void> {
     store.commit('setDeveloper', enabled);
     await Storage.set({key: 'APP_DEVELOPER', value: String(enabled)});
+}
+
+export async function saveJulianMode(enabled: boolean): Promise<void> {
+    store.commit('setJulianMode', enabled);
+    await Storage.set({key: 'APP_JULIAN_MODE', value: String(enabled)});
 }
 
 export async function reset(): Promise<void> {

@@ -26,7 +26,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-card class="gradient_1 ion-activatable ripple-parent" routerDirection="forward"
+            <ion-card :class="getJulianCss" class="gradient_1 ion-activatable ripple-parent" routerDirection="forward"
                       @click="router.push({name: 'MVV'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
                 <ion-icon :icon="busOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
@@ -58,7 +58,7 @@
           </ion-col>
 
           <ion-col>
-            <ion-card class="gradient_2 ion-activatable ripple-parent">
+            <ion-card :class="getJulianCss" class="gradient_2 ion-activatable ripple-parent">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-icon :icon="fileTrayFullOutline" class="card_icon" style="margin-right: 0.75rem;"/>
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">News</ion-label>
@@ -102,7 +102,8 @@
           </ion-col>
 
           <ion-col>
-            <ion-card class="gradient_3 ion-activatable ripple-parent" @click="router.push({name: 'Stundenplan'})">
+            <ion-card :class="getJulianCss" class="gradient_3 ion-activatable ripple-parent"
+                      @click="router.push({name: 'Stundenplan'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
                 <ion-icon :icon="calendarOutline" class="card_icon" style="margin-right: 0.75rem;"/>
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
@@ -126,7 +127,7 @@
 
         <ion-row>
           <ion-col>
-            <ion-card class="gradient_4 ion-activatable ripple-parent"
+            <ion-card :class="getJulianCss" class="gradient_4 ion-activatable ripple-parent"
                       @click="this.openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-icon :icon="restaurantOutline" class="card_icon" style="margin-right: 0.75rem;"/>
@@ -138,7 +139,8 @@
             </ion-card>
 
 
-            <ion-card class="gradient_5 ion-activatable ripple-parent" @click="router.push({name: 'Informationen'})">
+            <ion-card :class="getJulianCss" class="gradient_5 ion-activatable ripple-parent"
+                      @click="router.push({name: 'Informationen'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-icon :icon="clipboardOutline" class="card_icon" style="margin-right: 0.75rem;"/>
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Informationen
@@ -224,6 +226,7 @@ export default defineComponent({
     const store = useStore();
 
     const substitutions = store.getters.getSubstitutions;
+    const julian = store.getters.getJulianMode;
 
     return {
       busOutline,
@@ -242,7 +245,8 @@ export default defineComponent({
       router,
       store,
 
-      substitutions
+      substitutions,
+      julian
     };
   },
   created() {
@@ -338,6 +342,11 @@ export default defineComponent({
     },
     getDocuments(): any {
       return this.data?.documents?.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
+    },
+    getJulianCss(): any {
+      return {
+        gradient_julian: this.store.getters.getJulianMode
+      };
     }
   }
 });
@@ -365,7 +374,11 @@ export default defineComponent({
 }
 
 .gradient_5 {
-  background: linear-gradient(135deg, #c21500, hsla(78, 56%, 85%, 1) 100%);
+  background: linear-gradient(135deg, #c21500, #e1eec3);
+}
+
+.gradient_julian {
+  background: linear-gradient(315deg, #ffec3d, #00e06c);
 }
 
 .item_transparent {
