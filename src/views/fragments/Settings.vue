@@ -256,7 +256,8 @@ export default defineComponent({
               {
                 text: 'E-Mail senden',
                 handler: () => {
-                  openInBrowser('mailto:info@effner.app');
+                  window.open('mailto:info@effner.app');
+                  //openInBrowser('mailto:info@effner.app');
                 }
               }
             ]
