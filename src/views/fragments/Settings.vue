@@ -75,6 +75,10 @@
             <ion-label>FCMToken</ion-label>
             <ion-ripple-effect/>
           </ion-item>
+          <ion-item>
+            <ion-label>Julian Mode</ion-label>
+            <ion-toggle slot="end" :checked="julianModeEnabled" @ionChange="julianMode"></ion-toggle>
+          </ion-item>
           <ion-item class="ion-activatable ripple-parent" @click="leaveDeveloper">
             <ion-label>Leave</ion-label>
             <ion-ripple-effect/>
@@ -113,7 +117,7 @@ import {
 
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
-import {reset, saveClass, saveDeveloper, saveNotificationsState} from '@/tools/storage';
+import {reset, saveClass, saveJulianMode, saveDeveloper, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
 import {setTimetableColorTheme, TIMETABLE_COLOR_THEME_VALUES, toggleDarkTheme} from '@/tools/theme';
 import {isNative, openInBrowser, openSimpleAlert, openToast} from '@/tools/helper';
@@ -144,6 +148,7 @@ export default defineComponent({
 
     const notificationEnabled = store.getters.getNotificationsEnabled;
     const darkModeEnabled = store.getters.getDarkMode;
+    const julianModeEnabled = store.getters.getJulianMode;
     const developerClick = 0;
 
     const timetableColorTheme = ref(store.getters.getTimetableColorTheme);
@@ -154,6 +159,7 @@ export default defineComponent({
       store,
       notificationEnabled,
       darkModeEnabled,
+      julianModeEnabled,
       developerClick,
       openInBrowser,
       themes: TIMETABLE_COLOR_THEME_VALUES,
@@ -231,6 +237,11 @@ export default defineComponent({
       await openToast('Du bist kein Developer mehr');
       await saveDeveloper(false);
       await FCM.unsubscribeFrom({topic: 'APP_DEV_NOTIFICATIONS'});
+    },
+    async julianMode() {
+      const julianCurrent = this.store.getters.getJulianMode;
+      await saveJulianMode(!julianCurrent);
+      await openToast('Julian 🤡');
     },
     async showFCMToken() {
       await openSimpleAlert('FCMToken', (await FCM.getToken()).token);
