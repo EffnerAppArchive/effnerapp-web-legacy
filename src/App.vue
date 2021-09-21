@@ -47,7 +47,7 @@ export default defineComponent({
 
 
       // enable firebase crashlytics
-      await FirebaseCrashlytics.setEnabled({
+      FirebaseCrashlytics.setEnabled({
         enabled: true
       });
 
