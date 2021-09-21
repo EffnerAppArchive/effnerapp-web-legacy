@@ -199,6 +199,7 @@ import {
   shuffle,
   warningOutline
 } from 'ionicons/icons';
+import {openInBrowser} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Home',
@@ -246,7 +247,8 @@ export default defineComponent({
       store,
 
       substitutions,
-      julian
+      julian,
+      openInBrowser
     };
   },
   created() {
