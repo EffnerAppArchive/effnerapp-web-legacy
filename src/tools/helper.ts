@@ -6,6 +6,11 @@ const isNative = (): boolean => {
 };
 
 const openInBrowser = async (uri: string): Promise<void> => {
+    if(isPlatform('android') && (uri.endsWith('.pdf') || uri.startsWith('mailto:'))) {
+        window.open(uri);
+        return;
+    }
+
     await Browser.open({url: uri});
 };
 

@@ -57,7 +57,7 @@
         <ion-list-header>
           <ion-label>Account</ion-label>
         </ion-list-header>
-        <ion-item class="ion-activatable ripple-parent">
+        <ion-item class="ion-activatable ripple-parent" @click="showClassSelectionAlert">
           <ion-label>Deine Klasse</ion-label>
           <ion-note>{{ $store.getters.getClass }}</ion-note>
           <ion-ripple-effect/>
@@ -117,10 +117,12 @@ import {
 
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
-import {reset, saveDeveloper, saveJulianMode, saveNotificationsState} from '@/tools/storage';
+import {reset, saveClass, saveJulianMode, saveDeveloper, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
 import {setTimetableColorTheme, TIMETABLE_COLOR_THEME_VALUES, toggleDarkTheme} from '@/tools/theme';
 import {isNative, openInBrowser, openSimpleAlert, openToast} from '@/tools/helper';
+import axios from 'axios';
+import {loadData} from '@/tools/data';
 
 export default defineComponent({
   name: 'Settings',
@@ -267,8 +269,46 @@ export default defineComponent({
               {
                 text: 'E-Mail senden',
                 handler: () => {
-                  window.open('mailto:info@effner.app');
-                  //openInBrowser('mailto:info@effner.app');
+                  openInBrowser('mailto:info@effner.app');
+                }
+              }
+            ]
+          });
+      return alert.present();
+    },
+    async showClassSelectionAlert() {
+      const sClass = this.store.getters.getClass;
+
+      let classes = [];
+      try {
+        classes = await axios.get('https://api.effner.app/v2.1/data/classes').then((response: any) => response.data);
+      } catch (e: any) {
+        console.error(e);
+        await openToast(e.toString());
+        return;
+      }
+
+      const alert = await alertController
+          .create({
+            header: 'Klasse ändern ...',
+            inputs: classes.map((value: string) => ({
+              type: 'radio',
+              label: value,
+              value,
+              checked: value === sClass
+            })),
+            buttons: [
+              {
+                text: 'Cancel',
+                role: 'cancel'
+              },
+              {
+                text: 'Klasse ändern',
+                handler: (data) => {
+                  saveClass(data).then(() => {
+                    console.log('Updated class to: ' + data);
+                    loadData();
+                  });
                 }
               }
             ]

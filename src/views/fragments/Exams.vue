@@ -50,7 +50,6 @@
       </div>
     </ion-content>
 
-
     <ion-footer class="ion-no-border">
       <ion-toolbar>
         <div>
