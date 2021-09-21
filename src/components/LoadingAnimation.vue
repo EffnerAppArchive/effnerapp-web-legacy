@@ -44,23 +44,23 @@ export default defineComponent({
 }
 
 .roll-in-left {
-  -webkit-animation: roll-in-left 0.5s ease-out 0s both;
-  animation: roll-in-left 0.5s ease-out 0s both;
+  -webkit-animation: roll-in-left 0.25s ease-out 0s both;
+  animation: roll-in-left 0.25s ease-out 0s both;
 }
 
 .roll-in-top {
-  -webkit-animation: roll-in-top 1s ease-out 0.5s both;
-  animation: roll-in-top 1s ease-out 0.5s both;
+  -webkit-animation: roll-in-top 0.75s ease-out 0.25s both;
+  animation: roll-in-top 0.75s ease-out 0.25s both;
 }
 
 .roll-in-right {
-  -webkit-animation: roll-in-right 0.5s ease-out 0.5s both;
-  animation: roll-in-right 0.5s ease-out 0.5s both;
+  -webkit-animation: roll-in-right 0.25s ease-out 0.5s both;
+  animation: roll-in-right 0.25s ease-out 0.5s both;
 }
 
 .roll-in-bottom {
-  -webkit-animation: roll-in-bottom 0.5s ease-out 1s both;
-  animation: roll-in-bottom 0.5s ease-out 1s both;
+  -webkit-animation: roll-in-bottom 0.5s ease-out 0.5s both;
+  animation: roll-in-bottom 0.5s ease-out 0.5s both;
 }
 
 /* ----------------------------------------------
