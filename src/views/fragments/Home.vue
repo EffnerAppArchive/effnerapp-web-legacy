@@ -345,27 +345,27 @@ export default defineComponent({
 
 <style scoped>
 .gradient_0 {
-  background: linear-gradient(315deg, #f85032, #e73827);
+  background: linear-gradient(135deg, #e73827, #f85032);
 }
 
 .gradient_1 {
-  background: linear-gradient(315deg, #ffec3d, #00e06c);
+  background: linear-gradient(135deg, #f8b500, #fceabb);
 }
 
 .gradient_2 {
-  background: linear-gradient(135deg, hsla(186, 100%, 69%, 1) 0%, hsla(217, 100%, 50%, 1) 100%);
+  background: linear-gradient(135deg, #24FE41, #FDFC47);
 }
 
 .gradient_3 {
-  background: linear-gradient(135deg, #FBD3E9, #BB377D);
+  background: linear-gradient(135deg, #0062ff, #61efff);
 }
 
 .gradient_4 {
-  background: linear-gradient(135deg, hsla(359, 84%, 63%, 1) 0%, hsla(78, 56%, 85%, 1) 100%);
+  background: linear-gradient(135deg, #4A00E0, #8E2DE2);
 }
 
 .gradient_5 {
-  background: linear-gradient(315deg, #DBE6F6, #1cefff);
+  background: linear-gradient(135deg, #c21500, hsla(78, 56%, 85%, 1) 100%);
 }
 
 .item_transparent {
