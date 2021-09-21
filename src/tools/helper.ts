@@ -5,8 +5,8 @@ const isNative = (): boolean => {
     return (isPlatform('ios') || isPlatform('android')) && !isPlatform('mobileweb');
 };
 
-const openInBrowser = async (uri: string): Promise<void> => {
-    if(isPlatform('android') && (uri.endsWith('.pdf') || uri.startsWith('mailto:'))) {
+const openInBrowser = async (uri: string, type?: string): Promise<void> => {
+    if(isPlatform('android') && (type === 'pdf' || uri.endsWith('.pdf') || uri.startsWith('mailto:'))) {
         window.open(uri);
         return;
     }
