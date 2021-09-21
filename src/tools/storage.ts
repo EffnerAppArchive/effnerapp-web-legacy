@@ -65,6 +65,12 @@ export async function saveCredentials(credentials: string, sClass: string): Prom
     await Storage.set({key: 'APP_USER_CLASS', value: sClass});
 }
 
+export async function saveClass(sClass: string): Promise<void> {
+    store.commit('setClass', sClass);
+
+    await Storage.set({key: 'APP_USER_CLASS', value: sClass});
+}
+
 export async function saveNotificationsState(enabled: boolean): Promise<void> {
     store.commit('setNotificationsEnabled', enabled);
     await Storage.set({key: 'APP_NOTIFICATIONS', value: String(enabled)});
