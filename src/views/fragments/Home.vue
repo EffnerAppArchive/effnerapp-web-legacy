@@ -5,6 +5,7 @@
         <ion-title class="text-center">{{ motd }}</ion-title>
       </ion-toolbar>
     </ion-header>
+
     <ion-content :fullscreen="false">
       <ion-refresher slot="fixed" @ionRefresh="refreshContent($event)">
         <ion-refresher-content></ion-refresher-content>
@@ -101,14 +102,16 @@
           </ion-col>
 
           <ion-col>
-            <ion-card class="gradient_5 ion-activatable ripple-parent" @click="router.push({name: 'Stundenplan'})">
+            <ion-card class="gradient_3 ion-activatable ripple-parent" @click="router.push({name: 'Stundenplan'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
+                <ion-icon :icon="calendarOutline" class="card_icon" style="margin-right: 0.75rem;"/>
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
               </ion-item>
               <ion-card class="drop_shadow card_dark">
                 <ion-item class="item_transparent" lines="none">
-                  <ion-icon :icon="getNextTimetableLesson() ? calendarOutline : calendarClearOutline" class="card_icon"
-                            style="margin-right: 0.75rem;"></ion-icon>
+                  <ion-icon :icon="getNextTimetableLesson() ? calendarNumberOutline : calendarClearOutline"
+                            class="card_icon"
+                            style="margin-right: 0.75rem;"/>
                   <ion-label v-if="data?.timetables[store.getters.getPreferredTimetable]?.lessons"
                              class="card_dark_label" style="text-decoration: none">
                     {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
@@ -123,17 +126,21 @@
 
         <ion-row>
           <ion-col>
-            <ion-card class="gradient_3 ion-activatable ripple-parent"
-                      @click.prevent="this.openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
+            <ion-card class="gradient_4 ion-activatable ripple-parent"
+                      @click="this.openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
+                <ion-icon :icon="restaurantOutline" class="card_icon" style="margin-right: 0.75rem;"/>
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Speiseplan <i
                     class="fas fa-external-link-alt"/>
                 </ion-label>
               </ion-item>
               <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
-            <ion-card class="gradient_4 ion-activatable ripple-parent" @click="router.push({name: 'Informationen'})">
+
+
+            <ion-card class="gradient_5 ion-activatable ripple-parent" @click="router.push({name: 'Informationen'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
+                <ion-icon :icon="clipboardOutline" class="card_icon" style="margin-right: 0.75rem;"/>
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Informationen
                 </ion-label>
               </ion-item>
@@ -171,11 +178,17 @@ import {defineComponent} from 'vue';
 import {useStore} from 'vuex';
 
 import moment from 'moment';
+import DepartureItem from '@/components/DepartureItem.vue';
+import {useRouter} from 'vue-router';
+import {fetchDepartures} from '@/tools/mvv';
 
+import {refreshContent} from '@/tools/data';
 import {
   busOutline,
   calendarClearOutline,
+  calendarNumberOutline,
   calendarOutline,
+  clipboardOutline,
   documentOutline,
   fileTrayFullOutline,
   informationOutline,
@@ -184,11 +197,6 @@ import {
   shuffle,
   warningOutline
 } from 'ionicons/icons';
-import DepartureItem from '@/components/DepartureItem.vue';
-import {useRouter} from 'vue-router';
-import {fetchDepartures} from '@/tools/mvv';
-
-import {refreshContent} from '@/tools/data';
 
 export default defineComponent({
   name: 'Home',
@@ -227,7 +235,9 @@ export default defineComponent({
       restaurantOutline,
       calendarOutline,
       calendarClearOutline,
+      calendarNumberOutline,
       warningOutline,
+      clipboardOutline,
 
       router,
       store,
@@ -335,11 +345,11 @@ export default defineComponent({
 
 <style scoped>
 .gradient_0 {
-  background: linear-gradient(315deg, hsl(354, 64%, 49%) 1%, hsl(4, 85%, 58%) 100%);
+  background: linear-gradient(315deg, #f85032, #e73827);
 }
 
 .gradient_1 {
-  background: linear-gradient(315deg, hsla(54, 100%, 62%, 1) 1%, hsla(149, 100%, 44%, 1) 100%);
+  background: linear-gradient(315deg, #ffec3d, #00e06c);
 }
 
 .gradient_2 {
@@ -347,15 +357,15 @@ export default defineComponent({
 }
 
 .gradient_3 {
-  background: linear-gradient(180deg, hsla(78, 56%, 85%, 1) 0%, hsla(359, 84%, 63%, 1) 100%);
+  background: linear-gradient(135deg, #FBD3E9, #BB377D);
 }
 
 .gradient_4 {
-  background: linear-gradient(90deg, hsla(339, 100%, 55%, 1) 0%, hsla(197, 100%, 64%, 1) 100%);
+  background: linear-gradient(135deg, hsla(359, 84%, 63%, 1) 0%, hsla(78, 56%, 85%, 1) 100%);
 }
 
 .gradient_5 {
-  background: linear-gradient(0deg, hsla(261, 60%, 28%, 1) 0%, hsla(354, 57%, 64%, 1) 100%);
+  background: linear-gradient(315deg, #DBE6F6, #1cefff);
 }
 
 .item_transparent {
