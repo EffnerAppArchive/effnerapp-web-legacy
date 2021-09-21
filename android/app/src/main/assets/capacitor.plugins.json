@@ -4,6 +4,10 @@
 		"classpath": "com.getcapacitor.community.fcm.FCMPlugin"
 	},
 	{
+		"pkg": "@capacitor-community/firebase-crashlytics",
+		"classpath": "com.getcapacitor.community.firebasecrashlytics.FirebaseCrashlyticsPlugin"
+	},
+	{
 		"pkg": "@capacitor-community/http",
 		"classpath": "com.getcapacitor.plugin.http.Http"
 	},

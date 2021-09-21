@@ -15,9 +15,10 @@
 import {IonApp, IonRouterOutlet, isPlatform} from '@ionic/vue';
 import {defineComponent} from 'vue';
 import {ActionPerformed, PushNotifications, PushNotificationSchema, Token} from '@capacitor/push-notifications';
+import { FirebaseCrashlytics } from '@capacitor-community/firebase-crashlytics';
 import {initTheme} from '@/tools/theme';
 import LoadingAnimation from '@/components/LoadingAnimation.vue';
-import {isNative, openSimpleAlert} from '@/tools/helper';
+import {isNative, openSimpleAlert, openToast} from '@/tools/helper';
 
 export default defineComponent({
   name: 'App',
@@ -40,8 +41,14 @@ export default defineComponent({
           // Register with Apple / Google to receive push via APNS/FCM
           PushNotifications.register();
         } else {
-          // Show some error
+          openToast('Notifications disabled');
         }
+      });
+
+
+      // enable firebase crashlytics
+      await FirebaseCrashlytics.setEnabled({
+        enabled: true
       });
 
       // On success, we should be able to receive notifications

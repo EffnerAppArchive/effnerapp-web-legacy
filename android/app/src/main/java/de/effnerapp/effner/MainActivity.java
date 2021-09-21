@@ -8,6 +8,8 @@ import android.webkit.WebSettings;
 
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.community.fcm.FCMPlugin;
+import com.getcapacitor.community.firebasecrashlytics.FirebaseCrashlytics;
+import com.getcapacitor.community.firebasecrashlytics.FirebaseCrashlyticsPlugin;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
@@ -44,6 +46,7 @@ public class MainActivity extends BridgeActivity {
 
         // initialize plugins
         this.registerPlugin(FCMPlugin.class);
+        this.registerPlugin(FirebaseCrashlyticsPlugin.class);
     }
 
     @Override
