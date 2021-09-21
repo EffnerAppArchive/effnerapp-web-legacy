@@ -1,16 +1,12 @@
 <template>
   <ion-page>
-    <ion-content fullscreen>
+    <ion-content v-if="!loggingIn" fullscreen>
       <div class="container mx-auto px-6 py-10">
         <div class="flex flex-col">
           <div>
-            <div class="flex justify-center h-24 smolest:h-32 smol:h-36 norm:h-40 thiccc:h-52">
+            <div class="flex justify-center h-24 smolest:h-28 smol:h-36 norm:h-32 thiccc:h-44">
               <img alt="logo" src="/img/effnerapp_logo.svg">
             </div>
-          </div>
-
-          <div class="flex justify-center text-3xl">
-            <h1>EffnerApp</h1>
           </div>
 
           <div class="pt-8 smolest:pt-16 smol:pt-20 norm:pt-24 thiccc:pt-32">
@@ -37,11 +33,12 @@
           </div>
 
           <div style="position: relative">
-            <ion-button style="position: absolute; right: 0; padding-right: 0.5rem" @click="login">Login</ion-button>
+            <ion-button style="position: absolute; right: 0; padding-right: 0.5rem" :disabled="loggingIn" @click="login">Login</ion-button>
           </div>
         </div>
       </div>
     </ion-content>
+    <LoadingAnimation v-else />
   </ion-page>
 </template>
 
@@ -67,10 +64,12 @@ import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
 import {FCM} from '@capacitor-community/fcm';
 import {isNative, openToast} from '@/tools/helper';
+import LoadingAnimation from '@/components/LoadingAnimation.vue';
 
 export default defineComponent({
   name: 'Login',
   components: {
+    LoadingAnimation,
     IonPage,
     IonContent,
     IonLabel,
@@ -84,9 +83,7 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
 
-    const id = ref('');
-    const password = ref('');
-    const sClass = ref('');
+
 
     let classes = [];
     try {
@@ -95,12 +92,17 @@ export default defineComponent({
       console.error(e);
     }
 
+    const id = ref('');
+    const password = ref('');
+    const sClass = ref(classes[0]);
+
     return {
       router,
       store,
       id,
       password,
       sClass,
+      loggingIn: false,
       classes: classes as string[]
     };
   },
@@ -116,6 +118,8 @@ export default defineComponent({
         await openToast('Bitte fülle alle Felder aus.');
         return;
       }
+
+      this.loggingIn = true;
 
       const credentials = this.id + ':' + this.password;
       const sClass = this.sClass;
@@ -140,11 +144,14 @@ export default defineComponent({
             }
 
             await this.router.replace({path: '/main'});
+            this.loggingIn = false;
           })();
         } else {
           openToast(value.status + ' ' + value.statusText);
+          this.loggingIn = false;
         }
       }).catch(reason => {
+        this.loggingIn = false;
         if (reason.response.status === 401) {
           openToast('Überprüfe deine Anmeldedaten');
           return;
