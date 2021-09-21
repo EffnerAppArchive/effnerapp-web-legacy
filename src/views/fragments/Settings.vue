@@ -304,16 +304,16 @@ export default defineComponent({
               },
               {
                 text: 'Klasse ändern',
-                handler: (data) => {
+                handler: async (data) => {
 
                   if (this.notificationEnabled) {
                     // unsubscribe from FCM channel
                     await FCM.unsubscribeFrom({topic: `APP_SUBSTITUTION_NOTIFICATIONS_${sClass}`});
                   }
 
-                  saveClass(data).then(() => {
+                  saveClass(data).then(async () => {
                     console.log('Updated class to: ' + data);
-                    loadData();
+                    await loadData();
 
                     if (this.notificationEnabled) {
                       // unsubscribe from FCM channel
