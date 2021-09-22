@@ -141,7 +141,7 @@ jobs:
         with:
           name: Signed app bundle
 
-      - uses: r0adkll/upload-google-play@master
+      - uses: r0adkll/upload-google-play@v1.0.16
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: de.effnerapp.effner
