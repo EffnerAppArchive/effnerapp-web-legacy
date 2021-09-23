@@ -98,11 +98,11 @@ export default class DSBMobile {
                             }
                             break;
                         case 'K':
-                            absentClasses = absentClasses.concat(Array.from(table.querySelectorAll('tbody')).map(tr => {
+                            absentClasses = absentClasses.concat(Array.from(table.querySelectorAll('tbody')).map(tbody => {
                                 return {
                                     date: date,
-                                    class: tr.querySelector('th')?.innerText.trim(),
-                                    period: Array.from(tr.querySelectorAll('td')).map(td => td.innerText.trim()).join(', ')
+                                    class: tbody.querySelector('th')?.innerText.trim(),
+                                    period: Array.from(tbody.querySelectorAll('td')).map(td => td.innerText.trim()).join(', ')
                                 };
                             }));
                             break;
@@ -129,13 +129,16 @@ export default class DSBMobile {
                                 };
                             }));
                             break;
-
-                        // don't know what 'G' was :C
-                        // case 'G':
-                        //     table.querySelectorAll('tr').forEach(tr => {
-                        //
-                        //     })
-                        //     break;
+                        case 'G':
+                            absentClasses = absentClasses.concat(Array.from(table.querySelectorAll('tbody')).map(tbody => {
+                                return {
+                                    date: date,
+                                    class: 'Gesamte Schule',
+                                    period: tbody.querySelector('th')?.innerText.trim(),
+                                    info: Array.from(tbody.querySelectorAll('td')).map(td => td.innerText.trim()).join(', ')
+                                };
+                            }));
+                            break;
                     }
                 });
             });

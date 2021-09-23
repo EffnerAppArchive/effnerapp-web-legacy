@@ -217,7 +217,7 @@ export default defineComponent({
       return this.information;
     },
     getAbsentClasses(): string[] | undefined {
-      return this.timetable?.items?.absentClasses?.filter((e) => e.date === this.currentDate).map((e: AbsentClass) => e.class + ': ' + e.period);
+      return this.timetable?.items?.absentClasses?.filter((e) => e.date === this.currentDate).map((e: AbsentClass) => e.class + ': ' + e.period + (e.info ? ' (' + e.info + ')' : ''));
     }
   },
   watch: {
