@@ -17,7 +17,7 @@
     "@capacitor/android": "3.2.4",
     "@capacitor/app": "^1.0.3",
     "@capacitor/browser": "^1.0.3",
-    "@capacitor/core": "~3.2.3",
+    "@capacitor/core": "~3.2.4",
     "@capacitor/haptics": "1.1.0",
     "@capacitor/keyboard": "1.1.0",
     "@capacitor/push-notifications": "^1.0.4",
