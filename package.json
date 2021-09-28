@@ -19,7 +19,7 @@
     "@capacitor/browser": "^1.0.3",
     "@capacitor/core": "~3.2.3",
     "@capacitor/haptics": "1.1.0",
-    "@capacitor/keyboard": "1.0.3",
+    "@capacitor/keyboard": "1.1.0",
     "@capacitor/push-notifications": "^1.0.4",
     "@capacitor/status-bar": "^1.0.3",
     "@capacitor/storage": "^1.2.0",
