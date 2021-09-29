@@ -1,9 +1,9 @@
 <template>
   <ion-grid>
     <ion-row class="center">
-      <ion-col size="2" sizeMd="2" sizeXs="2">
+      <ion-col size="3" sizeMd="3" sizeXs="3">
         <div class="center">
-          <ion-badge :style="`padding: 0.5rem; min-width: 2rem; --background:var(${color});`">
+          <ion-badge class="py-2" :style="`--padding-start: 0.5rem; --padding-end: 0.5rem; min-width: 2rem; --background:var(${color});`">
             <span class="center">{{ line }}</span>
           </ion-badge>
         </div>

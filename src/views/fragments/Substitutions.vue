@@ -39,17 +39,26 @@
               v-if="getAbsentClasses && getAbsentClasses.length > 0"
               key="absent_classes"
               :absent-classes="getAbsentClasses"/>
+          <div
+              v-if="(!getSubstitutions || getSubstitutions.length === 0) && !getInformation && (!getAbsentClasses || getAbsentClasses.length === 0)">
+            <ion-item class="item_transparent pt-8 pb-2" lines="none">
+              <ion-icon :icon="informationOutline" color="black"
+                        style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
+              <ion-label style="font-weight: normal; font-size: 1rem">Keine Vertretungen
+              </ion-label>
+            </ion-item>
+          </div>
         </ion-list>
       </div>
       <div v-else>Could not fetch data from dsbmobile!</div>
       <ion-grid>
         <ion-row>
           <ion-col>
-            <div class="text-right pr-4 pb-6 pt-2">
-              <div class="ripple-parent ion-activatable">
+            <div class="pr-4 pb-6 pt-2">
+              <ion-item class="item_transparent ripple-parent ion-activatable float-right" lines="none">
                 <a class="text-blue-800" @click="showFullPlan">Gesamten Vertretungsplan anzeigen</a>
                 <ion-ripple-effect/>
-              </div>
+              </ion-item>
             </div>
           </ion-col>
         </ion-row>
@@ -100,8 +109,7 @@ import SubstitutionItem from '@/components/SubstitutionItem.vue';
 import {informationOutline} from 'ionicons/icons';
 
 import {refreshContent} from '@/tools/data';
-import moment from 'moment';
-import {openInBrowser} from '@/tools/helper';
+import {getCurrentSubstitutionDay, openInBrowser, validateClass} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Substitutions',
@@ -139,29 +147,8 @@ export default defineComponent({
     };
   },
   created() {
-    // improve this ugly shit
     if (this.timetable) {
-
-      const dates = this.timetable.items?.dates;
-      const now = new Date();
-      const hour = now.getHours();
-
-      let newDate;
-
-      if (dates) {
-        if (hour >= 14 || dates[0] !== moment(now).format('DD.MM.YYYY')) {
-          if (dates.length >= 2) {
-            newDate = dates[1];
-          } else {
-            newDate = dates[0];
-          }
-        } else {
-          newDate = dates[0];
-        }
-
-        this.select = newDate;
-        this.selectDate(newDate);
-      }
+      this.selectCurrentDay();
     }
   },
   data() {
@@ -173,9 +160,10 @@ export default defineComponent({
   },
   methods: {
     selectDate(date: string) {
+      const myClass = this.store.getters.getClass;
       const days = this.timetable?.items?.days;
 
-      const substitutions = days?.get(date)?.filter(entry => this.matchesClass(entry.name as string))?.map(e => e.items);
+      const substitutions = days?.get(date)?.filter(entry => validateClass(myClass, entry.name as string))?.map(e => e.items);
 
       let tmp = [] as any[];
       if (substitutions) {
@@ -190,17 +178,14 @@ export default defineComponent({
       this.information = this.timetable?.items?.information?.get(date);
       this.currentDate = date;
     },
-    matchesClass(sClass: string): boolean {
-      const myClass = this.store.getters.getClass;
-      if (myClass.startsWith('11') && sClass === '11Q') {
-        return true;
-      }
+    selectCurrentDay() {
+      const dates = this.timetable.items?.dates;
 
-      if (myClass.startsWith('12') && sClass === '12Q') {
-        return true;
+      if (dates) {
+        const newDate = getCurrentSubstitutionDay(dates);
+        this.select = newDate;
+        this.selectDate(newDate);
       }
-
-      return myClass === sClass;
     },
     async showFullPlan() {
       await openInBrowser(this.timetable.url);
@@ -222,7 +207,7 @@ export default defineComponent({
   },
   watch: {
     timetable: function () {
-      this.select = this.timetable.items?.dates[0] as string;
+      this.selectCurrentDay();
     }
   }
 });

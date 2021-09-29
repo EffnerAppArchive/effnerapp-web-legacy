@@ -173,7 +173,9 @@ export default class DSBMobile {
             if (i === elements.length - 1) {
                 documents.push(parser.parseFromString(outer.substr(outer.indexOf(elements[i])), 'text/html'));
             } else if (i !== 0) {
-                documents.push(parser.parseFromString(outer.substr(outer.indexOf(elements[i]), outer.indexOf(elements[i + 1])), 'text/html'));
+                const indexStart = outer.indexOf(elements[i]);
+                const length = outer.indexOf(elements[i + 1]) - indexStart;
+                documents.push(parser.parseFromString(outer.substr(indexStart, length), 'text/html'));
             }
         }
 
