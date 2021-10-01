@@ -25,7 +25,7 @@
     "@capacitor/storage": "^1.2.0",
     "@ionic/vue": "^5.8.1",
     "@ionic/vue-router": "^5.8.1",
-    "axios": "^0.21.4",
+    "axios": "^0.22.0",
     "core-js": "^3.18.1",
     "crypto": "^1.0.1",
     "moment": "^2.24.0",
