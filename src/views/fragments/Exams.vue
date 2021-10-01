@@ -10,7 +10,7 @@
       <ion-refresher slot="fixed" @ionRefresh="refreshContent($event)">
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
-      <div v-if="!isAdvancedLevel && sortedExams && sortedExams.length > 0" id="list">
+      <div v-if="sortedExams && sortedExams.length > 0" id="list">
         <div v-for="(item, i) in sortedExams" :key="i">
           <div class="row">
             <term-item
@@ -21,29 +21,27 @@
           </div>
         </div>
       </div>
-      <div v-else-if="isAdvancedLevel">
-        <ion-grid>
-          <ion-row class="text-center">
-            <ion-col class="p-8">
-              Bitte wähle das entsprechende Dokument aus, um die Schulaufgaben anzuzeigen
-            </ion-col>
-          </ion-row>
-          <ion-row class="text-center">
-            <ion-col>
-              <!-- TODO: Beautify -->
-              <ion-button @click="openDocument(1)">1. Halbjahr</ion-button>
-            </ion-col>
-            <ion-col>
-              <ion-button @click="openDocument(2)">2. Halbjahr</ion-button>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
+
       <div v-else-if="!sortedExams || sortedExams.length === 0">
         <ion-grid>
           <ion-row class="text-center">
             <ion-col>
               Keine Einträge!
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+
+      <div v-if="isAdvancedLevel && getDocument != null">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <div class="pr-4 pb-6 pt-2">
+                <ion-item class="item_transparent ripple-parent ion-activatable float-right" lines="none">
+                  <a class="text-blue-800" @click="openDocument">PDF-Version anzeigen</a>
+                  <ion-ripple-effect/>
+                </ion-item>
+              </div>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -72,7 +70,6 @@
 
 <script lang="ts">
 import {
-  IonButton,
   IonCol,
   IonContent,
   IonFooter,
@@ -84,6 +81,7 @@ import {
   IonPage,
   IonRefresher,
   IonRefresherContent,
+  IonRippleEffect,
   IonRow,
   IonTitle,
   IonToolbar
@@ -95,7 +93,7 @@ import moment from 'moment';
 import {defineComponent} from 'vue';
 
 import {refreshContent} from '@/tools/data';
-import {openInBrowser, openToast} from '@/tools/helper';
+import {getLevel, openInBrowser, openToast} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Exams',
@@ -111,11 +109,11 @@ export default defineComponent({
     IonGrid,
     IonRow,
     IonCol,
-    IonButton,
     IonFooter,
     IonLabel,
     IonRefresher,
-    IonRefresherContent
+    IonRefresherContent,
+    IonRippleEffect
   },
   setup() {
     const store = useStore();
@@ -130,19 +128,17 @@ export default defineComponent({
     };
   },
   methods: {
-    async openDocument(i: number) {
-      const myAdvancedLevel = this.getAdvancedLevel();
-      const document = this.data.documents.find((e: { key: string, uri: string }) => e.key.startsWith('DATA_TOP_LEVEL_SA_DOC_' + myAdvancedLevel + '_' + i));
+    getDocument() {
+      return this.data.documents.find((e: { key: string, uri: string }) => e.key.startsWith('DATA_EXAMS_Q' + getLevel()));
+    },
+    async openDocument() {
+      const document = this.getDocument();
 
       if (document) {
         await openInBrowser(document.uri);
       } else {
         await openToast('Dieses Dokument wurde nicht gefunden.');
       }
-
-    },
-    getAdvancedLevel() {
-      return this.myClass.startsWith('11') ? '11' : this.myClass.startsWith('12') ? '12' : null;
     }
   },
   computed: {
@@ -164,7 +160,7 @@ export default defineComponent({
     },
     sortedExams(): Exam[] {
       return this.exams.slice().sort((a: Exam, b: Exam) => {
-        return moment(b.date, 'DD.MM.YYYY').unix() - moment(a.date, 'DD.MM.YYYY').unix();
+        return moment(a.date, 'DD.MM.YYYY').unix() - moment(b.date, 'DD.MM.YYYY').unix();
       });
     },
     isAdvancedLevel(): boolean {

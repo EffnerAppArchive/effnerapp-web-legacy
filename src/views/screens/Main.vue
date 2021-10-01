@@ -9,8 +9,8 @@
           <ion-ripple-effect/>
         </ion-tab-button>
 
-        <ion-tab-button class="ion-activatable ripple-parent" href="/main/substitutions" tab="tab2">
-          <ion-icon :icon="listOutline"/>
+        <ion-tab-button class="ion-activatable ripple-parent" href="/main/substitutions" tab="tab2" @click="yee">
+          <ion-icon :icon="shuffleOutline"/>
           <ion-label>Vertretungen</ion-label>
           <ion-ripple-effect/>
         </ion-tab-button>
@@ -42,7 +42,7 @@ import {
   IonTabButton,
   IonTabs
 } from '@ionic/vue';
-import {homeOutline, listOutline, schoolOutline, settingsOutline} from 'ionicons/icons';
+import {hammer, homeOutline, schoolOutline, settingsOutline, shuffleOutline} from 'ionicons/icons';
 import {defineComponent} from 'vue';
 import {loadData, refreshContentIfNeeded} from '@/tools/data';
 import {App} from '@capacitor/app';
@@ -76,7 +76,8 @@ export default defineComponent({
       router,
       renderComponent,
       homeOutline,
-      listOutline,
+      shuffleOutline,
+      hammer,
       schoolOutline,
       settingsOutline
     };
@@ -97,3 +98,11 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped>
+
+ion-tab-button {
+  --color-selected: white;
+}
+
+</style>

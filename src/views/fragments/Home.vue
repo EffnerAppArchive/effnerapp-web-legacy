@@ -81,7 +81,7 @@
                             style="margin-right: 0.75rem;"></ion-icon>
                   <ion-label class="card_dark_label" style="text-decoration: none"
                              @click.prevent="router.push({name: 'Schulaufgaben'})">
-                    {{ data?.exams?.exams[data.exams?.exams.length - 1]?.name }}
+                    {{ data?.exams?.exams[0]?.name }}
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>

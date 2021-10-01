@@ -1,5 +1,6 @@
 import {Browser} from '@capacitor/browser';
 import {alertController, isPlatform, toastController} from '@ionic/vue';
+import store from '../store';
 import moment from 'moment';
 
 const isNative = (): boolean => {
@@ -76,4 +77,8 @@ const getCurrentSubstitutionDay = (dates: string[]): string => {
     return newDate;
 };
 
-export {isNative, openInBrowser, openToast, openSimpleAlert, validateClass, getCurrentSubstitutionDay};
+const getLevel = (): number => {
+    return store.getters.getClass.match('^\\d{1,2}');
+};
+
+export {isNative, openInBrowser, openToast, openSimpleAlert, validateClass, getCurrentSubstitutionDay, getLevel};
