@@ -1,30 +1,26 @@
 <template>
   <ion-page>
-    <ion-tabs v-if="renderComponent">
+    <ion-tabs v-if="renderComponent" @ionTabsDidChange="onTabChange">
       <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
-        <ion-tab-button class="ion-activatable ripple-parent" href="/main/home" tab="tab1">
-          <ion-icon :icon="homeOutline"/>
+        <ion-tab-button href="/main/home" tab="tab1">
+          <ion-icon :icon="currentTab === 'tab1' ? home : homeOutline"/>
           <ion-label>Home</ion-label>
-          <ion-ripple-effect/>
         </ion-tab-button>
 
-        <ion-tab-button class="ion-activatable ripple-parent" href="/main/substitutions" tab="tab2">
-          <ion-icon :icon="shuffleOutline"/>
+        <ion-tab-button href="/main/substitutions" tab="tab2">
+          <ion-icon :icon="currentTab === 'tab2' ? shuffle : shuffleOutline"/>
           <ion-label>Vertretungen</ion-label>
-          <ion-ripple-effect/>
         </ion-tab-button>
 
-        <ion-tab-button class="ion-activatable ripple-parent" href="/main/exams" tab="tab3">
-          <ion-icon :icon="schoolOutline"/>
+        <ion-tab-button href="/main/exams" tab="tab3">
+          <ion-icon :icon="currentTab === 'tab3' ? school : schoolOutline"/>
           <ion-label>Schulaufgaben</ion-label>
-          <ion-ripple-effect/>
         </ion-tab-button>
 
-        <ion-tab-button class="ion-activatable ripple-parent" href="/main/settings" tab="tab4">
-          <ion-icon :icon="settingsOutline"/>
+        <ion-tab-button href="/main/settings" tab="tab4">
+          <ion-icon :icon="currentTab === 'tab4' ? settings : settingsOutline"/>
           <ion-label>Einstellungen</ion-label>
-          <ion-ripple-effect/>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
@@ -36,23 +32,24 @@ import {
   IonIcon,
   IonLabel,
   IonPage,
-  IonRippleEffect,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
   IonTabs
 } from '@ionic/vue';
-import {hammer, homeOutline, schoolOutline, settingsOutline, shuffleOutline} from 'ionicons/icons';
+import {home, homeOutline, school, schoolOutline, settings, settingsOutline, shuffle, shuffleOutline} from 'ionicons/icons';
 import {defineComponent} from 'vue';
 import {loadData, refreshContentIfNeeded} from '@/tools/data';
 import {App} from '@capacitor/app';
 import {useRouter} from 'vue-router';
+import {useStore} from 'vuex';
 
 export default defineComponent({
   name: 'Main',
-  components: {IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage, IonRouterOutlet, IonRippleEffect},
+  components: {IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage, IonRouterOutlet},
   async setup() {
     const router = useRouter();
+    const store = useStore();
 
     let renderComponent = false;
 
@@ -75,12 +72,26 @@ export default defineComponent({
     return {
       router,
       renderComponent,
+      home,
       homeOutline,
+      shuffle,
       shuffleOutline,
-      hammer,
+      school,
       schoolOutline,
-      settingsOutline
+      settings,
+      settingsOutline,
+      store
     };
+  },
+  methods: {
+    onTabChange(e: any) {
+      this.store.commit('setRoute', e.tab);
+    }
+  },
+  computed: {
+    currentTab(): string {
+      return this.store.getters.getRoute;
+    }
   },
   watch: {
     $route(to, from) {

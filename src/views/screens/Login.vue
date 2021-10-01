@@ -5,7 +5,7 @@
         <div class="flex flex-col">
           <div>
             <div class="flex justify-center h-24 smolest:h-28 smol:h-36 norm:h-32 thiccc:h-44">
-              <img alt="logo" src="/img/effnerapp_logo.svg">
+              <img alt="logo" src="@/assets/effnerapp_logo.svg">
             </div>
           </div>
 

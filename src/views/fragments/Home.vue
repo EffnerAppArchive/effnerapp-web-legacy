@@ -40,6 +40,7 @@
                     :direction="nextDeparture.direction"
                     :line="nextDeparture.line"
                     :time="nextDeparture.time"
+                    :in-time="nextDeparture.inTime"
                     class="text-white"
                     style="padding-top: 0.5rem; padding-bottom: 0.5rem"
                 />
@@ -76,12 +77,12 @@
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
 
-                <ion-item v-if="data?.exams?.exams[0] != null" class="item_transparent ion-activatable ripple-parent">
+                <ion-item v-if="getExamName != null" class="item_transparent ion-activatable ripple-parent">
                   <ion-icon :icon="schoolOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
                   <ion-label class="card_dark_label" style="text-decoration: none"
                              @click.prevent="router.push({name: 'Schulaufgaben'})">
-                    {{ data?.exams?.exams[0]?.name }}
+                    {{ getExamName }}
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
@@ -285,10 +286,12 @@ export default defineComponent({
       const departures = await fetchDepartures(id);
 
       this.nextDeparture = departures.map((item: Departure) => {
+        const inTime = moment(item.departureLive, 'HH:mm').isSameOrBefore(moment(item.departurePlanned, 'HH:mm'));
         return {
           line: item.line.number,
           direction: item.direction,
-          time: item.departureLive
+          time: item.departureLive,
+          inTime
         };
       })[0];
     },
@@ -354,7 +357,7 @@ export default defineComponent({
         }
       }
 
-      return (tmp.length >= 0 ? tmp.length : 'Keine') + ' Vertretungen ' + (date === today ? 'heute' : 'am ' + date);
+      return (tmp.length > 0 ? tmp.length : 'Keine') + (tmp.length === 1 ? ' Vertretung ' : ' Vertretungen ') + (date === today ? 'heute' : 'am ' + date);
     },
     getDocuments(): any {
       return this.data?.documents?.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
@@ -363,6 +366,19 @@ export default defineComponent({
       return {
         gradient_julian: this.store.getters.getJulianMode
       };
+    },
+    getExamName(): string | null {
+      const exam = this.data.exams?.exams?.filter((exam: Exam) => moment(exam.date, 'DD.MM.YYYY') >= moment()).slice().sort((a: Exam, b: Exam) => {
+        return moment(a.date, 'DD.MM.YYYY').unix() - moment(b.date, 'DD.MM.YYYY').unix();
+      })[0];
+
+      if(!exam) return null;
+
+      const { name, date } = exam;
+
+      const subject = name.split(' in ')[1];
+
+      return (subject + ' am ' + date) || name;
     }
   }
 });

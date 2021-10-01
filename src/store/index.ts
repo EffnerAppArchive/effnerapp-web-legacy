@@ -15,7 +15,8 @@ export default createStore({
     timetableColorTheme: 0,
     preferredTimetable: 0,
     developer: false,
-    julianMode: false
+    julianMode: false,
+    currentRoute: null
   },
   mutations: {
     setCredentials(state, to) {
@@ -59,6 +60,9 @@ export default createStore({
     },
     setJulianMode(state, to) {
       state.julianMode = to;
+    },
+    setRoute(state, to) {
+      state.currentRoute = to;
     },
     reset(state) {
       state.credentials = null;
@@ -118,6 +122,9 @@ export default createStore({
     },
     getJulianMode(state) {
       return state.julianMode;
+    },
+    getRoute(state) {
+      return state.currentRoute;
     }
   },
   actions: {

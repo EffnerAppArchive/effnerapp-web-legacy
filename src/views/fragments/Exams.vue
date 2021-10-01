@@ -32,6 +32,25 @@
         </ion-grid>
       </div>
 
+      <div v-if="examsHistory && examsHistory.length > 0" id="history">
+        <ion-grid>
+          <ion-row class="text-center">
+            <ion-col>
+              Vergangene Schulaufgaben
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <div v-for="(item, i) in examsHistory" :key="i">
+          <div class="row">
+            <term-item
+                :color="item.color"
+                :date="item.date"
+                :name="item.name"
+            ></term-item>
+          </div>
+        </div>
+      </div>
+
       <div v-if="isAdvancedLevel() && getDocument() != null">
         <ion-grid>
           <ion-row>
@@ -136,25 +155,43 @@ export default defineComponent({
     }
   },
   computed: {
-    data(): any {
+    data(): { exams: { exams: Exam[] }; documents: any[] } {
       return this.store.getters.getData;
     },
-    exams(): Exam[] {
-      const exams: Exam[] = [];
-
-      this.data.exams?.exams?.forEach((exam: Exam) => {
-        exams.push({
-          name: exam.name,
-          date: exam.date,
-          color: moment(exam.date, 'DD.MM.YYYY') < moment() ? 'danger' : 'success'
-        });
-      });
-
-      return exams;
-    },
     sortedExams(): Exam[] {
-      return this.exams.slice().sort((a: Exam, b: Exam) => {
+      return this.data.exams?.exams?.filter((exam: Exam) => moment(exam.date, 'DD.MM.YYYY') >= moment()).slice().sort((a: Exam, b: Exam) => {
         return moment(a.date, 'DD.MM.YYYY').unix() - moment(b.date, 'DD.MM.YYYY').unix();
+      }).map((exam: Exam) => {
+        if (this.data.exams?.exams?.filter(value => value.name === exam.name).length > 1) {
+          return {
+            ...exam,
+            name: exam.name + ' (' + exam.course + ')',
+            color: 'success'
+          };
+        }
+
+        return {
+          ...exam,
+          color: 'success'
+        };
+      });
+    },
+    examsHistory(): Exam[] {
+      return this.data.exams?.exams?.filter((exam: Exam) => moment(exam.date, 'DD.MM.YYYY') < moment()).slice().sort((a: Exam, b: Exam) => {
+        return moment(a.date, 'DD.MM.YYYY').unix() - moment(b.date, 'DD.MM.YYYY').unix();
+      }).map((exam: Exam) => {
+        if (this.data.exams?.exams?.filter(value => value.name === exam.name).length > 1) {
+          return {
+            ...exam,
+            name: exam.name + ' (' + exam.course + ')',
+            color: 'danger'
+          };
+        }
+
+        return {
+          ...exam,
+          color: 'danger'
+        };
       });
     }
   }
