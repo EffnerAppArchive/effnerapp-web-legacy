@@ -9,7 +9,7 @@
           <ion-ripple-effect/>
         </ion-tab-button>
 
-        <ion-tab-button class="ion-activatable ripple-parent" href="/main/substitutions" tab="tab2" @click="yee">
+        <ion-tab-button class="ion-activatable ripple-parent" href="/main/substitutions" tab="tab2">
           <ion-icon :icon="shuffleOutline"/>
           <ion-label>Vertretungen</ion-label>
           <ion-ripple-effect/>
