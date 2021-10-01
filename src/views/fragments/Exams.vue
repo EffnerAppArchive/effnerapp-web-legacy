@@ -32,7 +32,7 @@
         </ion-grid>
       </div>
 
-      <div v-if="isAdvancedLevel && getDocument != null">
+      <div v-if="isAdvancedLevel() && getDocument() != null">
         <ion-grid>
           <ion-row>
             <ion-col>
@@ -46,25 +46,20 @@
           </ion-row>
         </ion-grid>
       </div>
+      <div>
+        <ion-item class="item_transparent" lines="none">
+          <ion-icon :icon="informationOutline" color="black"
+                    style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
+          <ion-label style="font-weight: normal; font-size: 1rem" text-wrap>
+            Alle Angaben sind ohne Gewähr. Es gilt das Wort des Lehrers.<br>
+            <div v-if="data.exams?.updatedAt">
+              Zuletzt aktualisiert:
+              {{ moment(data.exams?.updatedAt, 'YYYY-MM-DD\'T\'HH:mm:ss').format('DD.MM.YYYY HH:mm:ss') }}
+            </div>
+          </ion-label>
+        </ion-item>
+      </div>
     </ion-content>
-
-    <ion-footer class="ion-no-border">
-      <ion-toolbar>
-        <div>
-          <ion-item class="item_transparent" lines="none">
-            <ion-icon :icon="informationOutline" color="black"
-                      style="margin-right: 0.75rem; font-size: 1.5rem;"></ion-icon>
-            <ion-label style="font-weight: normal; font-size: 1rem" text-wrap>
-              Alle Angaben sind ohne Gewähr. Es gilt das Wort des Lehrers.<br>
-              <div v-if="data.exams?.updatedAt">
-                Zuletzt aktualisiert:
-                {{ moment(data.exams?.updatedAt, 'YYYY-MM-DD\'T\'HH:mm:ss').format('DD.MM.YYYY HH:mm:ss') }}
-              </div>
-            </ion-label>
-          </ion-item>
-        </div>
-      </ion-toolbar>
-    </ion-footer>
   </ion-page>
 </template>
 
@@ -72,7 +67,6 @@
 import {
   IonCol,
   IonContent,
-  IonFooter,
   IonGrid,
   IonHeader,
   IonIcon,
@@ -93,7 +87,7 @@ import moment from 'moment';
 import {defineComponent} from 'vue';
 
 import {refreshContent} from '@/tools/data';
-import {getLevel, openInBrowser, openToast} from '@/tools/helper';
+import {getLevel, isAdvancedLevel, openInBrowser, openToast} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Exams',
@@ -109,7 +103,6 @@ export default defineComponent({
     IonGrid,
     IonRow,
     IonCol,
-    IonFooter,
     IonLabel,
     IonRefresher,
     IonRefresherContent,
@@ -124,7 +117,8 @@ export default defineComponent({
       myClass,
       informationOutline,
       moment,
-      refreshContent
+      refreshContent,
+      isAdvancedLevel
     };
   },
   methods: {
@@ -162,10 +156,6 @@ export default defineComponent({
       return this.exams.slice().sort((a: Exam, b: Exam) => {
         return moment(a.date, 'DD.MM.YYYY').unix() - moment(b.date, 'DD.MM.YYYY').unix();
       });
-    },
-    isAdvancedLevel(): boolean {
-      // TODO: regex
-      return this.myClass.startsWith('11') || this.myClass.startsWith('12');
     }
   }
 });

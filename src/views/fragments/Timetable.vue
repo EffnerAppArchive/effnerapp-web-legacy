@@ -54,6 +54,20 @@
           </ion-row>
         </ion-grid>
       </div>
+      <div v-if="isAdvancedLevel() && getDocument() != null">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <div class="pr-4 pb-6 pt-2">
+                <ion-item class="item_transparent ripple-parent ion-activatable float-right" lines="none">
+                  <a class="text-blue-800" @click="openDocument">PDF-Version anzeigen</a>
+                  <ion-ripple-effect/>
+                </ion-item>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
     </ion-content>
     <ion-footer class="ion-no-border">
       <ion-toolbar>
@@ -85,7 +99,7 @@ import {
   IonLabel,
   IonPage,
   IonRefresher,
-  IonRefresherContent,
+  IonRefresherContent, IonRippleEffect,
   IonRow,
   IonSelect,
   IonSelectOption,
@@ -101,6 +115,7 @@ import moment from 'moment';
 import {refreshContent} from '@/tools/data';
 import {TIMETABLE_COLOR_THEME_KEYS} from '@/tools/theme';
 import {savePreferredTimetable} from '@/tools/storage';
+import {getLevel, isAdvancedLevel, openInBrowser, openToast} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Timetable',
@@ -122,7 +137,8 @@ export default defineComponent({
     IonRefresher,
     IonRefresherContent,
     IonSelect,
-    IonSelectOption
+    IonSelectOption,
+    IonRippleEffect
   },
   setup() {
     const store = useStore();
@@ -134,7 +150,8 @@ export default defineComponent({
       informationOutline,
       moment,
       refreshContent,
-      savePreferredTimetable
+      savePreferredTimetable,
+      isAdvancedLevel
     };
   },
   created() {
@@ -166,11 +183,26 @@ export default defineComponent({
         default:
           return TIMETABLE_COLOR_THEME_KEYS[this.colorTheme - 1];
       }
+    },
+    getDocument() {
+      return this.data.documents.find((e: { key: string, uri: string }) => e.key.startsWith('DATA_TIMETABLE_Q' + getLevel()));
+    },
+    async openDocument() {
+      const document = this.getDocument();
+
+      if (document) {
+        await openInBrowser(document.uri);
+      } else {
+        await openToast('Dieses Dokument wurde nicht gefunden.');
+      }
     }
   },
   computed: {
+    data(): any {
+      return this.store.getters.getData;
+    },
     timetables(): any {
-      return this.store.getters.getData.timetables;
+      return this.data.timetables;
     },
     timetable(): any {
       return this.timetables.find((t: any) => t.class === this.select) || this.timetables[0];

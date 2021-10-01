@@ -13,7 +13,7 @@
       <ion-refresher slot="fixed" @ionRefresh="refreshContent($event)">
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
-      <ion-searchbar v-model="search" style="padding: 1rem" @ionChange="queryStops"></ion-searchbar>
+      <ion-searchbar :animated="true" v-model="search" style="padding: 1rem" @ionChange="queryStops"></ion-searchbar>
       <ion-list v-if="getStops.length > 0">
         <ion-item v-for="(item, i) in getStops" :key="i" button @click="selectStop(item)">
           {{ item.name }}
@@ -114,7 +114,7 @@ export default defineComponent({
 
       if (query.length >= 4 && !this.currentQuery) {
         this.currentQuery = query;
-        setTimeout(() => this.runQuery(), 1000);
+        setTimeout(() => this.runQuery(), 100);
       } else {
         this.stops = [];
       }

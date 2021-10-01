@@ -86,13 +86,11 @@ export default defineComponent({
     $route(to, from) {
       if (from.name === 'Login' && to.fullPath.startsWith('/main')) {
         console.log('Reattached to main component, reloading data ...');
-        loadData()
-            .then(() => {
-              this.renderComponent = true;
-            })
-            .catch(() => {
-              this.router.push({name: 'Login'});
-            });
+        loadData().then(() => {
+          this.renderComponent = true;
+        }).catch(() => {
+          this.router.push({name: 'Login'});
+        });
       }
     }
   }
@@ -101,7 +99,7 @@ export default defineComponent({
 
 <style scoped>
 
-ion-tab-button {
+body.dark ion-tab-button {
   --color-selected: white;
 }
 

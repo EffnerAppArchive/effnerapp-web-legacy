@@ -77,8 +77,12 @@ const getCurrentSubstitutionDay = (dates: string[]): string => {
     return newDate;
 };
 
-const getLevel = (): number => {
-    return store.getters.getClass.match('^\\d{1,2}');
+const getLevel = (): string => {
+    return store.getters.getClass.match('^\\d{1,2}')[0];
 };
 
-export {isNative, openInBrowser, openToast, openSimpleAlert, validateClass, getCurrentSubstitutionDay, getLevel};
+const isAdvancedLevel = (): boolean => {
+    return ['11', '12'].includes(getLevel());
+};
+
+export {isNative, openInBrowser, openToast, openSimpleAlert, validateClass, getCurrentSubstitutionDay, getLevel, isAdvancedLevel};
