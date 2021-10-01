@@ -38,7 +38,7 @@
         </ion-item>
         <ion-item class="ion-activatable ripple-parent" @click="joinDeveloper">
           <ion-label>App-Version</ion-label>
-          <ion-note>Version: 2</ion-note>
+          <ion-note>Version: 2.0.9</ion-note>
           <ion-ripple-effect/>
         </ion-item>
         <ion-item class="ion-activatable ripple-parent" @click="openInBrowser('https://go.effner.app/privacy', 'pdf')">

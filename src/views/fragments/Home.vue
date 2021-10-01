@@ -91,7 +91,7 @@
                             style="margin-right: 0.75rem;"></ion-icon>
                   <ion-label class="card_dark_label" style="text-decoration: none;"
                              @click.prevent="router.push({name: 'Vertretungen'})">
-                    {{ getSubstitutions?.length || 0 }} Vertretungen heute
+                    {{ getSubstitutionsMessage }}
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
@@ -104,18 +104,18 @@
           <ion-col>
             <ion-card :class="getJulianCss" class="gradient_3 ion-activatable ripple-parent"
                       @click="router.push({name: 'Stundenplan'})">
-              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
+              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-icon :icon="calendarOutline" class="card_icon" style="margin-right: 0.75rem;"/>
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Stundenplan</ion-label>
               </ion-item>
-              <ion-card class="drop_shadow card_dark">
+              <ion-card v-if="getNextTimetableLesson()" class="drop_shadow card_dark">
                 <ion-item class="item_transparent" lines="none">
-                  <ion-icon :icon="getNextTimetableLesson() ? calendarNumberOutline : calendarClearOutline"
+                  <ion-icon :icon="calendarClearOutline"
                             class="card_icon"
                             style="margin-right: 0.75rem;"/>
                   <ion-label v-if="data?.timetables[store.getters.getPreferredTimetable]?.lessons"
                              class="card_dark_label" style="text-decoration: none">
-                    {{ getNextTimetableLesson() || 'Gerade kein Unterricht' }}
+                    {{ getNextTimetableLesson() }}
                   </ion-label>
                 </ion-item>
               </ion-card>
@@ -188,7 +188,6 @@ import {refreshContent} from '@/tools/data';
 import {
   busOutline,
   calendarClearOutline,
-  calendarNumberOutline,
   calendarOutline,
   clipboardOutline,
   documentOutline,
@@ -199,6 +198,7 @@ import {
   shuffle,
   warningOutline
 } from 'ionicons/icons';
+import {getCurrentSubstitutionDay, openInBrowser, validateClass} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Home',
@@ -238,7 +238,6 @@ export default defineComponent({
       restaurantOutline,
       calendarOutline,
       calendarClearOutline,
-      calendarNumberOutline,
       warningOutline,
       clipboardOutline,
 
@@ -246,7 +245,8 @@ export default defineComponent({
       store,
 
       substitutions,
-      julian
+      julian,
+      openInBrowser
     };
   },
   created() {
@@ -335,10 +335,26 @@ export default defineComponent({
     motd(): string {
       return this.data?.motd;
     },
-    getSubstitutions(): Array<Substitution> {
+    getSubstitutionsMessage(): string {
+      const dates = this.store.getters.getSubstitutions?.items?.dates;
+      const days = this.store.getters.getSubstitutions?.items?.days;
+
+      const date = getCurrentSubstitutionDay(dates);
       const today = moment().format('DD.MM.YYYY');
-      const date = this.store.getters.getSubstitutions?.items?.dates.find((d: string) => d === today);
-      return this.store.getters.getSubstitutions?.items?.days?.get(date)?.find((entry: any) => entry.name === this.store.getters.getClass)?.items;
+      const myClass = this.store.getters.getClass;
+
+      const substitutions = days?.get(date)?.filter((entry: { name: string; items: any[] }) => validateClass(myClass, entry.name as string))?.map((e: { items: any; }) => e.items);
+
+      let tmp = [] as any[];
+      if (substitutions) {
+        for (let i = 0; i < substitutions.length; i++) {
+          if (substitutions[i]) {
+            tmp = tmp.concat(substitutions[i]);
+          }
+        }
+      }
+
+      return (tmp.length >= 0 ? tmp.length : 'Keine') + ' Vertretungen ' + (date === today ? 'heute' : 'am ' + date);
     },
     getDocuments(): any {
       return this.data?.documents?.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));

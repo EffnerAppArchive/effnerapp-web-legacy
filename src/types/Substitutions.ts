@@ -29,4 +29,5 @@ type AbsentClass = {
     date?: string;
     class?: string;
     period?: string;
+    info?: string;
 }
