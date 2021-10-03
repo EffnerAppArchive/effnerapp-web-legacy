@@ -298,18 +298,22 @@ export default defineComponent({
     getNextTimetableLesson(): string | undefined {
       const lessons = this.data?.timetables[this.store.getters.getPreferredTimetable]?.lessons;
 
-      if (lessons) {
-        const now = new Date();
-        const dayI = now.getDay() - 1;
+      try {
+        if (lessons) {
+          const now = new Date();
+          const dayI = now.getDay() - 1;
 
-        const lessonI = this.getCurrentLessonIndex();
+          const lessonI = this.getCurrentLessonIndex();
 
-        if (lessonI !== -1 && dayI < 5) {
-          const nextLesson = lessons[dayI][lessonI];
-          if (nextLesson) {
-            return nextLesson + ' beginnt um ' + this.times[lessonI + 1] + ' Uhr';
+          if (lessonI !== -1 && dayI < 5 && dayI >= 0) {
+            const nextLesson = lessons[dayI][lessonI];
+            if (nextLesson) {
+              return nextLesson + ' beginnt um ' + this.times[lessonI + 1] + ' Uhr';
+            }
           }
         }
+      } catch (e) {
+        return undefined;
       }
 
       return undefined;
