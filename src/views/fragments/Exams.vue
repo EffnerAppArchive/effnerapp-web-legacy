@@ -13,11 +13,7 @@
       <div v-if="sortedExams && sortedExams.length > 0" id="list">
         <div v-for="(item, i) in sortedExams" :key="i">
           <div class="row">
-            <term-item
-                :color="item.color"
-                :date="item.date"
-                :name="item.name"
-            ></term-item>
+            <term-item :date="item[0]" :content="item[1].map((e) => e.name)" color="success"></term-item>
           </div>
         </div>
       </div>
@@ -42,11 +38,7 @@
         </ion-grid>
         <div v-for="(item, i) in examsHistory" :key="i">
           <div class="row">
-            <term-item
-                :color="item.color"
-                :date="item.date"
-                :name="item.name"
-            ></term-item>
+            <term-item :date="item[0]" :content="item[1].map((e) => e.name)" color="danger"></term-item>
           </div>
         </div>
       </div>
@@ -106,7 +98,7 @@ import moment from 'moment';
 import {defineComponent} from 'vue';
 
 import {refreshContent} from '@/tools/data';
-import {getLevel, isAdvancedLevel, openInBrowser, openToast} from '@/tools/helper';
+import {getLevel, groupBy, isAdvancedLevel, openInBrowser, openToast} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Exams',
@@ -158,41 +150,41 @@ export default defineComponent({
     data(): { exams: { exams: Exam[] }; documents: any[] } {
       return this.store.getters.getData;
     },
-    sortedExams(): Exam[] {
-      return this.data.exams?.exams?.filter((exam: Exam) => moment(exam.date, 'DD.MM.YYYY') >= moment()).slice().sort((a: Exam, b: Exam) => {
+    sortedExams(): Exam[][] {
+      const exams = this.data.exams?.exams?.filter((exam: Exam) => moment(exam.date, 'DD.MM.YYYY') >= moment()).slice().sort((a: Exam, b: Exam) => {
         return moment(a.date, 'DD.MM.YYYY').unix() - moment(b.date, 'DD.MM.YYYY').unix();
       }).map((exam: Exam) => {
         if (this.data.exams?.exams?.filter(value => value.name === exam.name).length > 1) {
           return {
             ...exam,
-            name: exam.name + ' (' + exam.course + ')',
-            color: 'success'
+            name: exam.name + (exam.course ? ' (' + exam.course + ')' : '')
           };
         }
 
-        return {
-          ...exam,
-          color: 'success'
-        };
+        return exam;
       });
+
+      const grouped = groupBy(exams, item => item.date);
+
+      return Array.from(grouped);
     },
-    examsHistory(): Exam[] {
-      return this.data.exams?.exams?.filter((exam: Exam) => moment(exam.date, 'DD.MM.YYYY') < moment()).slice().sort((a: Exam, b: Exam) => {
+    examsHistory(): Exam[][] {
+      const exams =  this.data.exams?.exams?.filter((exam: Exam) => moment(exam.date, 'DD.MM.YYYY') < moment()).slice().sort((a: Exam, b: Exam) => {
         return moment(a.date, 'DD.MM.YYYY').unix() - moment(b.date, 'DD.MM.YYYY').unix();
       }).map((exam: Exam) => {
         if (this.data.exams?.exams?.filter(value => value.name === exam.name).length > 1) {
           return {
             ...exam,
-            name: exam.name + ' (' + exam.course + ')',
-            color: 'danger'
+            name: exam.name + (exam.course ? ' (' + exam.course + ')' : '')
           };
         }
 
-        return {
-          ...exam,
-          color: 'danger'
-        };
+        return exam;
       });
+
+      const grouped = groupBy(exams, item => item.date);
+
+      return Array.from(grouped);
     }
   }
 });

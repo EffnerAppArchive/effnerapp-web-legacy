@@ -85,4 +85,18 @@ const isAdvancedLevel = (): boolean => {
     return ['11', '12'].includes(getLevel());
 };
 
-export {isNative, openInBrowser, openToast, openSimpleAlert, validateClass, getCurrentSubstitutionDay, getLevel, isAdvancedLevel};
+const groupBy = (list: any[], keyGetter: (item: any) => any): Map<any, any> => {
+    const map = new Map();
+    list.forEach((item) => {
+        const key = keyGetter(item);
+        const collection = map.get(key);
+        if (!collection) {
+            map.set(key, [item]);
+        } else {
+            collection.push(item);
+        }
+    });
+    return map;
+};
+
+export {isNative, openInBrowser, openToast, openSimpleAlert, validateClass, getCurrentSubstitutionDay, getLevel, isAdvancedLevel, groupBy};

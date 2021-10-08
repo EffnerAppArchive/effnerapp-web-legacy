@@ -23,8 +23,7 @@
     <div v-else>
       <ion-card-header>
         <ion-card-subtitle color="dark">
-          {{ period }}. Stunde
-          {{ (info === 'entfällt' || info === 'Bibliotheksarbeit' ? info : 'vertreten durch ' + subTeacher) }}
+          {{ period }}. Stunde{{ (info === 'entfällt' || !subTeacher ? ': ' + info : 'vertreten durch ' + subTeacher) }}
           <ion-badge v-if="fullClass !== myClass"
                      class="inline" style="margin-left: 0.3rem; padding: 0.3rem; min-width: 2rem; background: #e85b5b">
             {{ fullClass }}
