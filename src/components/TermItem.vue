@@ -21,7 +21,7 @@ import {defineComponent} from 'vue';
 export default defineComponent({
   name: 'TermItem',
   props: {
-    content: [String],
+    content: Array,
     date: String,
     color: String
   },

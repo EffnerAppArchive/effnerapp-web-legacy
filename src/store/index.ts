@@ -15,7 +15,7 @@ export default createStore({
     timetableColorTheme: 0,
     preferredTimetable: 0,
     developer: false,
-    julianMode: false,
+    theme: 0,
     currentRoute: null
   },
   mutations: {
@@ -58,8 +58,8 @@ export default createStore({
     setDeveloper(state, to) {
       state.developer = to;
     },
-    setJulianMode(state, to) {
-      state.julianMode = to;
+    setTheme(state, to) {
+      state.theme = to;
     },
     setRoute(state, to) {
       state.currentRoute = to;
@@ -77,7 +77,7 @@ export default createStore({
       state.timetableColorTheme = 0;
       state.preferredTimetable = 0;
       state.developer = false;
-      state.julianMode = false;
+      state.theme = 0;
     }
   },
   getters: {
@@ -120,8 +120,8 @@ export default createStore({
     getDeveloper(state) {
       return state.developer;
     },
-    getJulianMode(state) {
-      return state.julianMode;
+    getTheme(state) {
+      return state.theme;
     },
     getRoute(state) {
       return state.currentRoute;

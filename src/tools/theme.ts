@@ -1,12 +1,13 @@
 import {StatusBar, Style} from '@capacitor/status-bar';
-import {saveDarkMode, saveLaunched, saveTimetableColorTheme} from '@/tools/storage';
+import {saveDarkMode, saveLaunched, saveTheme, saveTimetableColorTheme} from '@/tools/storage';
 import store from '@/store';
 import {isPlatform} from '@ionic/vue';
+import {isNative} from '@/tools/helper';
 
 export const toggleDarkTheme = async (shouldAdd: boolean): Promise<void> => {
     document.body.classList.toggle('dark', shouldAdd);
 
-    if (isPlatform('ios')) {
+    if (isNative() && isPlatform('ios')) {
         await StatusBar.setStyle({style: shouldAdd ? Style.Dark : Style.Light});
     }
 
@@ -15,6 +16,10 @@ export const toggleDarkTheme = async (shouldAdd: boolean): Promise<void> => {
 
 export const setTimetableColorTheme = async (id: number): Promise<void> => {
     await saveTimetableColorTheme(id);
+};
+
+export const setExperimentalTheme = async (id: number): Promise<void> => {
+    await saveTheme(id);
 };
 
 export const initTheme = async (): Promise<void> => {
@@ -45,4 +50,17 @@ export const TIMETABLE_COLOR_THEME_VALUES = [
     'Blau',
     'Türkis',
     'Rot'
+];
+
+export const EXPERIMENTAL_THEME_VALUES = [
+    'Default',
+    'sieht komisch aus',
+    'Julian Legacy',
+    'Theo',
+    'Sebi',
+    'Luis gefällt das nicht',
+    'Julian',
+    'Pride',
+    'Plain dark',
+    'Unter wasser'
 ];

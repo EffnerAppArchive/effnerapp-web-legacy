@@ -13,7 +13,7 @@
       <ion-grid>
         <ion-row v-if="data?.announcement">
           <ion-col>
-            <ion-card class="gradient_0 ion-activatable ripple-parent">
+            <ion-card class="theme_alert ion-activatable ripple-parent">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem">
                 <ion-icon :icon="warningOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Meldung</ion-label>
@@ -26,7 +26,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-card :class="getJulianCss" class="gradient_1 ion-activatable ripple-parent" routerDirection="forward"
+            <ion-card :class="theme || 'theme_1'" class="ion-activatable ripple-parent" routerDirection="forward"
                       @click="router.push({name: 'MVV'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem;">
                 <ion-icon :icon="busOutline" class="card_icon" style="margin-right: 0.75rem;"></ion-icon>
@@ -59,7 +59,7 @@
           </ion-col>
 
           <ion-col>
-            <ion-card :class="getJulianCss" class="gradient_2 ion-activatable ripple-parent">
+            <ion-card :class="theme || 'theme_2'" class="ion-activatable ripple-parent">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-icon :icon="fileTrayFullOutline" class="card_icon" style="margin-right: 0.75rem;"/>
                 <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">News</ion-label>
@@ -103,7 +103,7 @@
           </ion-col>
 
           <ion-col>
-            <ion-card :class="getJulianCss" class="gradient_3 ion-activatable ripple-parent"
+            <ion-card :class="theme || 'theme_3'" class="ion-activatable ripple-parent"
                       @click="router.push({name: 'Stundenplan'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-icon :icon="calendarOutline" class="card_icon" style="margin-right: 0.75rem;"/>
@@ -128,7 +128,7 @@
 
         <ion-row>
           <ion-col>
-            <ion-card :class="getJulianCss" class="gradient_4 ion-activatable ripple-parent"
+            <ion-card :class="theme || 'theme_4'" class="ion-activatable ripple-parent"
                       @click="this.openInBrowser(data.documents.find(d => d.key === 'DATA_FOOD_PLAN').uri)">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-icon :icon="restaurantOutline" class="card_icon" style="margin-right: 0.75rem;"/>
@@ -140,7 +140,7 @@
             </ion-card>
 
 
-            <ion-card :class="getJulianCss" class="gradient_5 ion-activatable ripple-parent"
+            <ion-card :class="theme || 'theme_5'" class="ion-activatable ripple-parent"
                       @click="router.push({name: 'Informationen'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-icon :icon="clipboardOutline" class="card_icon" style="margin-right: 0.75rem;"/>
@@ -227,7 +227,6 @@ export default defineComponent({
     const store = useStore();
 
     const substitutions = store.getters.getSubstitutions;
-    const julian = store.getters.getJulianMode;
 
     return {
       busOutline,
@@ -246,7 +245,6 @@ export default defineComponent({
       store,
 
       substitutions,
-      julian,
       openInBrowser
     };
   },
@@ -366,19 +364,25 @@ export default defineComponent({
     getDocuments(): any {
       return this.data?.documents?.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
     },
-    getJulianCss(): any {
-      return {
-        gradient_julian: this.store.getters.getJulianMode
-      };
+    theme(): any {
+      const theme = this.store.getters.getTheme;
+      const obj: any = {};
+
+      if (theme > 0) {
+        obj['theme_' + this.store.getters.getTheme] = true;
+        return obj;
+      }
+
+      return null;
     },
     getExamName(): string | null {
       const exam = this.data.exams?.exams?.filter((exam: Exam) => moment(exam.date, 'DD.MM.YYYY') >= moment()).slice().sort((a: Exam, b: Exam) => {
         return moment(a.date, 'DD.MM.YYYY').unix() - moment(b.date, 'DD.MM.YYYY').unix();
       })[0];
 
-      if(!exam) return null;
+      if (!exam) return null;
 
-      const { name, date } = exam;
+      const {name, date} = exam;
 
       const subject = name.split(' in ')[1];
 
@@ -389,32 +393,59 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.gradient_0 {
+.theme_alert {
   background: linear-gradient(135deg, #e73827, #f85032);
 }
 
-.gradient_1 {
+.theme_1 {
   background: linear-gradient(135deg, #f8b500, #fceabb);
 }
 
-.gradient_2 {
+.theme_2 {
   background: linear-gradient(135deg, #24FE41, #FDFC47);
 }
 
-.gradient_3 {
+.theme_3 {
   background: linear-gradient(135deg, #0062ff, #61efff);
 }
 
-.gradient_4 {
+.theme_4 {
   background: linear-gradient(135deg, #5f0a87, #f8ceec);
 }
 
-.gradient_5 {
+.theme_5 {
   background: linear-gradient(135deg, #D31027, #e1eec3);
 }
 
-.gradient_julian {
-  background: linear-gradient(315deg, #ffec3d, #00e06c);
+.theme_6 {
+  background: linear-gradient(135deg, #f1e73a, #86ff6c);
+}
+
+.theme_7 {
+  background: linear-gradient(90deg, #f00000, #ff8000, #ffff00, #007940, #4040ff, #a000c0) fixed;
+  background-size: 400% 400%;
+  -webkit-animation: animate-gradient 2s ease infinite alternate;
+  animation: animate-gradient 2s ease infinite alternate;
+}
+
+.theme_8 {
+  background: #0d0d0d;
+}
+
+.theme_9 {
+  background-image: url("https://www.vku.de/fileadmin/_processed_/b/c/csm_SparteWasser_ndrey_Armyagov_Adobe_6e6e746c7e.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: black !important;
+}
+
+@keyframes animate-gradient {
+  0% {
+    background-position: left;
+  }
+  100% {
+    background-position: right;
+  }
 }
 
 .item_transparent {

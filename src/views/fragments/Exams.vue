@@ -121,11 +121,9 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    const myClass = store.getters.getClass;
 
     return {
       store,
-      myClass,
       informationOutline,
       moment,
       refreshContent,

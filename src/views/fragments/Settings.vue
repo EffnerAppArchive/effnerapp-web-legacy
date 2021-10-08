@@ -69,15 +69,17 @@
 
         <div v-if="store.getters.getDeveloper">
           <ion-list-header>
-            <ion-label>Developer</ion-label>
+            <ion-label>Mode für Nerds</ion-label>
           </ion-list-header>
           <ion-item class="ion-activatable ripple-parent" @click="showFCMToken">
             <ion-label>FCMToken</ion-label>
             <ion-ripple-effect/>
           </ion-item>
-          <ion-item>
-            <ion-label>Julian Mode</ion-label>
-            <ion-toggle slot="end" :checked="julianModeEnabled" @ionChange="julianMode"></ion-toggle>
+          <ion-item class="ion-activatable ripple-parent">
+            <ion-label>Experimental themes</ion-label>
+            <ion-select slot="end" v-model="theme" :value="theme" @ionChange="setExperimentalTheme(theme)">
+              <ion-select-option v-for="(e, i) in experimentalThemes" :key="i" :value="i">{{ e }}</ion-select-option>
+            </ion-select>
           </ion-item>
           <ion-item class="ion-activatable ripple-parent" @click="leaveDeveloper">
             <ion-label>Leave</ion-label>
@@ -117,9 +119,15 @@ import {
 
 import {useRouter} from 'vue-router';
 import {useStore} from 'vuex';
-import {reset, saveClass, saveDeveloper, saveJulianMode, saveNotificationsState} from '@/tools/storage';
+import {reset, saveClass, saveDeveloper, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
-import {setTimetableColorTheme, TIMETABLE_COLOR_THEME_VALUES, toggleDarkTheme} from '@/tools/theme';
+import {
+  setTimetableColorTheme,
+  TIMETABLE_COLOR_THEME_VALUES,
+  toggleDarkTheme,
+  setExperimentalTheme,
+  EXPERIMENTAL_THEME_VALUES
+} from '@/tools/theme';
 import {isNative, openInBrowser, openSimpleAlert, openToast} from '@/tools/helper';
 import axios from 'axios';
 import {loadData} from '@/tools/data';
@@ -148,7 +156,7 @@ export default defineComponent({
 
     const notificationEnabled = store.getters.getNotificationsEnabled;
     const darkModeEnabled = store.getters.getDarkMode;
-    const julianModeEnabled = store.getters.getJulianMode;
+    const theme = store.getters.getTheme;
     const developerClick = 0;
 
     const timetableColorTheme = ref(store.getters.getTimetableColorTheme);
@@ -159,11 +167,13 @@ export default defineComponent({
       store,
       notificationEnabled,
       darkModeEnabled,
-      julianModeEnabled,
+      theme,
       developerClick,
       openInBrowser,
       themes: TIMETABLE_COLOR_THEME_VALUES,
-      setTimetableColorTheme
+      experimentalThemes: EXPERIMENTAL_THEME_VALUES,
+      setTimetableColorTheme,
+      setExperimentalTheme
     };
   },
   methods: {
@@ -221,27 +231,22 @@ export default defineComponent({
     },
     async joinDeveloper() {
       if (this.store.getters.getDeveloper) {
-        await openToast('Du bist bereits Developer');
+        await openToast('Du bist bereits ein Nerd');
         return;
       }
       this.developerClick++;
 
       if (this.developerClick == 20) {
-        await openToast('Du bist jetzt Developer');
+        await openToast('Du bist jetzt ein Nerd');
         this.developerClick = 0;
         await saveDeveloper(true);
         await FCM.subscribeTo({topic: 'APP_DEV_NOTIFICATIONS'});
       }
     },
     async leaveDeveloper() {
-      await openToast('Du bist kein Developer mehr');
+      await openToast('Du bist kein Nerd mehr');
       await saveDeveloper(false);
       await FCM.unsubscribeFrom({topic: 'APP_DEV_NOTIFICATIONS'});
-    },
-    async julianMode() {
-      const julianCurrent = this.store.getters.getJulianMode;
-      await saveJulianMode(!julianCurrent);
-      await openToast('Julian 🤡');
     },
     async showFCMToken() {
       await openSimpleAlert('FCMToken', (await FCM.getToken()).token);

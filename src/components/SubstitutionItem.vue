@@ -63,11 +63,14 @@ export default defineComponent({
   setup() {
     const store = useStore();
 
-    const myClass = store.getters.getClass;
-
     return {
-      myClass
+      store
     };
+  },
+  computed: {
+    myClass() {
+      return this.store.getters.getClass;
+    }
   }
 });
 </script>
