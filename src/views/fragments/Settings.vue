@@ -89,7 +89,7 @@
       </ion-list>
       <div class="text-center mt-4 mb-4">
         <ion-note>
-          © {{ new Date().getFullYear() }} EffnerApp by Luis & Sebi
+          © {{ new Date().getFullYear() }} EffnerApp by<br>Luis Bros, Sebastian Müller & Jonathan Berger
         </ion-note>
       </div>
     </ion-content>
@@ -122,11 +122,11 @@ import {useStore} from 'vuex';
 import {reset, saveClass, saveDeveloper, saveNotificationsState} from '@/tools/storage';
 import {FCM} from '@capacitor-community/fcm';
 import {
+  EXPERIMENTAL_THEME_VALUES,
+  setExperimentalTheme,
   setTimetableColorTheme,
   TIMETABLE_COLOR_THEME_VALUES,
-  toggleDarkTheme,
-  setExperimentalTheme,
-  EXPERIMENTAL_THEME_VALUES
+  toggleDarkTheme
 } from '@/tools/theme';
 import {isNative, openInBrowser, openSimpleAlert, openToast} from '@/tools/helper';
 import axios from 'axios';
@@ -253,7 +253,7 @@ export default defineComponent({
     },
     async showAbout() {
       await openSimpleAlert('Über die App',
-          'EffnerApp - by Luis & Sebi!<br><br>© ' + new Date().getFullYear() + ' EffnerApp - Danke an alle Mitwirkenden ❤');
+          'EffnerApp by Luis Bros, Sebastian Müller & Jonathan Berger<br><br>© ' + new Date().getFullYear() + ' EffnerApp - Danke an alle Mitwirkenden ❤');
     },
     async showFeedback() {
       const alert = await alertController
