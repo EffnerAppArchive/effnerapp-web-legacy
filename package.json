@@ -38,7 +38,7 @@
     "@capacitor/cli": "3.2.5",
     "@types/jest": "^27.0.2",
     "@types/moment": "^2.13.0",
-    "@types/node": "^16.11.0",
+    "@types/node": "^16.11.2",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "@vue/cli-plugin-babel": "~4.5.0",
