@@ -8,7 +8,6 @@ import android.webkit.WebSettings;
 
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.community.fcm.FCMPlugin;
-import com.getcapacitor.community.firebasecrashlytics.FirebaseCrashlytics;
 import com.getcapacitor.community.firebasecrashlytics.FirebaseCrashlyticsPlugin;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;

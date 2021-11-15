@@ -22,6 +22,11 @@
 
         <ion-list class="substitutions_wrapper">
           <substitution-item
+              v-if="getInformation"
+              key="info"
+              :info="getInformation"
+              teacher="info"/>
+          <substitution-item
               v-for="(item, i) in getSubstitutions"
               :key="i"
               :full-class="item.fullClass"
@@ -30,11 +35,6 @@
               :room="item.room"
               :sub-teacher="item.subTeacher"
               :teacher="item.teacher"/>
-          <substitution-item
-              v-if="getInformation"
-              key="info"
-              :info="getInformation"
-              teacher="info"/>
           <substitution-item
               v-if="getAbsentClasses && getAbsentClasses.length > 0"
               key="absent_classes"
@@ -196,7 +196,8 @@ export default defineComponent({
       return this.store.getters.getSubstitutions;
     },
     getSubstitutions(): Substitution[] {
-      return this.substitutions;
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return this.substitutions.sort((a, b) => parseInt(a.period) - parseInt(b.period));
     },
     getInformation(): string | undefined {
       return this.information;
