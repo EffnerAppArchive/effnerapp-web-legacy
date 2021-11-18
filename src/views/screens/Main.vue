@@ -64,8 +64,9 @@ export default defineComponent({
         }
       });
       renderComponent = true;
-    } catch (e) {
+    } catch (e: any) {
       console.log('Error while loading data, pushing to login ...');
+      store.commit('setError', e.message);
       await router.push({name: 'Login'});
     }
 
@@ -99,7 +100,8 @@ export default defineComponent({
         console.log('Reattached to main component, reloading data ...');
         loadData().then(() => {
           this.renderComponent = true;
-        }).catch(() => {
+        }).catch((e: any) => {
+          this.store.commit('setError', e.message);
           this.router.push({name: 'Login'});
         });
       }
