@@ -149,6 +149,16 @@
               </ion-item>
               <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
+
+            <ion-card :class="theme || 'theme_6'" class="ion-activatable ripple-parent"
+                      @click="router.push({name: 'Aktuelles'})">
+              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
+                <ion-icon :icon="clipboardOutline" class="card_icon" style="margin-right: 0.75rem;"/>
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Aktuelles
+                </ion-label>
+              </ion-item>
+              <ion-ripple-effect></ion-ripple-effect>
+            </ion-card>
           </ion-col>
 
         </ion-row>
@@ -387,8 +397,6 @@ export default defineComponent({
       if (!nextExams) return null;
 
       const date = nextExams[0];
-
-      console.log(nextExams);
 
       if(nextExams[1].length === 1) {
         const {name} = nextExams[1][0];

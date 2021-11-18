@@ -53,6 +53,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Informationen',
         path: 'information',
         component: () => import('@/views/fragments/Information.vue')
+      },
+      {
+        name: 'Aktuelles',
+        path: 'news',
+        component: () => import('@/views/fragments/News.vue')
       }
     ]
   },
