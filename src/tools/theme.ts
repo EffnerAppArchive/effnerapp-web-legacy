@@ -59,6 +59,7 @@ export const EXPERIMENTAL_THEME_VALUES = [
     'Theo',
     'Sebi',
     'Luis gefällt das nicht',
+    '69',
     'Julian',
     'Pride',
     'Plain dark',

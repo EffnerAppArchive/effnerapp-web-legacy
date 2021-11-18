@@ -18,7 +18,10 @@
       <NewsCard v-for="news in getNews"
                 :id="news.id"
                 :key="news.id"
-                :title="news.title.rendered">
+                :title="news.title.rendered"
+                :excerpt="news.excerpt.rendered"
+                :content="news.content.rendered"
+                :uri="news.guid.rendered">
       </NewsCard>
     </ion-content>
   </ion-page>
@@ -40,6 +43,7 @@ import {
 } from '@ionic/vue';
 import NewsCard from '@/components/NewsCard.vue';
 import {useStore} from 'vuex';
+import {refreshContent} from '@/tools/data';
 
 export default defineComponent({
   name: 'News',
@@ -59,7 +63,8 @@ export default defineComponent({
     const store = useStore();
 
     return {
-      store
+      store,
+      refreshContent
     };
   },
   computed: {
@@ -71,5 +76,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+.text_dark {
+  color: var(--ion-text-color)
+}
 </style>

@@ -66,13 +66,13 @@
               </ion-item>
 
               <ion-card class="drop_shadow card_dark">
-                <ion-item v-if="getDocuments && getDocuments[0] != null"
+                <ion-item v-if="getNews && getNews[0] != null"
                           class="item_transparent ion-activatable ripple-parent">
-                  <ion-icon :icon="documentOutline" class="card_icon"
+                  <ion-icon :icon="newspaperOutline" class="card_icon"
                             style="margin-right: 0.75rem;"></ion-icon>
                   <ion-label class="card_dark_label" style="text-decoration: none"
-                             @click="this.openInBrowser(getDocuments[0]?.uri)">
-                    {{ getDocuments[0]?.name }} <i class="fas fa-external-link-alt" style="padding-left: 0.25rem"/>
+                             @click="router.push({name: 'Aktuelles'})">
+                    {{ getNews[0]?.title.rendered }}
                   </ion-label>
                   <ion-ripple-effect></ion-ripple-effect>
                 </ion-item>
@@ -139,8 +139,17 @@
               <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
 
-
             <ion-card :class="theme || 'theme_5'" class="ion-activatable ripple-parent"
+                      @click="router.push({name: 'Aktuelles'})">
+              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
+                <ion-icon :icon="clipboardOutline" class="card_icon" style="margin-right: 0.75rem;"/>
+                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Aktuelles
+                </ion-label>
+              </ion-item>
+              <ion-ripple-effect></ion-ripple-effect>
+            </ion-card>
+
+            <ion-card :class="theme || 'theme_6'" class="ion-activatable ripple-parent"
                       @click="router.push({name: 'Informationen'})">
               <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
                 <ion-icon :icon="clipboardOutline" class="card_icon" style="margin-right: 0.75rem;"/>
@@ -150,15 +159,6 @@
               <ion-ripple-effect></ion-ripple-effect>
             </ion-card>
 
-            <ion-card :class="theme || 'theme_6'" class="ion-activatable ripple-parent"
-                      @click="router.push({name: 'Aktuelles'})">
-              <ion-item class="item_transparent" lines="none" style="padding-top: 0.5rem; padding-bottom: 0.5rem">
-                <ion-icon :icon="clipboardOutline" class="card_icon" style="margin-right: 0.75rem;"/>
-                <ion-label class="card_dark_label" style="font-weight: bold; font-size: 1.3rem">Aktuelles
-                </ion-label>
-              </ion-item>
-              <ion-ripple-effect></ion-ripple-effect>
-            </ion-card>
           </ion-col>
 
         </ion-row>
@@ -201,7 +201,7 @@ import {
   calendarClearOutline,
   calendarOutline,
   clipboardOutline,
-  documentOutline,
+  newspaperOutline,
   fileTrayFullOutline,
   informationOutline,
   restaurantOutline,
@@ -242,7 +242,7 @@ export default defineComponent({
       busOutline,
       informationOutline,
       schoolOutline,
-      documentOutline,
+      newspaperOutline,
       shuffle,
       fileTrayFullOutline,
       restaurantOutline,
@@ -356,8 +356,8 @@ export default defineComponent({
 
       return (tmp.length > 0 ? tmp.length : 'Keine') + (tmp.length === 1 ? ' Vertretung ' : ' Vertretungen ') + (date === today ? 'heute' : 'am ' + date);
     },
-    getDocuments(): any {
-      return this.data?.documents?.filter((e: { key: string; }) => e.key.startsWith('DATA_INFORMATION'));
+    getNews(): any {
+      return this.store.getters.getNews;
     },
     theme(): any {
       const theme = this.store.getters.getTheme;
@@ -423,21 +423,25 @@ export default defineComponent({
 }
 
 .theme_6 {
-  background: linear-gradient(135deg, #f1e73a, #86ff6c);
+  background: linear-gradient(135deg, #50d1e0, #69e369);
 }
 
 .theme_7 {
+  background: linear-gradient(135deg, #f1e73a, #86ff6c);
+}
+
+.theme_8 {
   background: linear-gradient(90deg, #f00000, #ff8000, #ffff00, #007940, #4040ff, #a000c0) fixed;
   background-size: 400% 400%;
   -webkit-animation: animate-gradient 2s ease infinite alternate;
   animation: animate-gradient 2s ease infinite alternate;
 }
 
-.theme_8 {
+.theme_9 {
   background: #0d0d0d;
 }
 
-.theme_9 {
+.theme_10 {
   background-image: url("https://www.vku.de/fileadmin/_processed_/b/c/csm_SparteWasser_ndrey_Armyagov_Adobe_6e6e746c7e.jpg");
   background-repeat: no-repeat;
   background-size: cover;
