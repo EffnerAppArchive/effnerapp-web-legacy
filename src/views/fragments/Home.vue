@@ -199,7 +199,7 @@ import {
   shuffle,
   warningOutline
 } from 'ionicons/icons';
-import {getCurrentSubstitutionDay, openInBrowser, validateClass} from '@/tools/helper';
+import {getCurrentSubstitutionDay, groupBy, openInBrowser, validateClass} from '@/tools/helper';
 
 export default defineComponent({
   name: 'Home',
@@ -376,17 +376,29 @@ export default defineComponent({
       return null;
     },
     getExamName(): string | null {
-      const exam = this.data.exams?.exams?.filter((exam: Exam) => moment(exam.date, 'DD.MM.YYYY') >= moment()).slice().sort((a: Exam, b: Exam) => {
+      const exams = this.data.exams?.exams?.filter((exam: Exam) => moment(exam.date, 'DD.MM.YYYY') >= moment()).slice().sort((a: Exam, b: Exam) => {
         return moment(a.date, 'DD.MM.YYYY').unix() - moment(b.date, 'DD.MM.YYYY').unix();
-      })[0];
+      });
 
-      if (!exam) return null;
+      const grouped = Array.from(groupBy(exams, item => item.date));
 
-      const {name, date} = exam;
+      const nextExams = grouped[0];
 
-      const subject = name.split(' in ')[1];
+      if (!nextExams) return null;
 
-      return (subject + ' am ' + date) || name;
+      const date = nextExams[0];
+
+      console.log(nextExams);
+
+      if(nextExams[1].length === 1) {
+        const {name} = nextExams[1][0];
+
+        const subject = name.split(' in ')[1];
+
+        return (subject + ' am ' + date) || name;
+      }
+
+      return date + ': ' + nextExams[1].map((item: any) => item.course.match(/\d+([a-z]+)\d+/)[1].toUpperCase()).join(', ');
     }
   }
 });
