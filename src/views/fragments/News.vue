@@ -11,8 +11,15 @@
 
     <ion-content :fullscreen="false">
       <ion-refresher slot="fixed" @ionRefresh="refreshContent($event)">
-        <ion-refresher-content></ion-refresher-content>
+        <ion-refresher-content>
+        </ion-refresher-content>
       </ion-refresher>
+
+      <NewsCard v-for="news in getNews"
+                :id="news.id"
+                :key="news.id"
+                :title="news.title.rendered">
+      </NewsCard>
     </ion-content>
   </ion-page>
 </template>
@@ -22,6 +29,7 @@ import {defineComponent} from 'vue';
 
 import {
   IonBackButton,
+  IonButtons,
   IonContent,
   IonHeader,
   IonPage,
@@ -30,10 +38,13 @@ import {
   IonTitle,
   IonToolbar
 } from '@ionic/vue';
+import NewsCard from '@/components/NewsCard.vue';
+import {useStore} from 'vuex';
 
 export default defineComponent({
   name: 'News',
   components: {
+    NewsCard,
     IonContent,
     IonPage,
     IonHeader,
@@ -41,7 +52,20 @@ export default defineComponent({
     IonTitle,
     IonRefresher,
     IonRefresherContent,
-    IonBackButton
+    IonBackButton,
+    IonButtons
+  },
+  setup() {
+    const store = useStore();
+
+    return {
+      store
+    };
+  },
+  computed: {
+    getNews(): [] {
+      return this.store.getters.getNews;
+    }
   }
 });
 </script>

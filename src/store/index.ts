@@ -16,7 +16,8 @@ export default createStore({
     preferredTimetable: 0,
     developer: false,
     theme: 0,
-    currentRoute: null
+    currentRoute: null,
+    news: null
   },
   mutations: {
     setCredentials(state, to) {
@@ -64,6 +65,9 @@ export default createStore({
     setRoute(state, to) {
       state.currentRoute = to;
     },
+    setNews(state, to) {
+      state.news = to;
+    },
     reset(state) {
       state.credentials = null;
       state.registered = false;
@@ -78,6 +82,7 @@ export default createStore({
       state.preferredTimetable = 0;
       state.developer = false;
       state.theme = 0;
+      state.news = null;
     }
   },
   getters: {
@@ -125,6 +130,9 @@ export default createStore({
     },
     getRoute(state) {
       return state.currentRoute;
+    },
+    getNews(state) {
+      return state.news;
     }
   },
   actions: {

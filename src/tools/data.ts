@@ -53,4 +53,9 @@ export const loadData = async (): Promise<void> => {
     } catch (e) {
         console.error(e);
     }
+
+    // get news from effner.de website
+    const news = await axios.get('https://effner.de/wp-json/wp/v2/posts');
+    store.commit('setNews', news.data);
+    console.log(news.data);
 };
