@@ -265,21 +265,6 @@ export default defineComponent({
   },
   data() {
     return {
-      // TODO: improve
-      times: [
-        '7:15',
-        '8:00',
-        '8:45',
-        '9:45',
-        '10:30',
-        '11:15',
-        '12:15',
-        '13:00',
-        '13:45',
-        '14:30',
-        '15:15',
-        '16:00'
-      ],
       nextDeparture: undefined as { line: number; direction: string; time: string; } | undefined
     };
   },
@@ -316,7 +301,7 @@ export default defineComponent({
           if (lessonI !== -1 && dayI < 5 && dayI >= 0) {
             const nextLesson = lessons[dayI][lessonI];
             if (nextLesson) {
-              return nextLesson + ' beginnt um ' + this.times[lessonI + 1] + ' Uhr';
+              return nextLesson + ' beginnt um ' + this.data?.timetableSchedule[lessonI + 1] + ' Uhr';
             }
           }
         }
@@ -329,7 +314,7 @@ export default defineComponent({
     getCurrentLessonIndex(): number {
       const now = moment();
 
-      return this.times.findIndex(e => {
+      return this.data?.timetableSchedule.findIndex((e: string) => {
         const start = moment(e, 'HH:mm');
         const end = moment(e, 'HH:mm').add(45, 'minutes');
         return now.isBetween(start, end);
