@@ -135,7 +135,7 @@ import {
 import {isNative, openInBrowser, openSimpleAlert, openToast} from '@/tools/helper';
 import axios from 'axios';
 import {loadData} from '@/tools/data';
-import {FirebaseCrashlytics} from "@capacitor-community/firebase-crashlytics";
+import {FirebaseCrashlytics} from '@capacitor-community/firebase-crashlytics';
 
 export default defineComponent({
   name: 'Settings',
