@@ -2,6 +2,7 @@ import axios from 'axios';
 import {sha512} from '@/tools/hash';
 import DSBMobile from '@/tools/dsbmobile';
 import store from '@/store';
+import {FirebaseCrashlytics} from '@capacitor-community/firebase-crashlytics';
 
 let lastFetchTime = 0;
 
@@ -37,6 +38,10 @@ export const loadData = async (): Promise<void> => {
         store.commit('setData', response.data.data);
     } catch (e: any) {
         store.commit('setError', e.response?.data?.status?.error || e);
+
+        await FirebaseCrashlytics.recordException({message: e.message, stacktrace: e.stack});
+        console.error(e);
+
         return Promise.reject(e);
     }
 
@@ -50,12 +55,17 @@ export const loadData = async (): Promise<void> => {
         timetable = await dsbmobile.getTimetable();
 
         store.commit('setSubstitutions', timetable);
-    } catch (e) {
+    } catch (e: any) {
+        await FirebaseCrashlytics.recordException({message: e.message, stacktrace: e.stack});
         console.error(e);
     }
 
-    // get news from effner.de website
-    const news = await axios.get('https://effner.de/wp-json/wp/v2/posts');
-    store.commit('setNews', news.data);
-    console.log(news.data);
+    try {
+        // get news from effner.de website
+        const news = await axios.get('https://effner.de/wp-json/wp/v2/posts');
+        store.commit('setNews', news.data);
+    } catch (e: any) {
+        await FirebaseCrashlytics.recordException({message: e.message, stacktrace: e.stack});
+        console.error(e);
+    }
 };
