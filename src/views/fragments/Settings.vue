@@ -81,6 +81,10 @@
               <ion-select-option v-for="(e, i) in experimentalThemes" :key="i" :value="i">{{ e }}</ion-select-option>
             </ion-select>
           </ion-item>
+          <ion-item class="ion-activatable ripple-parent" @click="crashlyticsTest">
+            <ion-label>Crashlytics test</ion-label>
+            <ion-ripple-effect/>
+          </ion-item>
           <ion-item class="ion-activatable ripple-parent" @click="leaveDeveloper">
             <ion-label>Leave</ion-label>
             <ion-ripple-effect/>
@@ -131,6 +135,7 @@ import {
 import {isNative, openInBrowser, openSimpleAlert, openToast} from '@/tools/helper';
 import axios from 'axios';
 import {loadData} from '@/tools/data';
+import {FirebaseCrashlytics} from "@capacitor-community/firebase-crashlytics";
 
 export default defineComponent({
   name: 'Settings',
@@ -250,6 +255,9 @@ export default defineComponent({
     },
     async showFCMToken() {
       await openSimpleAlert('FCMToken', (await FCM.getToken()).token);
+    },
+    async crashlyticsTest() {
+      await FirebaseCrashlytics.crash({message: 'Test crash initiated by developer.'});
     },
     async showAbout() {
       await openSimpleAlert('Über die App',
