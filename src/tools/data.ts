@@ -3,6 +3,7 @@ import {sha512} from '@/tools/hash';
 import DSBMobile from '@/tools/dsbmobile';
 import store from '@/store';
 import {FirebaseCrashlytics} from '@capacitor-community/firebase-crashlytics';
+import {Http} from '@capacitor-community/http';
 
 let lastFetchTime = 0;
 
@@ -62,7 +63,12 @@ export const loadData = async (): Promise<void> => {
 
     try {
         // get news from effner.de website
-        const news = await axios.get('https://effner.de/wp-json/wp/v2/posts');
+        const news = await Http.request({
+            method: 'GET',
+            url: 'https://effner.de/wp-json/wp/v2/posts',
+            responseType: 'json'
+        });
+
         store.commit('setNews', news.data);
     } catch (e: any) {
         await FirebaseCrashlytics.recordException({message: e.message, stacktrace: e.stack});
